@@ -25,7 +25,7 @@
 	<select id="getNotices" parameterType="string" resultType="notice">
 		SELECT notice_id, notice, notice_plot, notice_date
 		FROM notice
-		<if test="noticId != null">
+		<if test="noticeId != null">
 			WHERE notice_id = #{noticId}
 		</if>
 	</select>
