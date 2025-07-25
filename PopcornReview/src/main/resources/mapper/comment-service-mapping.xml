@@ -20,12 +20,6 @@
 		WHERE c_id = #{cId}
 	</update>
 	
-	<select id="getComments" parameterType="string" resultType="comment">
-		SELECT c_id, c_plot, c_date, review_id, user_id
-		FROM comment
-		WHERE c_id = #{review.id}
-	</select>
-	
     <select id="getComments" parameterType="comment" resultType="comment">
         SELECT c_id, c_plot, c_date, review_id, user_id
         FROM comment
