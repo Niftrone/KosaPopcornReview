@@ -16,6 +16,7 @@ class Movie {
 	private String mCategories; // 영화 종류 예) 로맨스, 판타지 m_category
 	private String mUrlImage; // 영화 포스터 이미지 URL m_url_image
 	private String mUrlMovie; // 영화 포스터 영상 URL m_url_movie
+	private Double mAvarageScore; // 평균 평점 (계산된 값)
 
 	private List<Actor> actors; // 출연 배우 목록
 
@@ -25,7 +26,7 @@ class Movie {
 
 	public Movie(String mId, String mTitle, String mSubtitle, String mRelease, String mShowtime, String mDirector,
 			String mPlot, String mScreeningType, String mMovieTheater, String mCategories, String mUrlImage,
-			String mUrlMovie, List<Actor> actors) {
+			String mUrlMovie, Double mAvarageScore, List<Actor> actors) {
 		super();
 		this.mId = mId;
 		this.mTitle = mTitle;
@@ -39,6 +40,7 @@ class Movie {
 		this.mCategories = mCategories;
 		this.mUrlImage = mUrlImage;
 		this.mUrlMovie = mUrlMovie;
+		this.mAvarageScore = mAvarageScore;
 		this.actors = actors;
 	}
 
@@ -76,6 +78,16 @@ class Movie {
 
 	public String getmShowtime() {
 		return mShowtime;
+	}
+
+	public void setmAvarageScore() {
+		this.mAvarageScore = mAvarageScore;
+
+	}
+
+	public Double getmAvarageScore() {
+		return mAvarageScore;
+
 	}
 
 	public void setmShowtime(String mShowtime) {
@@ -151,8 +163,7 @@ class Movie {
 		return "Movie [mId=" + mId + ", mTitle=" + mTitle + ", mSubtitle=" + mSubtitle + ", mRelease=" + mRelease
 				+ ", mShowtime=" + mShowtime + ", mDirector=" + mDirector + ", mPlot=" + mPlot + ", mScreeningType="
 				+ mScreeningType + ", mMovieTheater=" + mMovieTheater + ", mCategories=" + mCategories + ", mUrlImage="
-				+ mUrlImage + ", mUrlMovie=" + mUrlMovie + ", actors=" + actors
-				+ "]";
+				+ mUrlImage + ", mUrlMovie=" + mUrlMovie + ", actors=" + actors + "]";
 	}
 
 }
