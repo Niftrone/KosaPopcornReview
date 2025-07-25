@@ -2,24 +2,21 @@ package com.service.popcornreview.vo;
 
 class Notice {
 	private int noticeId; // 공지사항 아이디 notice_id
-	private String noticeTitle; // 공지사항 제목 notice_title
+	private String notice; // 공지사항 제목 notice
 	private String noticePlot; // 공지사항 내용 notice_plot
 	private String noticeDate; // 작성일 notice_date
 
-	// 연관 객체 정보
-	private User user; // 공지사항을 작성한 사용자(관리자) 정보
 
 	public Notice() {
 
 	}
 
-	public Notice(int noticeId, String noticeTitle, String noticePlot, String noticeDate, User user) {
+	public Notice(int noticeId, String notice, String noticePlot, String noticeDate) {
 		super();
 		this.noticeId = noticeId;
-		this.noticeTitle = noticeTitle;
+		this.notice = notice;
 		this.noticePlot = noticePlot;
 		this.noticeDate = noticeDate;
-		this.user = user;
 	}
 
 	public int getNoticeId() {
@@ -30,12 +27,12 @@ class Notice {
 		this.noticeId = noticeId;
 	}
 
-	public String getNoticeTitle() {
-		return noticeTitle;
+	public String getnotice() {
+		return notice;
 	}
 
-	public void setNoticeTitle(String noticeTitle) {
-		this.noticeTitle = noticeTitle;
+	public void setnotice(String notice) {
+		this.notice = notice;
 	}
 
 	public String getNoticePlot() {
@@ -54,18 +51,10 @@ class Notice {
 		this.noticeDate = noticeDate;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	@Override
 	public String toString() {
-		return "Notice [noticeId=" + noticeId + ", noticeTitle=" + noticeTitle + ", noticePlot=" + noticePlot
-				+ ", noticeDate=" + noticeDate + ", user=" + user + "]";
+		return "Notice [noticeId=" + noticeId + ", notice=" + notice + ", noticePlot=" + noticePlot
+				+ ", noticeDate=" + noticeDate + "]";
 	}
 
 }
