@@ -3,9 +3,32 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ns.sql.NoticeMapper">
+
 	<insert id="addNotice" parameterType="notice">
-		INSERT INTO notice (notice_id, notice,notice_plot, notice_date)
+		INSERT INTO notice
+		(notice_id, notice, notice_plot, notice_date)
+		VALUES(#{noticeId},#{notice}, #{noticePlot}, curdate())
 	</insert>
+	
+	<delete id="deleteNotice" parameterType="string">
+		DELETE FROM notice
+		WHERE notice_id = #{noticeId}
+	</delete>
+	
+	<update id="updateNotice" parameterType="notice">
+		UPDATE notice
+		SET notice = #{notice}, notice_plot = #{noticePlot}
+		WHERE notice_id = #{noticeId}
+	</update>
+	
+	<!-- 동적쿼리 : 공지사항 list + 공지사항 자세히 보기 -->
+	<select id="getNotices" parameterType="string" resultType="notice">
+		SELECT notice_id, notice, notice_plot, notice_date
+		FROM notice
+		<if test="noticId != null">
+			WHERE notice_id = #{noticId}
+		</if>
+	</select>
 </mapper>
 
  
