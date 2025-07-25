@@ -2,34 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ns.sql.MemberMapper">
-<!-- 동적쿼리 : 회원검색 + 로그인 -->
-	<select id="selectUser" parameterType="member" resultType="member">
-		SELECT 
-		id, password, name, address
-		FROM member
-		WHERE id=#{id}
-		<if test="password !=null">
-			AND password LIKE #{password}
-		</if> 
-	</select>
-</mapper>
+<mapper namespace="ns.sql.CommentMapper">
 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+	<insert id="addComment" parameterType="comment">
+		INSERT INTO comment (c_id, c_plot, c_date, review_id, user_id)
+		VALUES (#{cId}, #{cPlot}, curdate(), #{review.id}, #{user.id})
+	</insert>
+	
+	<delete id="deleteComment" parameterType="string">
+		DELETE FROM comment
+		WHERE c_id = #{cId}
+	</delete>
+	
+	<update id="updateComment" parameterType="comment">
+		UPDATE comment
+		SET c_plot = #{cPlot}, c_date = curdate()
+		WHERE c_id = #{cId}
+	</update>
+	
+	<select id="getComments" parameterType="string" resultType="comment">
+		SELECT c_id, c_plot, c_date, review_id, user_id
+		FROM comment
+		WHERE c_id = #{review.id}
+	</select>
+	
+    <select id="getComments" parameterType="comment" resultType="comment">
+        SELECT c_id, c_plot, c_date, review_id, user_id
+        FROM comment
+        WHERE
+        <if test="review.id != null">
+            AND review_id = #{review.id}
+        </if>
+        <if test="user.id != null">
+            AND user_id = #{user.id}
+        </if>
+    </select>
+</mapper>
