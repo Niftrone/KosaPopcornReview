@@ -38,8 +38,14 @@
 			<result property="rRating" column="r_rating"/>
 			<result property="rPlot" column="r_plot"/>
 			<result property="rDate" column="r_date"/>
-			<result property="user" column="user_id"/>
-			<result property="movie" column="m_id"/>
+			
+			    <association property="user" javaType="user">
+			        <id property="id" column="user_id"/>
+			    </association>
+			    
+			    <association property="movie" javaType="movie">
+			        <id property="mId" column="m_id"/>
+			    </association>
 		</association>
 	</resultMap>
 	
