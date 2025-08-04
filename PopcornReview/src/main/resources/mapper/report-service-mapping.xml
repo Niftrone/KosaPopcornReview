@@ -2,18 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ns.sql.ReportMapper">
-<!-- 동적쿼리 : 회원검색 + 로그인 -->
-	<select id="selectUser" parameterType="member" resultType="member">
-		SELECT 
-		id, password, name, address
-		FROM member
-		WHERE id=#{id}
-		<if test="password !=null">
-			AND password LIKE #{password}
-		</if> 
+W
+	</resultMap>
+	<insert id="insertReported" parameterType="reportedReview">
+	INSERT INTO REPORTED_REVIEWS (rr_plot,rr_date,r_id,user_id) 
+	VALUES (#{rrPlot},CURDATE(),#{review.rId},#{user.id})
+	</insert>
+	
+	<delete id="deleteReported" parameterType="Integer">
+	DELETE FROM REPORTED_REVIEWS WHERE rr_id = #{rrId}
+	</delete>
+	
+	
+	<select id="getReported" resultMap="reportedRM">
+	SELECT
+	    rr.rr_id,
+	    rr.rr_plot,
+	    rr.rr_date,
+	    r.r_id,
+	    u.id AS user_id 
+	FROM reported_reviews rr
+	FROM 
+        review r
+    LEFT JOIN 
+        user u ON r.user_id = u.id
+    LEFT JOIN 
+        movie m ON r.m_id = m.m_id
+    ORDER BY
+        r.r_date DESC
 	</select>
 </mapper>
+
+<!-- 
+	private String rrId;      // 신고 ID (Primary Key) rr_id
+    private String rrPlot;    // 신고 내용 rr_plot
+
+    //연관객체 정보
+    private Review review;
+    private User user;
+
+
+ -->
 
  
  
