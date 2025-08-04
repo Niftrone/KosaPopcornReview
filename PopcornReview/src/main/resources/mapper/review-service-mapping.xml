@@ -2,9 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
 <mapper namespace="ns.sql.ReviewMapper">
-
-
 	<select id="getLatestReviews" resultType="review">
 		<![CDATA[
 			SELECT *
@@ -13,14 +12,8 @@
 			ORDER BY r_date DESC
 		]]>
 	</select>
-
-	
-
+  
 	<insert id="addReview" parameterType="review">
-	
-		<selectKey keyProperty="rId" resultType="int" order="AFTER">
-			SELECT LAST_INSERT_ID()
-		</selectKey>
 		INSERT INTO review
 			(r_rating, r_plot, r_date, user_id, m_id)
 		VALUES

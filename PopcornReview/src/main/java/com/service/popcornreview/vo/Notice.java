@@ -1,6 +1,6 @@
 package com.service.popcornreview.vo;
 
-class Notice {
+public class Notice {
 	private int noticeId; // 공지사항 아이디 notice_id
 	private String notice; // 공지사항 제목 notice
 	private String noticePlot; // 공지사항 내용 notice_plot

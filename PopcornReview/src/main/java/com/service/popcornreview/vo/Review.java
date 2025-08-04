@@ -1,7 +1,6 @@
 package com.service.popcornreview.vo;
 
 public class Review {
-	// [수정] DB의 r_id 컬럼 타입이 INT이므로, 필드 타입을 String에서 int로 변경합니다.
 	private int rId; // 리뷰 아이디 r_id
 	private int rRating; // 평점 r_rating
 	private String rPlot; // 리뷰 내용 r_plot
@@ -14,7 +13,6 @@ public class Review {
 
 	}
 
-	// [수정] 생성자의 rId 파라미터 타입도 int로 변경합니다.
 	public Review(int rId, int rRating, String rPlot, String rDate, User user, Movie movie) {
 		super();
 		this.rId = rId;
@@ -24,8 +22,7 @@ public class Review {
 		this.user = user;
 		this.movie = movie;
 	}
-
-	// [수정] rId의 Getter/Setter 타입을 모두 int로 변경합니다.
+  
 	public int getrId() {
 		return rId;
 	}
