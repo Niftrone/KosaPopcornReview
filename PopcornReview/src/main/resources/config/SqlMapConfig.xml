@@ -30,12 +30,12 @@
  
 
 	<mappers>
-		<mapper resource="mapper/actor-service-mapping.xml"/>
-		<mapper resource="mapper/comment-service-mapping.xml"/>
+			<!-- <mapper resource="mapper/actor-service-mapping.xml"/>
+		<mapper resource="mapper/comment-service-mapping.xml"/> 
 		<mapper resource="mapper/movie-service-mapping.xml"/>
-		<mapper resource="mapper/notice-service-mapping.xml"/>
-		<mapper resource="mapper/report-service-mapping.xml"/>		
+		 <mapper resource="mapper/notice-service-mapping.xml"/>
+		<mapper resource="mapper/report-service-mapping.xml"/>	 -->	
 		<mapper resource="mapper/review-service-mapping.xml"/>		
-		<mapper resource="mapper/user-service-mapping.xml"/>		
+		<!-- <mapper resource="mapper/user-service-mapping.xml"/>	 --> 
 	</mappers>
 </configuration>

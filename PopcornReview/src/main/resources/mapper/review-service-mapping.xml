@@ -2,25 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ns.sql.ReviewrMapper">
+
+<mapper namespace="ns.sql.ReviewMapper">
+	<select id="getLatestReviews" resultType="review">
+		<![CDATA[
+			SELECT *
+			FROM review
+			WHERE r_date <= CURDATE()
+			ORDER BY r_date DESC
+		]]>
+	</select>
+  
+	<insert id="addReview" parameterType="review">
+		INSERT INTO review
+			(r_rating, r_plot, r_date, user_id, m_id)
+		VALUES
+			(#{rRating}, #{rPlot}, CURDATE(), #{user.id}, #{movie.mId})
+	</insert>
+
+	<update id="updateReview" parameterType="review">
+		UPDATE review
+		SET
+			r_rating = #{rRating},
+			r_plot = #{rPlot}
+		WHERE
+			r_id = #{rId}
+	</update>
+	
+
+	<delete id="deleteReview" parameterType="int">
+		DELETE 
+		FROM review
+		WHERE r_id = #{rId}
+	</delete>
 	
 </mapper>
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
