@@ -25,8 +25,12 @@
 	<select id="getNotices" parameterType="string" resultType="notice">
 		SELECT notice_id, notice, notice_plot, notice_date
 		FROM notice
+		WHERE 1=1
 		<if test="noticeId != null">
-			WHERE notice_id = #{noticId}
+			AND notice_id = #{noticeId}
+		</if>
+		<if test="notice != null">
+			AND notice LIKE CONCAT('%', #{notice}, '%')
 		</if>
 	</select>
 </mapper>
