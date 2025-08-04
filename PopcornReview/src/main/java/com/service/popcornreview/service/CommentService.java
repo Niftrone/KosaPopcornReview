@@ -5,52 +5,33 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.service.popcornreview.dao.ActorDao;
 import com.service.popcornreview.dao.CommentDao;
-import com.service.popcornreview.dao.MovieDao;
-import com.service.popcornreview.vo.Actor;
 import com.service.popcornreview.vo.Comment;
-import com.service.popcornreview.vo.Movie;
 
 @Service
 public class CommentService {
 
 	@Autowired
-    private MovieDao movieDaoImpl;
+	private CommentDao commentDaoImpl;
 
-    public Movie getMovie(String mId) {
-        return movieDaoImpl.getMovie(mId);
-    }
+	public int addComment(Comment comment) {
+		System.out.println("CommentService...addComment");
+		return commentDaoImpl.addComment(comment);
+	}
 
-    public List<Movie> getAllMovies(Movie movie) {
-        return movieDaoImpl.getAllMovies(movie);
-    }
+	public int deleteComment(int cId) {
+		System.out.println("CommentService...deleteComment");
+		return commentDaoImpl.deleteComment(cId);
+	}
 
-    public List<Movie> getRecommendedMovies() {
-        return movieDaoImpl.getRecommendedMovies();
-    }
+	public int updateComment(Comment comment) {
+		System.out.println("CommentService...updateComment");
+		return commentDaoImpl.updateComment(comment);
+	}
 
-    public List<Movie> getMoviesByCategory(String category) {
-        return movieDaoImpl.getMoviesByCategory(category);
-    }
+	public List<Comment> getComments(Comment comment) {
+		System.out.println("CommentService...getComments");
+		return commentDaoImpl.getComments(comment);
+	}
 
-    public List<Movie> getMoviesByActor(String actorName) {
-        return movieDaoImpl.getMoviesByActor(actorName);
-    }
-
-    public List<Movie> getUpcomingMovies() {
-        return movieDaoImpl.getUpcomingMovies();
-    }
-
-    public int addMovie(Movie movie) {
-        return movieDaoImpl.addMovie(movie);
-    }
-
-    public int updateMovie(Movie movie) {
-        return movieDaoImpl.updateMovie(movie);
-    }
-
-    public int deleteMovie(String mId) {
-        return movieDaoImpl.deleteMovie(mId);
-    }
 }

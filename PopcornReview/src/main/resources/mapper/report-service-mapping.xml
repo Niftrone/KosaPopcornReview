@@ -16,24 +16,24 @@
 	</resultMap>
   
 	<insert id="insertReported" parameterType="reportedReview">
-	INSERT INTO REPORTED_REVIEWS (rr_plot,rr_date,r_id,user_id) 
-	VALUES (#{rrPlot},CURDATE(),#{review.rId},#{user.id})
+		INSERT INTO REPORTED_REVIEWS (rr_plot,rr_date,r_id,user_id) 
+		VALUES (#{rrPlot},CURDATE(),#{review.rId},#{user.id})
 	</insert>
 	
 	<delete id="deleteReported" parameterType="Integer">
-	DELETE FROM REPORTED_REVIEWS WHERE rr_id = #{rrId}
+		DELETE FROM REPORTED_REVIEWS WHERE rr_id = #{rrId}
 	</delete>
 	
 	<select id="getReported" resultMap="reportedRM">
-	SELECT
-	    rr.rr_id,
-	    rr.rr_plot,
-	    rr.rr_date,
-	    r.r_id,
-	    u.id AS user_id 
-	FROM reported_reviews rr
-	JOIN review r ON rr.r_id = r.r_id
-	JOIN user u ON rr.user_id = u.id
+		SELECT
+		    rr.rr_id,
+		    rr.rr_plot,
+		    rr.rr_date,
+		    r.r_id,
+		    u.id AS user_id 
+		FROM reported_reviews rr
+		JOIN review r ON rr.r_id = r.r_id
+		JOIN user u ON rr.user_id = u.id
 	</select>
 </mapper>
 

@@ -6,34 +6,34 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.service.popcornreview.vo.Actor;
 import com.service.popcornreview.vo.Comment;
+
 @Repository
 public class CommentDao {
-	
-	  public static final String NS = "ns.sql.CommentMapper.";
 
-	    @Autowired
-	    private SqlSession sqlSession;
+	public static final String NS = "ns.sql.CommentMapper.";
 
-	   
-	    public int addComment(Comment comment) {
-	        return sqlSession.insert(NS + "addComment", comment);
-	    }
+	@Autowired
+	private SqlSession sqlSession;
 
-	   
-	    public int deleteComment(int cId) {
-	        return sqlSession.delete(NS + "deleteComment", cId);
-	    }
+	public int addComment(Comment comment) {
+		System.out.println("CommentDao...addComment");
+		return sqlSession.insert(NS + "addComment", comment);
+	}
 
-	    
-	    public int updateComment(Comment comment) {
-	        return sqlSession.update(NS + "updateComment", comment);
-	    }
+	public int deleteComment(int cId) {
+		System.out.println("CommentDao...deleteComment");
+		return sqlSession.delete(NS + "deleteComment", cId);
+	}
 
-	    
-	    public List<Comment> getComments(Comment comment) {
-	        return sqlSession.selectList(NS + "getComments", comment);
+	public int updateComment(Comment comment) {
+		System.out.println("CommentDao...updateComment");
+		return sqlSession.update(NS + "updateComment", comment);
+	}
 
-}
+	public List<Comment> getComments(Comment comment) {
+		System.out.println("CommentDao...getComments");
+		return sqlSession.selectList(NS + "getComments", comment);
+
+	}
 }

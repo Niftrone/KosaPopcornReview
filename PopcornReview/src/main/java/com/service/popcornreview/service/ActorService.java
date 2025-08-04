@@ -10,9 +10,10 @@ import com.service.popcornreview.vo.Actor;
 public class ActorService {
 
 	@Autowired
-    private ActorDao actorDaoImpl;
+	private ActorDao actorDaoImpl;
 
-    public Actor getActor(String aId) {
-        return actorDaoImpl.getActor(aId);
-    }
+	public Actor getActor(String aId) {
+		System.out.println("ActorService...getActor");
+		return actorDaoImpl.getActor(aId);
+	}
 }
