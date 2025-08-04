@@ -6,10 +6,10 @@
 
 	<insert id="addComment" parameterType="comment">
 		INSERT INTO comment (c_id, c_plot, c_date, review_id, user_id)
-		VALUES (#{cId}, #{cPlot}, curdate(), #{review.id}, #{user.id})
+		VALUES (#{cId}, #{cPlot}, curdate(), #{review.rId}, #{user.id})
 	</insert>
 	
-	<delete id="deleteComment" parameterType="string">
+	<delete id="deleteComment" parameterType="int">
 		DELETE FROM comment
 		WHERE c_id = #{cId}
 	</delete>

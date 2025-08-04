@@ -2,7 +2,7 @@ package com.service.popcornreview.vo;
 
 import java.util.List;
 
-class Movie {
+public class Movie {
 	// 영화 기본 정보
 	private String mId; // 영화 아이디 m_id
 	private String mTitle; // 영화 제목 m_title

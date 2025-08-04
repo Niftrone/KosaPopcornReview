@@ -12,7 +12,7 @@
 	 </settings>
 	 
 	<typeAliases>
-		<package name="com.service.popcornreview.domain"/>
+		<package name="com.service.popcornreview.vo"/>
 	</typeAliases>
 	
 <!-- 2. MyBatis Framework Unit Test하기 위한 DataSource 설정부분 -->

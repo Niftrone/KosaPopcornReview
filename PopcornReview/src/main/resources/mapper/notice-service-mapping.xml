@@ -10,7 +10,7 @@
 		VALUES(#{noticeId},#{notice}, #{noticePlot}, curdate())
 	</insert>
 	
-	<delete id="deleteNotice" parameterType="string">
+	<delete id="deleteNotice" parameterType="int">
 		DELETE FROM notice
 		WHERE notice_id = #{noticeId}
 	</delete>
