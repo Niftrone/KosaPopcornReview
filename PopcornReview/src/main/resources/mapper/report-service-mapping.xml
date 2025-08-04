@@ -2,7 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-W
+<mapper namespace="ns.sql.ReportMapper">
+	<resultMap id="reportedRM" type="reportedReview">
+		 <id property="rrId" column="rr_id"/>
+		 <result property="rrPlot" column="rr_plot"/>
+         <result property="rrDate" column="rr_date"/>
+          <association property="review" javaType="review">
+            <id property="rId" column="r_id"/>
+         </association>
+         <association property="user" javaType="user">
+            <id property="id" column="user_id"/>
+         </association>
+		
 	</resultMap>
 	<insert id="insertReported" parameterType="reportedReview">
 	INSERT INTO REPORTED_REVIEWS (rr_plot,rr_date,r_id,user_id) 
@@ -22,14 +33,8 @@ W
 	    r.r_id,
 	    u.id AS user_id 
 	FROM reported_reviews rr
-	FROM 
-        review r
-    LEFT JOIN 
-        user u ON r.user_id = u.id
-    LEFT JOIN 
-        movie m ON r.m_id = m.m_id
-    ORDER BY
-        r.r_date DESC
+	JOIN review r ON rr.r_id = r.r_id
+	JOIN user u ON rr.user_id = u.id
 	</select>
 </mapper>
 
