@@ -22,7 +22,7 @@ public class Review {
 		this.user = user;
 		this.movie = movie;
 	}
-  
+
 	public int getrId() {
 		return rId;
 	}

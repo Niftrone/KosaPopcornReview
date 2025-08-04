@@ -3,8 +3,50 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ns.sql.ReportMapper">
-
+	<resultMap id="reportedRM" type="reportedReview">
+		 <id property="rrId" column="rr_id"/>
+		 <result property="rrPlot" column="rr_plot"/>
+         <result property="rrDate" column="rr_date"/>
+          <association property="review" javaType="review">
+            <id property="rId" column="r_id"/>
+         </association>
+         <association property="user" javaType="user">
+            <id property="id" column="user_id"/>
+         </association>
+	</resultMap>
+  
+	<insert id="insertReported" parameterType="reportedReview">
+	INSERT INTO REPORTED_REVIEWS (rr_plot,rr_date,r_id,user_id) 
+	VALUES (#{rrPlot},CURDATE(),#{review.rId},#{user.id})
+	</insert>
+	
+	<delete id="deleteReported" parameterType="Integer">
+	DELETE FROM REPORTED_REVIEWS WHERE rr_id = #{rrId}
+	</delete>
+	
+	<select id="getReported" resultMap="reportedRM">
+	SELECT
+	    rr.rr_id,
+	    rr.rr_plot,
+	    rr.rr_date,
+	    r.r_id,
+	    u.id AS user_id 
+	FROM reported_reviews rr
+	JOIN review r ON rr.r_id = r.r_id
+	JOIN user u ON rr.user_id = u.id
+	</select>
 </mapper>
+
+<!-- 
+	private String rrId;      // 신고 ID (Primary Key) rr_id
+    private String rrPlot;    // 신고 내용 rr_plot
+
+    //연관객체 정보
+    private Review review;
+    private User user;
+
+
+ -->
 
  
  

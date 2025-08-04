@@ -2,6 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<mapper namespace="ns.sql.ReviewrMapper">
+<!-- 동적쿼리 : 회원검색 + 로그인 -->
+	<resultMap id="reviewRM" type="review">
+		 <id column="r_id" property="rId"/>
+         <result column="r_rating" property="rRating"/>
+         <result column="r_plot" property="rPlot"/>
+         <result column="r_date" property="rDate"/> 
+        
+         <association property="user" javaType="user">
+            <id column="user_id" property="id"/>
+            </association>
+
+         <association property="movie" javaType="com.service.popcornreview.vo.Movie">
+            <id column="m_id" property="mId"/>
+            </association>
+	</resultMap>
+	
+	
+	<select id="getAllReviews" resultMap = "reviewRM">
+		 SELECT 
+		        r.r_id,
+		        r.r_rating,
+		        r.r_plot,
+		        r.r_date,
+		        u.id AS user_id,  -- user 테이블의 id 컬럼
+		        m.m_id            -- movie 테이블의 m_id 컬럼
+		    FROM 
+		        review r
+		    LEFT JOIN 
+		        user u ON r.user_id = u.id
+		    LEFT JOIN 
+		        movie m ON r.m_id = m.m_id
 
 <mapper namespace="ns.sql.ReviewMapper">
 	<select id="getLatestReviews" resultType="review">
@@ -28,7 +60,6 @@
 		WHERE
 			r_id = #{rId}
 	</update>
-	
 
 	<delete id="deleteReview" parameterType="int">
 		DELETE 
