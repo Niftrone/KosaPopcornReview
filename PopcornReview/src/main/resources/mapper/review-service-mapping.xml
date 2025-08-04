@@ -20,20 +20,37 @@
 	</resultMap>
 	
 	
-	<select id="getAllReviews" resultMap = "reviewRM">
-		 SELECT 
-		        r.r_id,
-		        r.r_rating,
-		        r.r_plot,
-		        r.r_date,
-		        u.id AS user_id,  -- user 테이블의 id 컬럼
-		        m.m_id            -- movie 테이블의 m_id 컬럼
-		    FROM 
-		        review r
-		    LEFT JOIN 
-		        user u ON r.user_id = u.id
-		    LEFT JOIN 
-		        movie m ON r.m_id = m.m_id
+	<select id="getAllReviews" parameterType="review" resultMap="reviewRM">
+	    SELECT 
+	        r.r_id,
+	        r.r_rating,
+	        r.r_plot,
+	        r.r_date,
+	        u.id AS user_id,
+	        m.m_id
+	    FROM 
+	        review r
+	    LEFT JOIN 
+	        user u ON r.user_id = u.id
+	    LEFT JOIN 
+	        movie m ON r.m_id = m.m_id
+	    
+	    <where>
+	        <choose>
+	            <when test="movie != null and movie.mId != null">
+	                m.m_id = #{movie.mId}
+	            </when>
+	            
+	            <when test="user != null and user.id != null">
+	                u.id = #{user.id}
+	            </when>
+	            
+	            <otherwise></otherwise>
+	        </choose>
+	    </where>
+	    
+	    
+	    ORDER BY r.r_date DESC
 	</select>
   
 	<insert id="addReview" parameterType="review">
