@@ -3,15 +3,26 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ns.sql.ActorMapper">	
+
 	<select id="getActor" parameterType="string" resultType="actor">
 		SELECT 
-		a_id, a_name, a_plot, a_url_image
+			a_id, a_name, a_plot, a_url_image
 		FROM actor
 		WHERE a_id=#{aId}
 	</select>
+	
+	<select id="getActorsByMovie" parameterType="string" resultType="actor">
+		SELECT
+			
+			a.a_name
+		
+		FROM 
+			actor a JOIN mov_act ma ON a.a_id = ma.a_id
+		WHERE
+			ma.m_id = #{mId}
+	</select>
+	
 </mapper>
-
- 
  
  
  

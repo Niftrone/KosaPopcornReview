@@ -2,21 +2,28 @@ package com.service.popcornreview.vo;
 
 import java.util.List;
 
-class Movie {
+public class Movie {
 	// 영화 기본 정보
 	private String mId; // 영화 아이디 m_id
 	private String mTitle; // 영화 제목 m_title
 	private String mSubtitle; // 영화 부제 m_subtitle
 	private String mRelease; // 개봉일 m_release
 	private String mShowtime; // 상영 시간 m_showtime
+	
+	// [추가] DB의 m_director 컬럼과 매핑하기 위한 필드입니다.
 	private String mDirector; // 감독 m_director
+	
 	private String mPlot; // 줄거리 m_plot
 	private String mScreeningType; // 상영타입 예) 2D, iMax m_screening_type
 	private String mMovieTheater; // 영화관 예) 일반, 프리미엄 m_movie_theater
 	private String mCategories; // 영화 종류 예) 로맨스, 판타지 m_category
 	private String mUrlImage; // 영화 포스터 이미지 URL m_url_image
 	private String mUrlMovie; // 영화 포스터 영상 URL m_url_movie
-	private Double mAvarageScore; // 평균 평점 (계산된 값)
+	private Double mAverageScore; // 평균 평점 (계산된 값)
+	private String id; //관리자 아이디
+	
+	// [추가] DB의 m_added_date 컬럼과 매핑하기 위한 필드입니다. SELECT 시 setter가 필요합니다.
+	private String mAddedDate;
 
 	private List<Actor> actors; // 출연 배우 목록
 
@@ -24,9 +31,10 @@ class Movie {
 
 	}
 
+	// [수정] 새로 추가된 필드(mDirector, mAddedDate)를 생성자에 반영합니다.
 	public Movie(String mId, String mTitle, String mSubtitle, String mRelease, String mShowtime, String mDirector,
 			String mPlot, String mScreeningType, String mMovieTheater, String mCategories, String mUrlImage,
-			String mUrlMovie, Double mAvarageScore, List<Actor> actors) {
+			String mUrlMovie, Double mAverageScore, String id, String mAddedDate, List<Actor> actors) {
 		super();
 		this.mId = mId;
 		this.mTitle = mTitle;
@@ -40,7 +48,9 @@ class Movie {
 		this.mCategories = mCategories;
 		this.mUrlImage = mUrlImage;
 		this.mUrlMovie = mUrlMovie;
-		this.mAvarageScore = mAvarageScore;
+		this.mAverageScore = mAverageScore;
+		this.id = id;
+		this.mAddedDate = mAddedDate;
 		this.actors = actors;
 	}
 
@@ -80,20 +90,11 @@ class Movie {
 		return mShowtime;
 	}
 
-	public void setmAvarageScore() {
-		this.mAvarageScore = mAvarageScore;
-
-	}
-
-	public Double getmAvarageScore() {
-		return mAvarageScore;
-
-	}
-
 	public void setmShowtime(String mShowtime) {
 		this.mShowtime = mShowtime;
 	}
-
+	
+	// [추가] mDirector 필드의 Getter/Setter
 	public String getmDirector() {
 		return mDirector;
 	}
@@ -150,6 +151,31 @@ class Movie {
 		this.mUrlMovie = mUrlMovie;
 	}
 
+	public Double getmAverageScore() {
+		return mAverageScore;
+	}
+
+	public void setmAverageScore(Double mAverageScore) {
+		this.mAverageScore = mAverageScore;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	// [추가] mAddedDate 필드의 Getter/Setter
+	public String getmAddedDate() {
+		return mAddedDate;
+	}
+
+	public void setmAddedDate(String mAddedDate) {
+		this.mAddedDate = mAddedDate;
+	}
+
 	public List<Actor> getActors() {
 		return actors;
 	}
@@ -158,12 +184,13 @@ class Movie {
 		this.actors = actors;
 	}
 
+	// [수정] 새로 추가된 필드를 toString()에 반영하여 디버깅 시 모든 정보를 볼 수 있도록 합니다.
 	@Override
 	public String toString() {
 		return "Movie [mId=" + mId + ", mTitle=" + mTitle + ", mSubtitle=" + mSubtitle + ", mRelease=" + mRelease
 				+ ", mShowtime=" + mShowtime + ", mDirector=" + mDirector + ", mPlot=" + mPlot + ", mScreeningType="
 				+ mScreeningType + ", mMovieTheater=" + mMovieTheater + ", mCategories=" + mCategories + ", mUrlImage="
-				+ mUrlImage + ", mUrlMovie=" + mUrlMovie + ", actors=" + actors + "]";
+				+ mUrlImage + ", mUrlMovie=" + mUrlMovie + ", mAverageScore=" + mAverageScore + ", id=" + id
+				+ ", mAddedDate=" + mAddedDate + ", actors=" + actors + "]";
 	}
-
 }

@@ -6,29 +6,65 @@
 
 	<insert id="addComment" parameterType="comment">
 		INSERT INTO comment (c_id, c_plot, c_date, review_id, user_id)
-		VALUES (#{cId}, #{cPlot}, curdate(), #{review.id}, #{user.id})
+		VALUES (#{cId}, #{cPlot}, curdate(), #{review.rId}, #{user.id})
 	</insert>
 	
-	<delete id="deleteComment" parameterType="string">
+	<delete id="deleteComment" parameterType="int">
 		DELETE FROM comment
 		WHERE c_id = #{cId}
 	</delete>
 	
 	<update id="updateComment" parameterType="comment">
 		UPDATE comment
-		SET c_plot = #{cPlot}, c_date = curdate()
+		SET c_plot = #{cPlot}
 		WHERE c_id = #{cId}
 	</update>
 	
-    <select id="getComments" parameterType="comment" resultType="comment">
-        SELECT c_id, c_plot, c_date, review_id, user_id
-        FROM comment
-        WHERE
-        <if test="review.id != null">
-            AND review_id = #{review.id}
-        </if>
-        <if test="user.id != null">
-            AND user_id = #{user.id}
-        </if>
+	<resultMap type="comment" id="commentListRM">
+		<id property="cId" column="c_id"/>
+		<result property="cPlot" column="c_plot"/>
+		<result property="cDate" column="c_date"/>
+		<association property="user" javaType="user">
+			<id property="id" column="id"/>
+			<result property="pwd" column="pwd"/>
+			<result property="email" column="email"/>
+			<result property="name" column="name"/>
+			<result property="birthdate" column="birthdate"/>
+			<result property="phone" column="phone"/>
+			<result property="gender" column="gender"/>
+		</association>
+		<association property="review" javaType="review">
+			<id property="rId" column="r_id"/>
+			<result property="rRating" column="r_rating"/>
+			<result property="rPlot" column="r_plot"/>
+			<result property="rDate" column="r_date"/>
+			
+			    <association property="user" javaType="user">
+			        <id property="id" column="user_id"/>
+			    </association>
+			    
+			    <association property="movie" javaType="movie">
+			        <id property="mId" column="m_id"/>
+			    </association>
+		</association>
+	</resultMap>
+	
+    <select id="getComments" parameterType="comment" resultMap="commentListRM">
+	    SELECT 
+	        c.c_id, c.c_plot, c.c_date, 
+	        u.id AS id, u.pwd, u.email, u.name, u.birthdate, u.phone, u.gender,
+	        r.r_id, r.r_rating, r.r_plot, r.r_date, 
+	        r.user_id AS user_id,
+	        r.m_id AS m_id
+	    FROM comment c
+	    JOIN user u ON c.user_id = u.id
+	    JOIN review r ON c.review_id = r.r_id
+	    WHERE 1=1
+	    <if test="review.rId != null">
+	        AND c.review_id = #{review.rId}
+	    </if>
+	    <if test="user.id != null">
+	        AND c.user_id = #{user.id}
+	    </if>
     </select>
 </mapper>
