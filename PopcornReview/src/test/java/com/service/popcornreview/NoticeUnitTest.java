@@ -12,7 +12,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import com.service.popcornreview.vo.Notice;
 
 
-public class noticeUnitTest {
+public class NoticeUnitTest {
 
     public static void main(String[] args) throws IOException {
         Reader r = Resources.getResourceAsReader("config/SqlMapConfig.xml");
@@ -28,18 +28,18 @@ public class noticeUnitTest {
         n.setNoticePlot("이것은 공지사항의 내용입니다.");
 
         int insertResult = session.insert(NS + "addNotice", n);
-        System.out.println("📌 INSERT 결과: " + insertResult);
+        System.out.println(" INSERT 결과: " + insertResult);
 
         // 2. UPDATE 테스트
         n.setnotice("수정된 제목");
         n.setNoticePlot("수정된 내용입니다.");
 
         int updateResult = session.update(NS + "updateNotice", n);
-        System.out.println("📌 UPDATE 결과: " + updateResult);
+        System.out.println(" UPDATE 결과: " + updateResult);
 
         // 3. SELECT 테스트 (전체 조회)
         List<Notice> list = session.selectList(NS + "getNotices", new Notice());
-        System.out.println("📌 SELECT 전체 결과:");
+        System.out.println(" SELECT 전체 결과:");
         for (Notice no : list) {
             System.out.println(no);
         }
@@ -48,14 +48,14 @@ public class noticeUnitTest {
         Notice param = new Notice();
         param.setNoticeId(100);
         List<Notice> byId = session.selectList(NS + "getNotices", param);
-        System.out.println("📌 SELECT by ID 결과:");
+        System.out.println(" SELECT by ID 결과:");
         for (Notice no : byId) {
             System.out.println(no);
         }
 
         // 5. DELETE 테스트
         int deleteResult = session.delete(NS + "deleteNotice", 100);
-        System.out.println("📌 DELETE 결과: " + deleteResult);
+        System.out.println(" DELETE 결과: " + deleteResult);
 
         session.close();
     }

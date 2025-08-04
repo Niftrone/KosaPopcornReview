@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.service.popcornreview.vo.Actor;
 
-public class actorUnitTest {
+public class ActorUnitTest {
 
 	public static void main(String[] args) throws IOException {
 		Reader r = Resources.getResourceAsReader("config/SqlMapConfig.xml");
@@ -18,7 +18,7 @@ public class actorUnitTest {
 		SqlSession session = factory.openSession();
 		String NS = "ns.sql.ActorMapper.";
 		
-		Actor a = session.selectOne(NS + "getActor", "a01");
+		Actor a = session.selectOne(NS + "getActor", "a01-1");
 		System.out.println(a);
 		
 	}

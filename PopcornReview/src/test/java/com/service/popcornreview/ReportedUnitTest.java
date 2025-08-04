@@ -14,7 +14,7 @@ import com.service.popcornreview.vo.ReportedReview;
 import com.service.popcornreview.vo.Review;
 import com.service.popcornreview.vo.User;
 
-public class MyBatisUnitTest {
+public class ReportedUnitTest {
 	private static final String NS = "ns.sql.ReportMapper.";
 	private SqlSession getSqlSession() throws Exception {
 		Reader reader = Resources.getResourceAsReader("config/SqlMapConfig.xml");
@@ -25,7 +25,6 @@ public class MyBatisUnitTest {
 	
 	@Test
 	public void insertReported() throws Exception {
-		
 		SqlSession session = getSqlSession();
 		ReportedReview reported = new ReportedReview();
 		User user = new User();
@@ -42,24 +41,20 @@ public class MyBatisUnitTest {
 	}
 	
 	@Test
-	public void deleteReported() throws Exception {
-		/*
-		 * SqlSession session = getSqlSession(); int rrId = 1; int lines =
-		 * session.delete(NS+"deleteReported",rrId); session.commit();
-		 * System.out.println(lines); session.close();
-		 */
-		
-	}
-	
-	@Test
 	public void getReported() throws Exception {
 		SqlSession session = getSqlSession();
 		List<ReportedReview> list = session.selectList(NS+"getReported");
 		for (ReportedReview r : list) {
-            System.out.println("📱 Phone: " + r);
+            System.out.println("Phone: " + r);
         }
-		
-		
 	}
+	
+	@Test
+	public void deleteReported() throws Exception {
+		SqlSession session = getSqlSession(); int rrId = 1; int lines =
+		session.delete(NS+"deleteReported",rrId); session.commit();
+		System.out.println(lines); session.close();
+	}
+	
 
 }
