@@ -3,33 +3,100 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ns.sql.MovieMapper">
-<!-- 동적쿼리 : 회원검색 + 로그인 -->
-	<select id="selectUser" parameterType="member" resultType="member">
-		SELECT 
-		id, password, name, address
-		FROM member
-		WHERE id=#{id}
-		<if test="password !=null">
-			AND password LIKE #{password}
-		</if> 
-	</select>
-</mapper>
 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+	<resultMap type="movie" id="movieResultMap">
+		<id property="mId" column="m_id"/>
+		<result property="mTitle" column="m_title"/>
+		<result property="mSubtitle" column="m_subtitle"/>
+		<result property="mRelease" column="m_release"/>
+		<result property="mShowtime" column="m_showtime"/>
+		<result property="mDirector" column="m_director"/>
+		<result property="mPlot" column="m_plot"/>
+		<result property="mScreeningType" column="m_screening_type"/>
+		<result property="mMovieTheater" column="m_movie_theater"/>
+		<result property="mCategories" column="m_category"/>
+		<result property="mUrlImage" column="m_url_image"/>
+		<result property="mUrlMovie" column="m_url_movie"/>
+		<result property="mAddedDate" column="m_added_date"/>
+		<result property="id" column="id"/>
+		
+		<result property="mAverageScore" column="average_score"/>
+		<result property="mAverageScore" column="m_averagescore"/>
+		
+		<collection property="actors"
+            ofType="actor"
+            select="ns.sql.ActorMapper.getActorsByMovie"
+            column="m_id"/>
+	</resultMap>
+
+	<select id="getMovie" parameterType="string" resultMap="movieResultMap">
+		SELECT
+			m.*,
+			IFNULL(AVG(r.r_rating), 0) AS average_score
+		FROM
+			movie m
+		LEFT JOIN
+			review r ON m.m_id = r.m_id
+		WHERE
+			m.m_id = #{mId}
+		GROUP BY
+			m.m_id
+	</select>
+
+	<select id="getAllMovies" parameterType="movie" resultType="movie">
+		SELECT *
+		FROM movie
+		<if test="mTitle != null and mTitle != ''">
+			WHERE m_title LIKE CONCAT('%', #{mTitle}, '%')
+		</if>
+		ORDER BY m_release DESC
+	</select>
+	
+	<select id="getRecommendedMovies" resultType="movie">
+		SELECT m.*
+		FROM movie m JOIN review r ON m.m_id = r.m_id
+		GROUP BY m.m_id 
+		ORDER BY COUNT(r.r_id) DESC, AVG(r.r_rating) DESC 	
+	</select>
+	
+	<select id="getMoviesByCategory" parameterType="string" resultType="movie">
+		SELECT *
+		FROM movie
+		WHERE m_category = #{category}
+		ORDER BY m_release DESC
+	</select>
+	
+	<select id="getMoviesByActor" parameterType="string" resultType="movie">
+		SELECT m.* FROM movie m 
+		JOIN mov_act ma ON m.m_id = ma.m_id 
+		JOIN actor a ON ma.a_id = a.a_id
+		WHERE a.a_name = #{actorName} 
+		ORDER BY m.m_release DESC
+	</select>
+
+	<select id="getUpcomingMovies" resultType="movie">
+		SELECT * FROM movie WHERE m_release > CURDATE() ORDER BY m_release ASC
+	</select>
+
+	<insert id="addMovie" parameterType="movie">
+		INSERT INTO movie 
+			(m_id, m_title, m_subtitle, m_release, m_showtime, m_plot, m_category, m_screening_type, m_movie_theater, m_url_image, m_url_movie, id, m_added_date)
+		VALUES 
+			(#{mId}, #{mTitle}, #{mSubtitle}, #{mRelease}, #{mShowtime}, #{mPlot}, #{mCategories}, #{mScreeningType}, #{mMovieTheater}, #{mUrlImage}, #{mUrlMovie}, #{id}, CURDATE())
+	</insert>
+
+	<update id="updateMovie" parameterType="movie">
+		UPDATE movie
+		SET 
+			m_title = #{mTitle}, 
+			m_release = #{mRelease}, 
+			m_plot = #{mPlot}, 
+			m_category = #{mCategories}
+		WHERE m_id = #{mId}
+	</update>
+
+	<delete id="deleteMovie" parameterType="string">
+		DELETE FROM movie WHERE m_id = #{mId}
+	</delete>
+	
+</mapper>
