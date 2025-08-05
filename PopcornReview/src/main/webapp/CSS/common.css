@@ -1,0 +1,339 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+:root {
+    /* Primary Colors */
+    --primary-90: #003067;
+    --primary-60: #0F62FE;
+    --primary-40: #1048FF;
+    --primary-30: #A6CBFF;
+
+    /* Text & Background Colors */
+    --font-family-base: 'Noto Sans KR', sans-serif;
+    --text-white: #ffffff;
+    --bg-overlay: #141822;
+    --sub-bg-overlay: #1F2937;
+    
+    /* Typography */
+    --font-family-base: 'Noto Sans KR', sans-serif;
+    --font-size-base: 16px; /* 기본 폰트 크기 */
+    --font-size-sm: 14px;  /* 작은 폰트 크기 */
+    --font-size-xs: 12px;  /* 더 작은 폰트 크기 */
+    --font-size-lg: 18px;  /* 큰 폰트 크기 (섹션 제목 등) */
+    --font-size-xl: 24px;  /* 더 큰 폰트 크기 (메인 타이틀 등) */
+
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+
+    --coolGray-100: #121619; /* 메인 배경색 */
+
+    /* System Colors */
+    --btn-color: #EAB308 ;
+    --modal-btn:  #30363D;
+
+    --system-error: #DA1E28;
+    --system-warning: #F1A21B; /* 로그인 버튼이나 별점에 사용될 수 있는 색상 */
+    --system-success: #0A7E28;
+}
+
+
+/* =================================================================
+   2. Reset & Global Styles
+   ================================================================= */
+
+/* 모든 요소의 margin, padding을 초기화하고, box-sizing을 통일하여 레이아웃 계산을 쉽게 함 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* HTML 전체에 기본 스타일 적용 */
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: var(--bg-overlay); 
+    color: var(--text-white); 
+    font-size: 16px; 
+    line-height: 1.5; 
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 링크의 기본 밑줄과 색상 제거 */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 목록의 기본 스타일 제거 */
+ul, ol {
+    list-style: none;
+}
+
+/* 버튼의 기본 스타일 제거 */
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+}
+
+/* 헤더 지정 */
+header {
+    background-color: var(--color-background-darkest);
+    width: 100%;
+    height: 80px; /* 헤더 높이 지정 */
+    display: flex;
+    align-items: center;
+    padding: 0 2rem; /* 좌우 여백 */
+}
+
+/* 헤더 내부 콘텐츠 정렬용 */
+header .inner {
+    width: 100%;
+    max-width: 1280px; 
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.inner a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 로고와 타이틀을 묶는 영역 */
+.logo-area{
+    display: flex;
+    align-items: center;
+}
+
+/* 로고 이미지 크기 */
+.logo-area .logo img {
+    height: 50px; 
+}
+
+.logo-area .title h1 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    margin: 0; /* h1 기본 마진 제거 */
+}
+
+/* 검색창 영역 */
+header .search {
+    flex-grow: 1; /* 남는 공간을 모두 차지하도록 설정 */
+    margin: 0 2rem; /* 좌우 다른 요소와 간격 확보 */
+    position: relative;
+}
+
+header .search #searchInput {
+    width: 100%;
+    height: 44px;
+    background-color: #4E576A; 
+    border: 1px solid var(--color-border);
+    border-radius: 50px; 
+    padding: 0 20px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+}
+
+/* 검색창 placeholder 스타일 */
+header .search #searchInput::placeholder {
+    color: var(--color-text-secondary);
+}
+
+
+/* 로그인 버튼 */
+.btn-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90px;
+    height: 44px;
+    background-color: var(--btn-color);
+    color: var(--bg-overlay);
+    border-radius: 50px;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+}
+
+.btn-login:hover {
+    color: var(--color-background-darkest);
+    opacity: 0.9;
+    text-decoration: none;
+}
+
+/* 모달 배경 (어두운 오버레이) */
+.modal-overlay {
+    position: fixed; /* 화면에 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(20, 24, 34, 0.9); /* 반투명 검은색 배경 */
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* 모달이 활성화될 때의 스타일 */
+.modal-overlay.active {
+    display: flex;
+}
+
+/* 모달 콘텐츠 박스 */
+.modal-overlay .modal-content {
+    width: 100%;
+    max-width: 550px;
+    background-color: var(--color-background-dark);
+    border: none;
+    border-radius: 16px;
+    padding: 2.5rem; /* 내부 여백 */
+    color: var(--color-text-primary);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* 모달 헤더 */
+.modal-overlay .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none;
+    padding: 0 0 1rem 0;
+}
+
+.modal-overlay .modal-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+}
+
+/* 헤더의 링크 (회원가입/로그인) */
+.modal-overlay .link {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: #2F81F7;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+.modal-overlay .link:hover {
+    opacity: 0.8;
+}
+
+/* 모달 바디 */
+.modal-overlay .modal-body {
+    padding: 0;
+    text-align: center;
+}
+
+.modal-overlay .modal-body .subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    margin-bottom: 2rem;
+}
+
+/* 모달 폼 요소 (로그인/회원가입) */
+.modal-form {
+    text-align: left;
+}
+
+.modal-form input[type="text"],
+.modal-form input[type="password"] {
+    width: 100%;
+    height: 52px;
+    background-color: var(--sub-bg-overlay);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+}
+
+.signup-form input[type="text"],
+.signup-form input[type="password"],
+.signup-form input[type="email"],
+.signup-form input[type="tel"] {
+    width: 80%;
+    height: 52px;
+    background-color: var(--sub-bg-overlay);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+}
+.modal-form input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+/* 회원가입 폼의 입력 부분 길이*/
+
+
+/* 회원가입 폼의 성별 선택 부분 */
+.modal-form .gender-selection {
+        margin-bottom: 1rem;
+        color: var(--color-text-primary);
+}
+.modal-form .gender-selection label {
+    margin-left: 5px;
+    margin-right: 15px;
+}
+
+/* 제출 버튼 (로그인/회원가입) */
+.modal-form .btn-submit {
+    width: 100%;
+    height: 52px;
+    background-color: var(--modal-btn);
+    color: var(--color-text-primary); /* 텍스트 색상 수정 */
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--border-radius-md);
+    border: none;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+.modal-form .btn-submit:hover {
+    background-color: #414b56;
+}
+
+/* 모달 푸터 */
+.modal-overlay .modal-footer {
+    border-top: none;
+    padding: 0;
+    justify-content: center;
+}
+
+/* 아이디/비밀번호 찾기 버튼 */
+.modal-overlay .btn-find-account {
+    width: 100%;
+    height: 52px;
+    background-color:  var(--modal-btn); /* 배경 투명으로 변경 */
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.modal-overlay .btn-find-account:hover {
+    background-color: #414b56;
+}
+
+
+

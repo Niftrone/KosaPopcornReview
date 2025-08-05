@@ -15,5 +15,5 @@ public class ActorService {
 	public Actor getActor(String aId) {
 		System.out.println("ActorService...getActor");
 		return actorDaoImpl.getActor(aId);
-	}
+	}	
 }
