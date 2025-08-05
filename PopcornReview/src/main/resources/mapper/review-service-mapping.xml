@@ -44,6 +44,9 @@
 	            <when test="user != null and user.id != null">
 	                u.id = #{user.id}
 	            </when>
+	            <when test="rId != null">
+	            	r.r_id = #{rId}
+	            </when>
 	            
 	            <otherwise></otherwise>
 	        </choose>
