@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="CSS/common.css"/>
 </head>
 <body>
-    <header id="hedaer"></header>
+    <jsp:include page="include/header.jsp" />
 
 
 </body>

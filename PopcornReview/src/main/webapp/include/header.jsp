@@ -21,7 +21,7 @@
         <div class="inner">
             <a href="../index.jsp" class="logo-area">
                 <div class="logo">
-                    <img src="../image/popcorn.png" alt="logo" loading="lazy" />
+                    <img src="../image/popcorn.png" alt="logo"/>
                 </div>
                 <div class="title">
                     <h1>Popcorn</h1> 
