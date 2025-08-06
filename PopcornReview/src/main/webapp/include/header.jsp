@@ -1,18 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%-- JSTL 사용을 위한 선언 --%>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
     <title>Insert title here</title>
-
-    
-
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-
+<!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+ -->
     <link rel="stylesheet" href="../CSS/common.css" />
-    <link rel="stylesheet" href="../CSS/header.css" />
 </head>
 
 <body>
@@ -30,7 +27,26 @@
             <div class="search">
                 <input type="text" placeholder="영화를 검색해주세요" id="searchInput" />
             </div>
-            <button class="btn-login">로그인</button>
+            
+            <%-- =======================================================
+                 [수정] 로그인 상태에 따라 다른 버튼 표시 
+                 ======================================================= --%>
+            <div class="header-buttons">
+                <c:choose>
+                    <%-- 1. 세션에 userNickname이 없는 경우 (로그아웃 상태) --%>
+                    <c:when test="${empty sessionScope.userNickname}">
+                        <button class="btn-login">로그인</button>
+                    </c:when>
+                    
+                    <%-- 2. 세션에 userNickname이 있는 경우 (로그인 상태) --%>
+                    <c:otherwise>
+                        <%-- 링크(a) 태그에 버튼 스타일을 적용하여 버튼처럼 보이게 합니다. --%>
+                        <a href="../mypage/mypage.jsp" class="btn-user">
+                            ${sessionScope.userNickname} 님
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </header>
 
@@ -81,6 +97,40 @@
             </div>
         </div>
     </div>
+
+    <div id="findAccountModal" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h5 class="modal-title">아이디/비밀번호 찾기</h5>
+                <a class="link login-link">로그인</a>
+            </header>
+            <div class="modal-body">
+                <nav class="find-tabs">
+                    <a class="tab-link active" data-tab="find-id">아이디 찾기</a>
+                    <a class="tab-link" data-tab="find-pw">비밀번호 찾기</a>
+                </nav>
+
+                <div id="find-id" class="tab-pane active">
+                    <p class="description">회원 정보에 등록된 정보로 아이디를 찾을 수 있습니다.</p>
+                    <form action="#" class="modal-form">
+                        <input type="text" placeholder="이름을 입력해주세요." required>
+                        <input type="tel" placeholder="핸드폰 번호를 입력하세요" required>
+                        <button type="submit" class="btn-submit">아이디 찾기</button>
+                    </form>
+                </div>
+
+                <div id="find-pw" class="tab-pane">
+                    <p class="description">가입 시 등록한 아이디와 이메일 주소를 입력해주세요.</p>
+                     <form action="#" class="modal-form">
+                        <input type="text" placeholder="아이디를 입력해주세요." required>
+                        <input type="email" placeholder="이메일 주소를 입력하세요" required>
+                        <button type="submit" class="btn-submit">비밀번호 찾기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../JS/common.js"></script>
 </body>
 
