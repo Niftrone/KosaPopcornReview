@@ -72,12 +72,41 @@ $(document).ready(function(){
 
     // 4. 공지사항 슬라이더
     $('.notice-list').slick({
-        vertical: true,         // 세로 방향으로 슬라이드
+        vertical: true, 
         slidesToShow: 1,        
         autoplay: true,         
         autoplaySpeed: 3000,  
         arrows: false,    
-        verticalSwiping: true   // 모바일에서 세로 스와이프 기능 활성화
+    });
+
+    $('.notice-item').on('click', function(e) {
+        e.preventDefault(); // a 태그의 기본 동작(페이지 이동) 방지
+
+        // 클릭한 공지사항의 data-* 속성에서 정보 가져오기
+        const title = $(this).data('title');
+        const date = $(this).data('date');
+        const content = $(this).data('content');
+
+        // 가져온 정보로 모달 내용 채우기
+        $('#noticeModalTitle').text(title);
+        $('#noticeModalDate').text('작성일: ' + date);
+        $('#noticeModalContent').text(content);
+
+        // 모달창 보이기
+        $('#noticeDetailModal').addClass('active');
+    });
+
+    // 모달 닫기 버튼 클릭 시
+    $('#closeNoticeModal').on('click', function() {
+        $('#noticeDetailModal').removeClass('active');
+    });
+
+    // 모달 배경 클릭 시 닫기
+    $('#noticeDetailModal').on('click', function(e) {
+        // 클릭된 요소가 모달 배경 자체일 때만 닫기
+        if ($(e.target).is('.modal-overlay')) {
+            $(this).removeClass('active');
+        }
     });
 
 });

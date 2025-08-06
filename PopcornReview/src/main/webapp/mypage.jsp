@@ -8,9 +8,12 @@
   <meta charset="UTF-8" />
   <title>마이페이지</title>
 
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
   <!-- 공통/페이지 CSS -->
-  <<link rel="stylesheet" href="<c:url value='/CSS/common.css'/>" /> 
-  <link rel="stylesheet" href="<c:url value='/CSS/mypage.css'/>" />
+  <link rel="stylesheet" href="./CSS/common.css" /> 
+  <link rel="stylesheet" href="./CSS/mypage.css" />
 
   <!-- 🔒 Bootstrap .modal 충돌 방지용 모달 전용 스타일(네임스페이스: mp-) -->
   <style>
@@ -458,5 +461,6 @@
   }
 })();
 </script>
+<script src="JS/common.js"></script>
 </body>
 </html>

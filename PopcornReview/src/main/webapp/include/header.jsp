@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%-- JSTL 사용을 위한 선언 --%>
 <!DOCTYPE html>
 <html>
 
@@ -9,7 +10,6 @@
 <!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
  -->
     <link rel="stylesheet" href="../CSS/common.css" />
-    <link rel="stylesheet" href="../CSS/header.css" />
 </head>
 
 <body>
@@ -27,7 +27,26 @@
             <div class="search">
                 <input type="text" placeholder="영화를 검색해주세요" id="searchInput" />
             </div>
-            <button class="btn-login">로그인</button>
+            
+            <%-- =======================================================
+                 [수정] 로그인 상태에 따라 다른 버튼 표시 
+                 ======================================================= --%>
+            <div class="header-buttons">
+                <c:choose>
+                    <%-- 1. 세션에 userNickname이 없는 경우 (로그아웃 상태) --%>
+                    <c:when test="${empty sessionScope.userNickname}">
+                        <button class="btn-login">로그인</button>
+                    </c:when>
+                    
+                    <%-- 2. 세션에 userNickname이 있는 경우 (로그인 상태) --%>
+                    <c:otherwise>
+                        <%-- 링크(a) 태그에 버튼 스타일을 적용하여 버튼처럼 보이게 합니다. --%>
+                        <a href="../mypage/mypage.jsp" class="btn-user">
+                            ${sessionScope.userNickname} 님
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </header>
 
