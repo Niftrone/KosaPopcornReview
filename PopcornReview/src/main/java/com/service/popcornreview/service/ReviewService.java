@@ -12,25 +12,25 @@ import com.service.popcornreview.vo.Review;
 public class ReviewService {
 
 	@Autowired
-	private ReviewDao reviewDaoImpl;
+	private ReviewDao reviewDao;
 
 	public List<Review> getAllReviews(Review review) {
 		System.out.println("ReviewService...getAllReviews");
-		return reviewDaoImpl.getAllReviews(review);
+		return reviewDao.getAllReviews(review);
 	}
 
 	public int addReview(Review review) {
 		System.out.println("ReviewService...addReview");
-		return reviewDaoImpl.addReview(review);
+		return reviewDao.addReview(review);
 	}
 
 	public int updateReview(Review review) {
 		System.out.println("ReviewService...updateReview");
-		return reviewDaoImpl.updateReview(review);
+		return reviewDao.updateReview(review);
 	}
 
 	public int deleteReview(int rId) {
 		System.out.println("ReviewService...deleteReview");
-		return reviewDaoImpl.deleteReview(rId);
+		return reviewDao.deleteReview(rId);
 	}
 }

@@ -1,0 +1,244 @@
+@charset "UTF-8";
+
+/* =========================
+   THEME TOKENS
+========================= */
+:root{
+  --bg:#0E1116;
+  --panel:#12161D;
+  --card:#151B23;
+  --muted:#9AA3AD;
+  --text:#EDEFF3;
+  --accent:#FFD166;
+  --primary:#3B82F6;
+  --primary-600:#306FDE;
+  --danger:#EF4444;
+  --danger-600:#D93C3C;
+  --profile-bg:#2F2F2F;
+  --border:#232A33;
+  --ring:#60A5FA55;
+
+  /* 버튼 규격 */
+  --btn-h:36px;
+  --btn-radius:10px;
+  --btn-h-sm:32px;
+  --btn-radius-sm:8px;
+}
+
+/* =========================
+   PAGE SCOPE
+========================= */
+.mypage-body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+.mypage-body .container{ max-width:1100px; margin:0 auto; padding:24px; }
+
+/* =========================
+   BUTTONS (기본)
+========================= */
+.mypage-body .btn{
+  appearance:none; border:1px solid transparent;
+  border-radius:var(--btn-radius);
+  padding:0 14px; height:var(--btn-h);
+  line-height:calc(var(--btn-h) - 2px);
+  font-size:13px; font-weight:700; cursor:pointer;
+  transition:transform .06s ease, box-shadow .15s ease, filter .15s ease, background .15s ease, border-color .15s ease;
+}
+.mypage-body .btn:disabled{ opacity:.55; cursor:not-allowed; }
+.mypage-body .btn-primary{ background:var(--primary); color:#fff; border-color:var(--primary-600); }
+.mypage-body .btn-primary:hover{ filter:brightness(1.03); }
+.mypage-body .btn-primary:active{ transform:translateY(1px); }
+.mypage-body .btn-ghost{ background:transparent; color:var(--text); border-color:#2A313B; }
+.mypage-body .btn-ghost:hover{ background:#0F141B; }
+.mypage-body .btn-ghost:active{ transform:translateY(1px); }
+.mypage-body .btn-danger{ background:var(--danger); color:#fff; border-color:var(--danger-600); }
+.mypage-body .btn-danger:hover{ filter:brightness(1.03); }
+.mypage-body .btn-danger:active{ transform:translateY(1px); }
+.mypage-body .btn.sm{ height:var(--btn-h-sm); line-height:calc(var(--btn-h-sm) - 2px); padding:0 10px; border-radius:var(--btn-radius-sm); font-size:12px; }
+
+/* =========================
+   PROFILE CARD
+========================= */
+.profile-wrap{ margin-bottom:28px; }
+.profile-card{
+  background:var(--profile-bg); border:1px solid var(--border);
+  border-radius:12px; padding:20px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.18);
+}
+.profile-left{ display:flex; align-items:center; gap:16px; }
+.avatar{
+  width:80px; height:80px; border-radius:50%;
+  background:#0F141B; border:1px solid var(--border);
+  overflow:hidden; display:flex; align-items:center; justify-content:center;
+}
+.avatar img{ width:100%; height:100%; object-fit:cover; }
+.profile-meta{ display:flex; flex-direction:column; gap:6px; }
+.profile-meta .nickname{ font-size:22px; font-weight:800; letter-spacing:.2px; }
+.profile-meta .joined{ font-size:12px; color:#C9CED6; }
+.profile-right{ display:flex; gap:14px; }
+.stat-box{ width:140px; height:90px; padding:12px; background:#1F242C; border:1px solid #2A313B; border-radius:12px; display:flex; flex-direction:column; justify-content:space-between; }
+.stat-title{ font-size:12px; color:var(--muted); }
+.stat-value{ font-size:28px; font-weight:900; text-align:right; }
+.avatar-block{ display:flex; flex-direction:column; align-items:center; gap:8px; width:100px; }
+.btn-edit-under{ width:100%; padding:8px 0; font-size:12px; border-radius:8px; }
+.confetti-icon{ width:28px; height:28px; object-fit:contain; display:inline-block; }
+
+/* =========================
+   SECTIONS / CAROUSEL / CARDS
+========================= */
+.section{ margin-top:36px; }
+.section-title{ font-size:18px; font-weight:900; margin-bottom:14px; letter-spacing:.2px; }
+
+.mp-carousel{ position:relative; }
+.mp-viewport{ overflow-x:hidden; overflow-y:visible; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
+.mp-track{ display:flex; gap:14px; align-items:stretch; padding-bottom:0; overflow:visible; }
+.mp-item{ flex:0 0 340px; max-width:340px; scroll-snap-align:start; }
+.mp-btn{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:40px; height:40px; border-radius:50%;
+  background:#0F141B; border:1px solid var(--border); color:#EDEFF3;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; z-index:2; box-shadow:0 3px 10px rgba(0,0,0,.35);
+  transition:background .15s ease, transform .06s ease;
+}
+.mp-btn:hover{ background:#121821; } .mp-btn:active{ transform:translateY(-50%) scale(.98); }
+.mp-btn[disabled]{ opacity:.4; cursor:not-allowed; }
+.mp-prev{ left:-48px; } .mp-next{ right:-48px; }
+
+.review-card,.comment-item{
+  display:block; height:100%; background:var(--card)!important; border:1px solid var(--border)!important;
+  border-radius:12px; padding:16px; color:var(--text); text-decoration:none;
+  transition:box-shadow .15s ease, transform .06s ease, outline-color .15s ease;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.review-card:hover,.comment-item:hover{ outline:1px solid #334155; box-shadow:0 8px 22px rgba(0,0,0,.22); }
+.review-card:active,.comment-item:active{ transform:translateY(1px); }
+.review-card{ min-height:140px; cursor:pointer; display:flex; flex-direction:column; gap:8px; }
+.rating-badge{ font-size:12px; color:var(--accent); display:flex; align-items:center; gap:6px; }
+.rating-badge span{ font-weight:900; font-size:16px; color:var(--accent); letter-spacing:.2px; }
+.review-title{ font-weight:800; font-size:14px; }
+.review-snippet{ font-size:12px; color:var(--muted); line-height:1.45; }
+.comment-item{ min-height:120px; }
+.comment-item.clickable{ cursor:pointer; }
+.comment-title a{ color:#EDEFF3; font-weight:800; font-size:14px; text-decoration:none; }
+.comment-text{ color:#9AA3AD; font-size:12px; margin-top:6px; line-height:1.45; }
+.comment-reply{ border-top:1px dashed var(--border); margin-top:10px; padding-top:8px; color:#C9CFD6; font-size:12px; }
+
+/* =========================
+   MODAL (mp- namespaced)
+========================= */
+body.noscroll{ overflow:hidden; }
+.mypage-body .mp-modal[aria-hidden="true"]{ display:none !important; }
+.mypage-body .mp-modal{
+  position:fixed; inset:0; background:rgba(0,0,0,.45);
+  display:flex !important; align-items:center; justify-content:center;
+  z-index:1000; -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
+}
+
+/* dialog : 더 넓게 */
+.mypage-body .mp-modal-dialog{
+  width:640px; max-width:calc(100% - 40px);
+  background:#151B23; border:1px solid var(--border);
+  border-radius:14px; overflow:hidden;
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+  transform:translateY(-2px);
+}
+
+/* header */
+.mypage-body .mp-modal-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 18px; border-bottom:1px solid var(--border);
+}
+.mypage-body .mp-modal-header h3{ margin:0; font-size:18px; font-weight:900; letter-spacing:.2px; }
+.mypage-body .mp-modal-close{
+  background:transparent; border:none; color:#fff; font-size:22px; cursor:pointer; line-height:1;
+  padding:2px 4px; border-radius:8px;
+}
+.mypage-body .mp-modal-close:hover{ background:#0F141B; }
+
+/* body */
+.mypage-body .mp-modal-body{
+  padding:18px; display:flex; flex-direction:column; align-items:stretch; gap:6px;
+}
+
+/* 행: 라벨 120 + 입력 1fr */
+.mypage-body .mp-modal-body .form-row{
+  width:100%; display:grid;
+  grid-template-columns:120px 1fr; column-gap:16px;
+  align-items:center; margin-bottom:12px; font-size:14px;
+}
+.mypage-body .mp-modal-body .form-row > span{ color:#C9CED6; font-size:13px; text-align:left; }
+
+/* inputs */
+.mypage-body .mp-modal-body .form-row input[type="text"],
+.mypage-body .mp-modal-body .form-row input[type="email"],
+.mypage-body .mp-modal-body .form-row input[type="tel"],
+.mypage-body .mp-modal-body .form-row input[type="date"],
+.mypage-body .mp-modal-body .form-row input[type="password"],
+.mypage-body .mp-modal-body .form-row input[type="file"]{
+  width:100%; height:44px;
+  background:#0F141B; border:1px solid #2A313B; color:#EDEFF3;
+  border-radius:10px; padding:0 14px; box-shadow:0 0 0 0 rgba(0,0,0,0);
+  outline:none; caret-color:#EDEFF3;
+  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.mypage-body .mp-modal-body .form-row input::placeholder{ color:#9AA3AD; opacity:.9; }
+.mypage-body .mp-modal-body .form-row input:focus{ border-color:#3B82F6; box-shadow:0 0 0 3px var(--ring); }
+.mypage-body .mp-modal-body .form-row input[readonly]{ opacity:.75; cursor:not-allowed; }
+
+/* ===== 스타일 교체 요구사항 ===== */
+/* 1) 파일선택 버튼을 '아래 버튼처럼'(사각형 기본 버튼) */
+.mypage-body .mp-modal-body .form-row input[type="file"]{ padding:4px 14px; box-sizing:border-box; }
+.mypage-body .mp-modal-body .form-row input[type="file"]::file-selector-button,
+.mypage-body .mp-modal-body .form-row input[type="file"]::-webkit-file-upload-button{
+  height:var(--btn-h); padding:0 14px; margin-right:10px;
+  border:1px solid var(--primary-600);
+  border-radius:var(--btn-radius);       /* ← 사각형 느낌 */
+  background:var(--primary); color:#fff; font-weight:800; cursor:pointer;
+  box-shadow:none;                       /* 하단 기본과 동일하게 flat */
+  transition:filter .15s ease, transform .06s ease;
+}
+.mypage-body .mp-modal-body .form-row input[type="file"]::file-selector-button:hover,
+.mypage-body .mp-modal-body .form-row input[type="file"]::-webkit-file-upload-button:hover{ filter:brightness(1.03); }
+.mypage-body .mp-modal-body .form-row input[type="file"]::file-selector-button:active,
+.mypage-body .mp-modal-body .form-row input[type="file"]::-webkit-file-upload-button:active{ transform:translateY(1px); }
+
+/* 2) 아래 버튼들을 '파일선택처럼'(필/알약 형태) */
+.mypage-body .mp-modal-footer{
+  width:100%; margin-top:6px; padding:0 2px 4px;
+  display:flex; gap:8px; justify-content:flex-end;
+}
+.mypage-body .mp-modal-footer > :first-child{ margin-right:auto; } /* 회원탈퇴 왼쪽 */
+
+.mypage-body .mp-modal-footer .btn{
+  height:var(--btn-h); line-height:calc(var(--btn-h) - 2px);
+  padding:0 16px;
+  border-radius:9999px;                 /* ← 필(알약) */
+}
+/* 살짝 하이라이트(파일버튼 느낌 살림) */
+.mypage-body .mp-modal-footer .btn-primary{ box-shadow:0 6px 18px rgba(59,130,246,.28); }
+.mypage-body .mp-modal-footer .btn-danger{ box-shadow:0 6px 18px rgba(239,68,68,.25); }
+
+/* 3) 취소 버튼 숨기기(중복 방지) */
+.mypage-body .mp-modal-footer .btn-ghost{ display:none; }
+/* 만약 X를 숨기고 취소를 살리고 싶다면 위 한 줄 주석 처리하고 아래 줄을 사용하세요 */
+/* .mypage-body .mp-modal-close{ display:none; } */
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width:980px){ .mp-item{ flex-basis:300px; max-width:300px; } }
+@media (max-width:640px){
+  .profile-card{ flex-direction:column; align-items:flex-start; }
+  .profile-right{ width:100%; }
+  .mp-prev{ left:-36px; } .mp-next{ right:-36px; }
+}
+@media (max-width:560px){
+  .mypage-body .mp-modal-dialog{ width:100%; max-width:calc(100% - 24px); }
+  .mypage-body .mp-modal-body .form-row{ grid-template-columns:1fr; row-gap:6px; align-items:stretch; }
+}
