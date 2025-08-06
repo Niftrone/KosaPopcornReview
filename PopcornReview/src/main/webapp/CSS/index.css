@@ -1,0 +1,304 @@
+/* ======================= 메인 레이아웃 ======================= */
+.main-content {
+    width: 100%;
+    max-width: 1320px; 
+    margin: 0 auto; 
+    padding: 2rem 2rem;
+}
+
+section {
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 1.5rem;
+    color: var(--color-text-primary);
+}
+
+
+/* ======================= 팝콘 이미지 공통 =========================*/
+.rating {
+    display: flex;
+    align-items: center;
+}
+
+.rating img{
+    height: 50px;
+}
+
+/* ======================= 배너 섹션 ======================= */
+.banner-section {
+    background-color: var(--color-background-card);
+    border-radius: var(--border-radius-md);
+    padding: 2rem;
+    margin-bottom: 4rem;
+}
+
+.banner-slide-content{
+    display: flex !important;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center; /* << 이 줄을 추가하세요 (수평 가운데 정렬) */
+    gap: 3rem;
+}
+
+.banner-poster img {
+    max-width: 250px;
+    border-radius: var(--border-radius-sm);
+}
+
+.banner-info {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 1rem; /* 수평 간격 */
+}
+
+.banner-info h2 {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 1rem;
+}
+
+.banner-info p {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    width: 300px;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+.banner-info .category {
+    width: 100px;
+    height: 30px;
+    background-color: var(--modal-btn);
+    border-radius: 30px;
+}
+
+.banner-info .rating img{
+    margin-left: -3rem;
+    height: 70px;
+}
+
+.banner-info .rating .rating-value{
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--btn-color);
+}
+
+/* ======================= 영화/리뷰 카드 리스트 공통 ======================= */
+.movie-card-list, .review-card-list {
+    width: 1248px;
+    margin: 0 -10px; /* 카드 좌우 여백과 상쇄 */
+}
+
+/* ======================= 영화 카드 ======================= */
+.movie-card {
+    margin: 0 10px;
+    background-color: var(--color-background-card);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+}
+
+.movie-card a { 
+    text-decoration: none; 
+}
+
+.movie-card > img { 
+    margin-left: 1.5rem;
+    width: 182px; 
+    display: block;
+    border-radius: 30px; 
+}
+
+.movie-card .card-info {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;     
+    justify-content: center;
+    gap: 0.5rem;             
+}
+.movie-card .movie-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+}
+.movie-card .rating { 
+    margin-left: -3rem;
+    color: var(--btn-color);
+    font-weight: bolder;
+    font-size: var(--font-size-lg); 
+}
+
+a.movie-card {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+/* ======================= 리뷰 카드 ======================= */
+.review-card {
+    padding: 1.5rem;
+    background-color: var(--sub-bg-overlay);
+    border-radius: var(--border-radius-md);
+    margin: 0 10px;
+    height: 180px; /* slick 슬라이더 높이 맞춤용 */
+    border-radius: 30px;
+}
+.review-card .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.review-card .reviewer-id {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+.review-card .review-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    /* 여러 줄 말줄임 처리 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* 3줄까지 보이고 말줄임 */
+    -webkit-box-orient: vertical;
+}
+.review-card .more-link {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.review-card .rating {
+    margin-left: -1.5rem;
+}
+
+a.review-card {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+/* =================================  공지 사항 섹션 스타일  ================================= */
+
+.notice-section .section-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 1.5rem;
+}
+
+/* [수정] 공지사항 슬라이더 컨테이너 */
+.notice-list {
+    height: 100px; /* 중요: 하나의 공지사항이 보일 높이를 지정합니다. 내용 길이에 맞춰 조절하세요. */
+}
+
+/* 개별 공지사항 박스 (기존 스타일 유지) */
+.notice-box {
+    background-color: var(--sub-bg-overlay);
+    border-radius: var(--border-radius-md, 8px);
+    height: 150px;
+}
+
+.notice-box a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 2rem;
+    height: 100%; /* a 태그가 박스 전체를 채우도록 설정 */
+    box-sizing: border-box;
+}
+
+.notice-box h4 {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: 0.5rem;
+    color: var(--text-white);
+    /* 긴 제목이 잘리지 않도록 추가 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notice-box p {
+    font-size: var(--font-size-sm);
+    color: var(--primary-30);
+    margin-top: 1rem;
+    line-height: 1.6;
+    /* 긴 내용이 잘리지 않도록 추가 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Slick이 생성하는 추가적인 div에 대한 스타일 초기화 */
+.slick-slide, .slick-slide > div {
+    height: 100%;
+}
+
+
+
+/* ======================= Slick Slider 커스텀 ======================= */
+.slick-slide {
+    outline: none;
+    border: none;
+    margin: 0 10px;
+}
+.slick-prev,
+.slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+
+/* 위치 조정 */
+.banner-slider .slick-prev {
+    left: 40px;
+}
+
+.banner-slider .slick-next {
+    right: 40px;
+}
+
+.slick-prev::before,
+.slick-next::before {
+    font-size: 36px;
+    color: #4E576A;
+    font-weight: bold;
+}
+
+.slick-next::before {
+    content: "→";
+}
+
+/* 호버 시 강조 */
+.slick-prev:hover,
+.slick-next:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* 비활성화 상태 */
+.slick-prev.slick-disabled,
+.slick-next.slick-disabled {
+    opacity: 0.2;
+    pointer-events: none;
+}
+

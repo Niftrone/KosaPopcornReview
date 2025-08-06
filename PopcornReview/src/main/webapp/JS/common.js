@@ -1,48 +1,57 @@
 $(document).ready(function() {
-    // 헤더의 '로그인' 버튼 클릭 시 모달 열기
-    $('.btn-login').on('click', function(e) {
-        e.preventDefault(); // a 태그의 기본 동작 방지
+    // --- 모달 열기 ---
+    $('.btn-login').on('click', function() {
         $('#loginModal').addClass('active');
     });
 
-    // 모달의 닫기 버튼 클릭 시 모달 닫기
-    $('#loginModal .close-modal').on('click', function() {
+    // --- 모달 간 전환 ---
+    // 로그인 -> 회원가입
+    $('#loginModal .signup-link').on('click', function(e) {
+        e.preventDefault();
         $('#loginModal').removeClass('active');
+        $('#signupModal').addClass('active');
     });
 
-    // 모달 배경 클릭 시 모달 닫기
-    $('#loginModal').on('click', function(e) {
-        if (e.target === this) { // e.target이 모달 배경 자신일 때만
-            $(this).removeClass('active');
-        }
-    });
-});
-
-$(document).ready(function() {
-    // '로그인' 버튼 클릭 시 로그인 모달 표시
-    $('.btn-login').on('click', function() {
-        $('#loginModal').css('display', 'flex');
+    // 회원가입 -> 로그인
+    $('#signupModal .login-link').on('click', function(e) {
+        e.preventDefault();
+        $('#signupModal').removeClass('active');
+        $('#loginModal').addClass('active');
     });
 
-    // 로그인 모달의 '회원가입' 링크 클릭
-    $('.signup-link').on('click', function(e) {
-        e.preventDefault(); // a 태그 기본 동작 방지
-        $('#loginModal').hide();
-        $('#signupModal').css('display', 'flex');
+    // 로그인 -> 아이디/비번 찾기 (신규)
+    $('#loginModal .btn-find-account').on('click', function() {
+        $('#loginModal').removeClass('active');
+        $('#findAccountModal').addClass('active');
+    });
+    
+    // 아이디/비번 찾기 -> 로그인 (신규)
+    $('#findAccountModal .login-link').on('click', function(e) {
+        e.preventDefault();
+        $('#findAccountModal').removeClass('active');
+        $('#loginModal').addClass('active');
     });
 
-    // 회원가입 모달의 '로그인' 링크 클릭
-    $('.login-link').on('click', function(e) {
-        e.preventDefault(); // a 태그 기본 동작 방지
-        $('#signupModal').hide();
-        $('#loginModal').css('display', 'flex');
+    // --- 아이디/비번 찾기 모달 내 탭 전환 (신규) ---
+    $('.find-tabs .tab-link').on('click', function(e) {
+        e.preventDefault();
+        var tab_id = $(this).data('tab');
+
+        // 모든 탭 링크와 탭 내용에서 active 클래스 제거
+        $('.find-tabs .tab-link').removeClass('active');
+        $('.tab-pane').removeClass('active');
+
+        // 클릭된 탭과 그에 맞는 내용에 active 클래스 추가
+        $(this).addClass('active');
+        $("#"+tab_id).addClass('active');
     });
 
-    // 모달 외부 클릭 시 모달 닫기
+
+    // --- 모달 닫기 ---
+    // 모달 외부(배경) 클릭 시 해당 모달 닫기
     $('.modal-overlay').on('click', function(e) {
-        // 실제 모달 컨텐츠 영역이 아닌 오버레이 부분을 클릭했을 때만 닫힘
         if (e.target === this) {
-            $(this).hide();
+            $(this).removeClass('active');
         }
     });
 });
