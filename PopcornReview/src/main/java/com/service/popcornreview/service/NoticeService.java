@@ -11,26 +11,26 @@ import com.service.popcornreview.vo.Notice;
 @Service
 public class NoticeService {
 
-	   @Autowired
-	    private NoticeDao noticeDaoImpl;
+	@Autowired
+	private NoticeDao noticeDao;
 
-	    public int addNotice(Notice notice) {
-	    		System.out.println("NoticeService...addNotice");
-	        return noticeDaoImpl.addNotice(notice);
-	    }
+	public int addNotice(Notice notice) {
+		System.out.println("NoticeService...addNotice");
+		return noticeDao.addNotice(notice);
+	}
 
-	    public int deleteNotice(int noticeId) {
-	    		System.out.println("NoticeService...deleteNotice");
-	        return noticeDaoImpl.deleteNotice(noticeId);
-	    }
+	public int deleteNotice(int noticeId) {
+		System.out.println("NoticeService...deleteNotice");
+		return noticeDao.deleteNotice(noticeId);
+	}
 
-	    public int updateNotice(Notice notice) {
-	    		System.out.println("NoticeService...updateNotice");
-	        return noticeDaoImpl.updateNotice(notice);
-	    }
+	public int updateNotice(Notice notice) {
+		System.out.println("NoticeService...updateNotice");
+		return noticeDao.updateNotice(notice);
+	}
 
-		public List<Notice> getNotices(Notice notice) {
-			System.out.println("NoticeService...getNotices");
-	        return noticeDaoImpl.getNotices(notice);
-	    }
+	public List<Notice> getNotices(Notice notice) {
+		System.out.println("NoticeService...getNotices");
+		return noticeDao.getNotices(notice);
+	}
 }
