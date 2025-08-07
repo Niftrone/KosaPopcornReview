@@ -1,5 +1,7 @@
 package com.service.popcornreview.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,7 +63,7 @@ public class MovieController {
 	
 	@GetMapping("/movie/detail")
 	public String getMovieDetail(Movie movie, Model model) {
-	    
+		System.out.println("getMovieDetail.....Controller.....");
 	    try {
 	        // 영화 기본 정보 조회
 	        movie = movieService.getMovie(movie.getmId());
@@ -70,6 +72,7 @@ public class MovieController {
 	        Review review = new Review();
 	        review.setMovie(movie);
 	        List<Review> list = reviewService.getAllReviews(review);
+	        System.out.println("list=>"+list);
 
 	        // ★ [수정됨] movieId 대신, 위에서 가져온 'list'를 그대로 전달합니다.
 	        AudienceStatsDto audienceStats = movieService.getAudienceStats(list);
@@ -80,7 +83,7 @@ public class MovieController {
 	        // ... (요약 서비스 및 모델 추가 로직) ...
 	        
 	        model.addAttribute("movie", movie);
-	        model.addAttribute("list", list);
+	        model.addAttribute("reviews", list);
 	        model.addAttribute("audienceStats", audienceStats);
 	        model.addAttribute("reviewStats", reviewStats); // ★ 리뷰 통계 데이터 추가
 	        model.addAttribute("summary", """
