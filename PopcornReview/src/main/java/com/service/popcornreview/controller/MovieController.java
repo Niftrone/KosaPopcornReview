@@ -1,7 +1,5 @@
 package com.service.popcornreview.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +10,6 @@ import com.service.popcornreview.service.MovieService;
 import com.service.popcornreview.service.NoticeService;
 import com.service.popcornreview.service.ReviewService;
 import com.service.popcornreview.vo.Movie;
-import com.service.popcornreview.vo.Notice;
-import com.service.popcornreview.vo.Review;
 
 @Controller
 public class MovieController {
@@ -46,7 +42,9 @@ public class MovieController {
 	 */
 	@GetMapping("/movie/{movieId}")
 	public String getMovieDetail(@PathVariable String movieId, Model model) {
-		return "moviedetail"; // moviedetail.jsp
+	    Movie movie = movieService.getMovie(movieId); // 영화 한 개 정보 조회
+	    model.addAttribute("movie", movie);
+	    return "moviedetail"; // moviedetail.jsp로 이동
 	}
 	
 

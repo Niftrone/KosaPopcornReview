@@ -34,10 +34,10 @@
             margin-bottom: 25px;
         }
         .error-details {
+        		font-family: 'Noto Sans KR', sans-serif;
             background-color: #374151;
             padding: 15px;
             border-radius: 8px;
-            font-family: monospace;
             font-size: 13px;
             text-align: left;
             white-space: pre-wrap; /* 줄 바꿈을 위해 추가 */
@@ -58,11 +58,19 @@
         a.button:hover {
             background-color: #2563EB;
         }
+       
     </style>
 </head>
 <body>
     <div class="error-container">
-        <h1>요청 처리 중 오류 발생</h1>
+    		<c:choose>
+    			<c:when test="${not empty errorTitle}">
+    				<h1>${errorTitle}</h1>
+    			</c:when>
+    			<c:otherwise>
+    				<h1>요청 처리 중 오류 발생</h1>
+    			</c:otherwise>
+    		</c:choose>
         <p>서비스 이용에 불편을 드려 죄송합니다. 문제가 지속될 경우 관리자에게 문의해주세요.</p>
         
         <!-- 컨트롤러에서 전달한 에러 메시지 표시 -->

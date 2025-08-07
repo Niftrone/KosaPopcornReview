@@ -12,8 +12,8 @@
 
 
   <!-- 공통/페이지 CSS -->
-  <link rel="stylesheet" href="./CSS/common.css" /> 
-  <link rel="stylesheet" href="./CSS/mypage.css" />
+  <link rel="stylesheet" href="../../CSS/common.css" /> 
+  <link rel="stylesheet" href="../../CSS/mypage.css" />
 
   <!-- Slick CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
@@ -274,6 +274,6 @@
     if (window.console) console.log('[mypage] slick init:', !!(jQuery.fn && jQuery.fn.slick));
   });
 </script>
-<script src="JS/common.js"></script>
+<script src="../../JS/common.js"></script>
 </body>
 </html>

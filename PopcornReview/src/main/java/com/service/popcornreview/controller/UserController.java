@@ -12,6 +12,7 @@ import com.service.popcornreview.service.UserService;
 import com.service.popcornreview.vo.User;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
 
 
 @Controller
@@ -28,7 +29,7 @@ public class UserController {
 	 * @param redirectAttributes 로그인 실패 시 메시지를 전달하기 위한 객체입니다.
 	 */
 	@PostMapping("/login")
-	public String doLogin(User user, HttpSession session, RedirectAttributes redirectAttributes) {
+	public String doLogin(User user, HttpSession session) {
 		User foundUser = userService.getUser(user); // DB에서 사용자 정보 조회
 		
 		if (foundUser != null) {
@@ -37,10 +38,10 @@ public class UserController {
 			System.out.println(foundUser.getName() + "님 로그인 성공");
 		} else {
 			// 로그인 실패
-			// addFlashAttribute: 리다이렉트 후에도 데이터가 한번 유지되도록 함
-			redirectAttributes.addFlashAttribute("loginError", "아이디 또는 비밀번호가 일치하지 않습니다.");
 			System.out.println("로그인 실패");
-			return "/loginfail";
+			session.setAttribute("errorTitle", "로그인 실패");
+			session.setAttribute("errorMessage", "아이디나 비밀번호를 확인해 주세요");
+			return "/error";
 		}
 		return "redirect:/"; // 메인 페이지로 리다이렉트
 	}
@@ -50,9 +51,15 @@ public class UserController {
 	 * @param user JSP의 form에서 각 input의 name에 맞춰 User 객체로 데이터를 받습니다.
 	 */
 	@PostMapping("/register")
-	public String addUser(User user) {
-		userService.addUser(user);
+	public String addUser(User user, HttpSession session) {
+		session.setAttribute("errorTitle", "회원가입 실패");
+		session.setAttribute("errorMessage", "(예시 : 날짜 2000-05-08 전화번호 : 01011114444)");
+		
+		if(userService.addUser(user) == 0) {
+			return "/error";
+		}
 		System.out.println("회원가입 성공: " + user.getId());
+		
 		return "redirect:/"; // 회원가입 성공 후 메인 페이지로
 	}
 	
@@ -60,11 +67,26 @@ public class UserController {
 	 * 아이디/비밀번호 찾기
 	 */
 	@PostMapping("/find")
-	public String doFindUser(User user) {
+	public String doFindUser(User user, boolean test, HttpSession session) {
 		User foundUser = userService.getUser(user);
-		// 여기에 찾은 정보를 보여주는 로직이 필요합니다.
-		// 지금은 임시로 findResult.jsp로 이동합니다.
-		return "findResult";
+		
+		session.setAttribute("errorTitle", "아이디/비번 찾기 실패");
+		session.setAttribute("errorMessage", "입력한 값을 확인해주세요.");
+
+		if (foundUser == null) {
+		    return "/error";
+		}
+
+		if(test) {
+			session.setAttribute("findIdOrPw", "아이디 찾기 성공");
+			session.setAttribute("findText", foundUser.getId());
+		} else {
+			session.setAttribute("findIdOrPw", "비밀번호 찾기 성공");
+			session.setAttribute("findText", foundUser.getPwd());
+		}
+
+		
+		return "find";
 	}
 	
 	/**

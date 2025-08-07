@@ -33,10 +33,10 @@
 		<section class="banner-section">
 			<div class="banner-slider">
 				<c:choose>
-					<c:when test="${not empty bannerMovies}">
+					<c:when test="${not empty bannerMovies}" >
 						<c:forEach var="movie" items="${bannerMovies}">
 							<div class="banner-slide">
-								<div class="banner-slide-content">
+								<a class="banner-slide-content" href="/movie/${movie.mId}">
 									<div class="banner-poster">
 										<img src="${movie.mUrlImage}" alt="${movie.mTitle} 포스터">
 									</div>
@@ -49,7 +49,7 @@
 											<span class="rating-value">${movie.mAverageScore}</span>
 										</div>
 									</div>
-								</div>
+								</a>
 							</div>
 						</c:forEach>
 					</c:when>

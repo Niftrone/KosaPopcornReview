@@ -85,17 +85,17 @@
                  <%-- [수정] action, method를 지정하고 모든 input에 name 속성을 추가합니다. --%>
                 <form action="/user/register" method="post" class="modal-form signup-form">
                     <input type="text" name="id" placeholder="아이디를 입력하세요." required>
-                    <input type="password" name="password" placeholder="비밀번호를 입력하세요." required>
+                    <input type="password" name="pwd" placeholder="비밀번호를 입력하세요." required>
                     <input type="password" placeholder="비밀번호를 다시 입력하세요." required>
                     <input type="email" name="email" placeholder="이메일" required>
                     <input type="text" name="name" placeholder="이름을 입력해주세요." required>
-                    <input type="tel" name="birth" placeholder="생년월일 (예: 2000-01-01)" required>
+                    <input type="tel" name="birthdate" placeholder="생년월일 (예: 2000-01-01)" required>
                     <input type="tel" name="phone" placeholder="핸드폰 번호를 입력하세요" required>
                     <div class="gender-selection">
                         <span>성별:</span>
-                        <input type="radio" id="male" name="gender" value="M" checked>
+                        <input type="radio" id="male" name="gender" value="true" checked>
                         <label for="male">남성(M)</label>
-                        <input type="radio" id="female" name="gender" value="W">
+                        <input type="radio" id="female" name="gender" value="false">
                         <label for="female">여성(W)</label>
                     </div>
                     <button type="submit" class="btn-submit">회원 가입</button>
@@ -118,18 +118,20 @@
 
                 <div id="find-id" class="tab-pane active">
                     <p class="description">회원 정보에 등록된 정보로 아이디를 찾을 수 있습니다.</p>
-                    <form action="#" class="modal-form">
-                        <input type="text" placeholder="이름을 입력해주세요." required>
-                        <input type="tel" placeholder="핸드폰 번호를 입력하세요" required>
+                    <form action="/user/find" class="modal-form" method="post">
+                        <input type="text" name="name" placeholder="이름을 입력해주세요." required>
+                        <input type="tel" name="phone" placeholder="핸드폰 번호를 입력하세요" required>
+                        <input name="test" value="true" hidden=""/>
                         <button type="submit" class="btn-submit">아이디 찾기</button>
                     </form>
                 </div>
 
                 <div id="find-pw" class="tab-pane">
                     <p class="description">가입 시 등록한 아이디와 이메일 주소를 입력해주세요.</p>
-                     <form action="#" class="modal-form">
-                        <input type="text" placeholder="아이디를 입력해주세요." required>
-                        <input type="email" placeholder="이메일 주소를 입력하세요" required>
+                     <form action="/user/find" class="modal-form" method = "post">
+                        <input type="text" name="id" placeholder="아이디를 입력해주세요." required>
+                        <input type="email" name="email" placeholder="이메일 주소를 입력하세요" required>
+                        <input name="test" value="false" hidden=""/>
                         <button type="submit" class="btn-submit">비밀번호 찾기</button>
                     </form>
                 </div>
