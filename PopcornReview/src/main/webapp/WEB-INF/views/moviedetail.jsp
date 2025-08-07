@@ -236,7 +236,11 @@
 /* ================================================ */
 
 /* 리뷰 모달창 관련 스타일 */
-.modal-review {
+#reviewModal .modal-review {
+    background-color: #1B232F;
+    color: #e0e0e0;
+    border: 1px solid #444;
+} {
     background-color: #1B232F; /* 요청하신 배경색 */
     color: #e0e0e0;
     border: 1px solid #444;
@@ -279,30 +283,49 @@
     margin: 0;
 }
 
-/* 팝콘 별점 섹션 */
-.rating-section {
+/* 👇 [최종 교체] 기존의 rating-section 관련 모든 CSS를 이 코드로 대체해주세요. */
+
+/* 별점 시스템 전체 컨테이너 */
+#reviewModal .rating-section {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
+    width: 100%;
+    margin-bottom: 20px;
 }
-.rating-section > span:first-child { /* 'Your Rating' 텍스트 */
+
+/* 'Your Rating' 텍스트 */
+#reviewModal .rating-section > span:first-child {
     font-weight: 700;
     color: #aaa;
+    margin-right: 15px;
 }
-.popcorn-rating i {
-    font-size: 2rem;
-    color: #555; /* ★★★ 비활성화 상태 (회색 팝콘) */
-    cursor: pointer;
-    transition: color 0.2s;
+
+/* 팝콘 아이콘 그룹 */
+#reviewModal .popcorn-rating {
+    display: flex;
+    align-items: center;
 }
-.popcorn-rating i.hovered,
-.popcorn-rating i.active {
-    color: #f5c518; /* ★★★ 활성화 상태 (노란색 팝콘) */
+
+/* 팝콘 아이콘 크기 및 간격 */
+#reviewModal .popcorn-rating img {
+    height: 50px;        /* ★★★ 팝콘 아이콘 크기를 50px로 키움 ★★★ */
+    width: auto;
+    margin-right: 10px;  /* ★★★ 아이콘 사이 간격을 10px로 조정 ★★★ */
+    transition: transform 0.1s ease;
 }
-#scoreDisplay {
-    font-size: 1.2rem;
+#reviewModal .popcorn-rating img:hover {
+    transform: scale(1.1);
+}
+#reviewModal .popcorn-rating img:last-child {
+    margin-right: 0;
+}
+
+/* '0/5' 점수 텍스트 */
+#reviewModal #scoreDisplay {
+    margin-left: auto;
+    font-size: 1.8rem; /* ★★★ 점수 텍스트 크기도 키움 ★★★ */
     font-weight: 700;
+    color: #f5c518;
 }
 
 /* 리뷰 텍스트 입력창 */
@@ -325,13 +348,13 @@
 }
 
 /* 등록 버튼 */
-.btn-submit-review {
+#reviewModal .btn-submit-review {
     background-color: #f5c518;
     color: #121212;
     font-weight: 700;
     border: none;
 }
-.btn-submit-review:hover {
+#reviewModal .btn-submit-review:hover {
     background-color: #e0b400;
     color: #121212;
 }
@@ -359,17 +382,11 @@
             </c:choose>
         </div>
         <div class="col-md-6">
-            <div class="ratio ratio-16x9 h-100">
-                <c:choose>
-                    <c:when test="${not empty movie.mUrlMovie}">
-                      <iframe src="${pageContext.request.contextPath}/videos/${movie.mUrlMovie}" title="영화 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </c:when>
-                    <c:otherwise>
-                      <iframe src="${pageContext.request.contextPath}/videos/movie.mp4" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
+		    <div class="ratio ratio-16x9 h-100">
+		        <%-- 항상 기본 예고편(movie.mp4)을 표시하도록 고정 --%>
+		        <iframe src="${pageContext.request.contextPath}/videos/movie.mp4" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		    </div>
+		</div>
     </div>
     
     <hr class="my-5">
@@ -585,33 +602,7 @@
         </c:otherwise>
     </c:choose>
 </div>
-<div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content bg-dark">
-      <div class="modal-header">
-        <h5 class="modal-title" id="trailerModalLabel">${movie.mTitle} 예고편</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="ratio ratio-16x9">
 
-          <%-- 이 부분이 수정되었습니다. --%>
-          <c:choose>
-              <%-- movie.mUrlMovie에 파일 이름이 있을 경우 --%>
-              <c:when test="${not empty movie.mUrlMovie}">
-                <iframe src="${pageContext.request.contextPath}/videos/${movie.mUrlMovie}" title="영화 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </c:when>
-              <%-- movie.mUrlMovie가 비어있을 경우 --%>
-              <c:otherwise>
-                <iframe src="${pageContext.request.contextPath}/videos/movie.mp4" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </c:otherwise>
-          </c:choose>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content modal-review">
@@ -636,11 +627,11 @@
                     <div class="rating-section">
                         <span>Your Rating</span>
                         <div class="popcorn-rating">
-						    <i class="fa-solid fa-popcorn"></i>
-						    <i class="fa-solid fa-popcorn"></i>
-						    <i class="fa-solid fa-popcorn"></i>
-						    <i class="fa-solid fa-popcorn"></i>
-						    <i class="fa-solid fa-popcorn"></i>
+						    <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="1점" data-value="1">
+					        <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="2점" data-value="2">
+					        <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="3점" data-value="3">
+					        <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="4점" data-value="4">
+					        <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="5점" data-value="5">
 						</div>
                         <span id="scoreDisplay">0/5</span>
                     </div>
@@ -649,81 +640,78 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                <button type="submit" form="reviewForm" class="btn btn-submit-review">등록</button>
+	            <button type="submit" form="reviewForm" class="btn btn-submit-review">등록</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>            
             </div>
         </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-// 리뷰 모달 요소를 가져옵니다.
-const reviewModal = document.getElementById('reviewModal');
 
-// 모달이 화면에 나타날 때마다 아래 코드를 실행합니다.
-reviewModal.addEventListener('shown.bs.modal', function () {
-    const popcorns = document.querySelectorAll('.popcorn-rating i');
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const nopopcornPath = "${pageContext.request.contextPath}/image/nopopcorn.png";
+    const popcornPath = "${pageContext.request.contextPath}/image/popcorn.png";
+
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewForm = document.getElementById('reviewForm');
+    const popcorns = document.querySelectorAll('.popcorn-rating img');
     const scoreDisplay = document.getElementById('scoreDisplay');
     const ratingValueInput = document.getElementById('ratingValue');
+
     let currentRating = 0;
 
-    // 팝콘 아이콘 이벤트 리스너 설정
-    popcorns.forEach((popcorn, index) => {
+    const updatePopcorns = (rating) => {
+        popcorns.forEach(popcorn => {
+            const popcornValue = parseInt(popcorn.dataset.value);
+            if (popcornValue <= rating) {
+                popcorn.src = popcornPath;
+            } else {
+                popcorn.src = nopopcornPath;
+            }
+        });
+    };
+
+    popcorns.forEach(popcorn => {
         popcorn.addEventListener('mouseover', () => {
-            for (let i = 0; i <= index; i++) {
-                popcorns[i].classList.add('hovered');
-            }
-            for (let i = index + 1; i < popcorns.length; i++) {
-                popcorns[i].classList.remove('hovered');
-            }
+            updatePopcorns(parseInt(popcorn.dataset.value));
         });
 
         popcorn.addEventListener('mouseout', () => {
-            popcorns.forEach(p => p.classList.remove('hovered'));
+            updatePopcorns(currentRating);
         });
 
         popcorn.addEventListener('click', () => {
-            currentRating = index + 1;
+            currentRating = parseInt(popcorn.dataset.value);
             ratingValueInput.value = currentRating;
-            scoreDisplay.textContent = `${currentRating}/5`;
-
-            popcorns.forEach((p, i) => {
-                if (i < currentRating) {
-                    p.classList.add('active');
-                } else {
-                    p.classList.remove('active');
-                }
-            });
+            scoreDisplay.textContent = `\${currentRating}/5`;
+            updatePopcorns(currentRating);
         });
     });
-});
 
-// 리뷰 폼 제출 이벤트 처리 (이 부분은 그대로 둡니다)
-const reviewForm = document.getElementById('reviewForm');
-reviewForm.addEventListener('submit', function(event) {
-    const ratingValue = document.getElementById('ratingValue').value;
-    if (ratingValue === '0') {
-        alert('평점을 선택해주세요.');
-        event.preventDefault();
-        return;
-    }
+    reviewForm.addEventListener('submit', function(event) {
+        if (ratingValueInput.value === '0') {
+            alert('평점을 선택해주세요.');
+            event.preventDefault();
+            return;
+        }
+        const plotText = this.querySelector('textarea[name="plot"]').value;
+        if (plotText.trim() === '') {
+            alert('리뷰 내용을 입력해주세요.');
+            event.preventDefault();
+            return;
+        }
+        alert('리뷰가 등록되었습니다.');
+    });
 
-    const plotText = this.querySelector('textarea[name="plot"]').value;
-    if (plotText.trim() === '') {
-        alert('리뷰 내용을 입력해주세요.');
-        event.preventDefault();
-        return;
-    }
-
-    alert('리뷰가 등록되었습니다.');
-});
-
-// 모달이 닫힐 때 폼 초기화 (이 부분도 그대로 둡니다)
-reviewModal.addEventListener('hidden.bs.modal', function () {
-    reviewForm.reset();
-    document.getElementById('ratingValue').value = '0';
-    document.getElementById('scoreDisplay').textContent = '0/5';
-    document.querySelectorAll('.popcorn-rating i').forEach(p => p.classList.remove('active', 'hovered'));
+    reviewModal.addEventListener('hidden.bs.modal', function () {
+        reviewForm.reset();
+        currentRating = 0;
+        ratingValueInput.value = '0';
+        scoreDisplay.textContent = '0/5';
+        updatePopcorns(0);
+    });
 });
 </script>
 
