@@ -38,7 +38,7 @@
                                 <div class="banner-info">
                                     <h2>${movie.mTitle}</h2>
                                     <p>${movie.mPlot}</p>
-                                    <p class="category">${movie.mCategories}</p>
+                                    <p class="category">${movie.mCategory}</p>
                                     <div class="rating">
                                         <img src="./image/popcorn.png" class="icon-popcorn" alt="팝콘">
                                         <span class="rating-value">${movie.mAverageScore}</span>
