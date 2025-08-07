@@ -17,7 +17,7 @@
     movie.setmRelease("2025-08-05"); // VO에 따라 String 타입으로 설정
     movie.setmShowtime("45");       // VO에 따라 String 타입으로 설정
     movie.setmAverageScore(7.8);
-	movie.setmCategories("서사, 드라마, 코미디");
+	movie.setmCategory("서사, 드라마, 코미디");
     // 2. 테스트용 가짜 배우(Actor) 리스트를 만듭니다.
     List<Actor> actors = new ArrayList<>();
     

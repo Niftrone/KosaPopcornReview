@@ -9,6 +9,14 @@
 		FROM actor
 		WHERE a_id=#{aId}
 	</select>
+	
+	<select id="getActorsByMovie" parameterType="string" resultType="actor">
+        SELECT a.*
+        FROM actor a
+        JOIN mov_act ma ON a.a_id = ma.a_id
+        WHERE ma.m_id = #{movieId}
+    </select>
 </mapper>
  
+
  

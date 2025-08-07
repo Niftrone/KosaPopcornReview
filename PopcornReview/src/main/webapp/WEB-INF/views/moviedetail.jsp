@@ -432,7 +432,7 @@
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>장르</strong>
-                    <p class="text-muted mb-0">${movie.mCategories}</p>
+                    <p class="text-muted mb-0">${movie.mCategory}</p>
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>상영 시간</strong>
@@ -625,7 +625,7 @@
                     <div class="modal-movie-details">
                         <h4>${movie.mTitle}</h4>
                         <p>${movie.mSubtitle}</p>
-                        <span>${movie.mCategories}</span>
+                        <span>${movie.mCategory}</span>
                     </div>
                 </div>
 

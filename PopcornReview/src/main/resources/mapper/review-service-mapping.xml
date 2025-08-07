@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ns.sql.ReviewrMapper">
+<mapper namespace="ns.sql.ReviewMapper">
 <!-- 동적쿼리 : 회원검색 + 로그인 -->
 	<resultMap id="reviewRM" type="review">
 		 <id column="r_id" property="rId"/>

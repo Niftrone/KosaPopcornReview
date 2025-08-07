@@ -11,7 +11,7 @@ import com.service.popcornreview.vo.Review;
 @Repository
 public class ReviewDao {
 
-	public static final String NS = "ns.sql.NoticeMapper.";
+	public static final String NS = "ns.sql.ReviewMapper.";
 
 	@Autowired
 	private SqlSession sqlSession;
