@@ -18,6 +18,11 @@ public class MovieService {
 		System.out.println("MovieService...getMovie");
 		return movieDao.getMovie(mId);
 	}
+	
+	public List<Movie> getBannerList(Movie movie){
+		System.out.println("MovieService...getAllMovies");
+		return movieDao.getAllMovies(movie).stream().limit(5).toList();
+	}
 
 	public List<Movie> getAllMovies(Movie movie) {
 		System.out.println("MovieService...getAllMovies");

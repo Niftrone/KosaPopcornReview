@@ -16,24 +16,31 @@ import com.service.popcornreview.service.UserService;
 import com.service.popcornreview.vo.Movie;
 import com.service.popcornreview.vo.Review;
 
+
 @Controller
 public class MovieController {
+
 	@Autowired
-	MovieService movieService;
-	@Autowired
-	NoticeService noticeService;
-	@Autowired
-	ReportService reportService;
-	@Autowired
-	UserService userService;
-	@Autowired
-	ReviewService reviewService;
-	@Autowired
-	CommentService commentService;
+	private MovieService movieService;
+	private ReviewService reviewService;
+	
+	@GetMapping("/")
+	public String getMovieList(Model model) {		
+		List<Movie> movieList = movieService.getAllMovies(null); 
+		model.addAttribute("bannerMovies", movieList); 
+		System.out.println("조회된 배너 영화 수: " + movieList);
+		return "index";
+	}
+	
+	// SERVICE-01: 영화 메인 페이지 (GET)
+	@GetMapping("/index")
+	public String getStats() {
+		return "movietalkIndex";
+	}
 	
 	// SERVICE-01: 영화 상세 페이지 접속 (GET)
 	@GetMapping("/movie/detail")
-	public String getMovieDetail(Movie movie,Model model) throws Exception {
+	public String getMovieDetail(Movie movie,Model model)  {
 		Review review = new Review();
 		
 		try {
@@ -48,5 +55,4 @@ public class MovieController {
 			return "error";
 		}
 	}
-
 }

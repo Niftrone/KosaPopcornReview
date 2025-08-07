@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 
@@ -27,40 +28,33 @@
     <main class="main-content">
         <section class="banner-section">
             <div class="banner-slider">
-                <div class="banner-slide">
-                    <div class="banner-slide-content">
-                        <div class="banner-poster">
-                            <img src="https://upload.wikimedia.org/wikipedia/ko/7/76/%EC%84%9C%EC%9A%B8%EC%9D%98_%EB%B4%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg"
-                                alt="서울의 봄 포스터">
-                        </div>
-                        <div class="banner-info">
-                            <h2>서울의 봄</h2>
-                            <p>1979년 12월 12일, 수도 서울에서 일어난 신군부 세력의 반란을 막기 위한 일촉즉발의 9시간을 그린 영화.</p>
-                            <p class="category">액션/스릴러</p>
-                            <div class="rating">
-                                <img src="./image/popcorn.png" class="icon-popcorn" alt="팝콘">
-                                <span class="rating-value">4.5</span>
+                <c:if test="${not empty bannerMovies}">
+                    <c:forEach var="movie" items="${bannerMovies}">
+                        <div class="banner-slide">
+                            <div class="banner-slide-content">
+                                <div class="banner-poster">
+                                    <img src="${movie.mUrlImage}" alt="${movie.mTitle} 포스터">
+                                </div>
+                                <div class="banner-info">
+                                    <h2>${movie.mTitle}</h2>
+                                    <p>${movie.mPlot}</p>
+                                    <p class="category">${movie.mCategory}</p>
+                                    <div class="rating">
+                                        <img src="./image/popcorn.png" class="icon-popcorn" alt="팝콘">
+                                        <span class="rating-value">${movie.mAverageScore}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="banner-slide">
-                    <div class="banner-slide-content">
-                        <div class="banner-poster">
-                            <img src="https://img.khan.co.kr/news/2019/07/30/l_2019073001003557100286352.jpg"
-                                alt="서울의 봄 포스터" loading="lazy">
-                        </div>
-                        <div class="banner-info">
-                            <h2>엑시트</h2>
-                            <p>도시에 치명적인 가스가 살포되어 조정석과 윤아가 탈출하는 코미디 영화!</p>
-                            <p class="category">액션/코미디</p>
-                            <div class="rating">
-                                <img src="./image/popcorn.png" class="icon-popcorn" alt="팝콘">
-                                <span class="rating-value">4.5</span>
-                            </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty bannerMovies}">
+                    <div class="banner-slide">
+                        <div class="banner-slide-content">
+                            <p>현재 표시할 영화가 없습니다.</p>
                         </div>
                     </div>
-                </div>
+                </c:if>
             </div>
         </section>
 

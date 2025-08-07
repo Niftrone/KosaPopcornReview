@@ -16,7 +16,7 @@ public class Movie {
 	private String mPlot; // 줄거리 m_plot
 	private String mScreeningType; // 상영타입 예) 2D, iMax m_screening_type
 	private String mMovieTheater; // 영화관 예) 일반, 프리미엄 m_movie_theater
-	private String mCategories; // 영화 종류 예) 로맨스, 판타지 m_category
+	private String mCategory; // 영화 종류 예) 로맨스, 판타지 m_category
 	private String mUrlImage; // 영화 포스터 이미지 URL m_url_image
 	private String mUrlMovie; // 영화 포스터 영상 URL m_url_movie
 	private Double mAverageScore; // 평균 평점 (계산된 값)
@@ -29,11 +29,11 @@ public class Movie {
 
 	public Movie() {
 
-	}
+	} 
 
 	// [수정] 새로 추가된 필드(mDirector, mAddedDate)를 생성자에 반영합니다.
 	public Movie(String mId, String mTitle, String mSubtitle, String mRelease, String mShowtime, String mDirector,
-			String mPlot, String mScreeningType, String mMovieTheater, String mCategories, String mUrlImage,
+			String mPlot, String mScreeningType, String mMovieTheater, String mCategory, String mUrlImage,
 			String mUrlMovie, Double mAverageScore, String id, String mAddedDate, List<Actor> actors) {
 		super();
 		this.mId = mId;
@@ -45,7 +45,7 @@ public class Movie {
 		this.mPlot = mPlot;
 		this.mScreeningType = mScreeningType;
 		this.mMovieTheater = mMovieTheater;
-		this.mCategories = mCategories;
+		this.mCategory = mCategory;
 		this.mUrlImage = mUrlImage;
 		this.mUrlMovie = mUrlMovie;
 		this.mAverageScore = mAverageScore;
@@ -127,12 +127,12 @@ public class Movie {
 		this.mMovieTheater = mMovieTheater;
 	}
 
-	public String getmCategories() {
-		return mCategories;
+	public String getmCategory() {
+		return mCategory;
 	}
 
-	public void setmCategories(String mCategories) {
-		this.mCategories = mCategories;
+	public void setmCategory(String mCategory) {
+		this.mCategory = mCategory;
 	}
 
 	public String getmUrlImage() {
@@ -189,7 +189,7 @@ public class Movie {
 	public String toString() {
 		return "Movie [mId=" + mId + ", mTitle=" + mTitle + ", mSubtitle=" + mSubtitle + ", mRelease=" + mRelease
 				+ ", mShowtime=" + mShowtime + ", mDirector=" + mDirector + ", mPlot=" + mPlot + ", mScreeningType="
-				+ mScreeningType + ", mMovieTheater=" + mMovieTheater + ", mCategories=" + mCategories + ", mUrlImage="
+				+ mScreeningType + ", mMovieTheater=" + mMovieTheater + ", mCategory=" + mCategory + ", mUrlImage="
 				+ mUrlImage + ", mUrlMovie=" + mUrlMovie + ", mAverageScore=" + mAverageScore + ", id=" + id
 				+ ", mAddedDate=" + mAddedDate + ", actors=" + actors + "]";
 	}
