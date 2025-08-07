@@ -7,18 +7,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.service.popcornreview.service.ReviewService;
 import com.service.popcornreview.vo.Review;
 
 @Controller
+@RequestMapping("/review")
 public class ReviewController {
 	
 	@Autowired
 	private ReviewService reviewService;
 	
 	// REVIEW-02, 03, 10: 리뷰 상세 보기 (GET /review/detailreview?id=...)
-	@GetMapping("/detailreview")
+	@GetMapping("/{reviewrId}")
 	public String getReviewDetail() {
 		// DB에서 특정 리뷰의 상세 정보를 가져오는 로직
 		return "reviewdetail";

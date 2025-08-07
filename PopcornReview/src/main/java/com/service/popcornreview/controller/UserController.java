@@ -12,8 +12,6 @@ import com.service.popcornreview.service.UserService;
 import com.service.popcornreview.vo.User;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
-
 
 @Controller
 @RequestMapping("/user")
