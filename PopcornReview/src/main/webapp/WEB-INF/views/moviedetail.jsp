@@ -685,7 +685,7 @@ document.addEventListener('DOMContentLoaded', function() {
         popcorn.addEventListener('click', () => {
             currentRating = parseInt(popcorn.dataset.value);
             ratingValueInput.value = currentRating;
-            scoreDisplay.textContent = `S\${currentRating}/5`;
+            scoreDisplay.textContent = `\${currentRating}/5`;
             updatePopcorns(currentRating);
         });
     });
