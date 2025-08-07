@@ -1,27 +1,21 @@
 package com.service.popcornreview.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.service.popcornreview.service.CommentService;
 import com.service.popcornreview.service.MovieService;
 import com.service.popcornreview.service.NoticeService;
 import com.service.popcornreview.service.ReportService;
+import com.service.popcornreview.service.ReviewService;
 import com.service.popcornreview.service.UserService;
-import com.service.popcornreview.vo.Movie;
 import com.service.popcornreview.vo.Review;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-
-import com.service.popcornreview.service.ReviewService;
-import com.service.popcornreview.service.CommentService;
-
 @Controller
-public class UserController {
+public class ReviewController {
+
 	
 	@Autowired
 	MovieService movieService;
@@ -35,14 +29,16 @@ public class UserController {
 	ReviewService reviewService;
 	@Autowired
 	CommentService commentService;
-
-	
-
-
 	
 	@PostMapping("/review/add")
-	public void getaddReview(Review review) {
-		int result = reviewService.addReview(review);
-		System.out.println(result);
+	public String getaddReview(Review review) {
+		
+		try {
+			int result = reviewService.addReview(review);
+			System.out.println(result);
+			return "moviedetail";
+		} catch(Exception e) {
+			return "error";
+		}
 	}
 }
