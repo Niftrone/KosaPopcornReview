@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	
     // --- 모달 열기 ---
     $('.btn-login').on('click', function() {
         $('#loginModal').addClass('active');
@@ -18,6 +19,22 @@ $(document).ready(function() {
         $('#signupModal').removeClass('active');
         $('#loginModal').addClass('active');
     });
+	
+	const userMenuButton = $('#userMenuButton');
+	const userDropdownMenu = $('#userDropdownMenu');
+
+	// 닉네임 버튼을 클릭했을 때 드롭다운 메뉴를 토글(열고/닫고)
+	userMenuButton.on('click', function(event) {
+	    event.stopPropagation(); // 이벤트 버블링 방지
+	    userDropdownMenu.toggleClass('show');
+	});
+
+	// 문서(document)의 다른 곳을 클릭했을 때 드롭다운 메뉴 닫기
+	$(document).on('click', function() {
+	    if (userDropdownMenu.hasClass('show')) {
+	        userDropdownMenu.removeClass('show');
+	    }
+	});
 
     // 로그인 -> 아이디/비번 찾기 (신규)
     $('#loginModal .btn-find-account').on('click', function() {

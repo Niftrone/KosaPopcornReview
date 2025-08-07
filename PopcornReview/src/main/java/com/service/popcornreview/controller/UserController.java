@@ -1,141 +1,86 @@
 package com.service.popcornreview.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.service.popcornreview.service.CommentService;
-import com.service.popcornreview.service.NoticeService;
-import com.service.popcornreview.service.ReportService;
-import com.service.popcornreview.service.ReviewService;
 import com.service.popcornreview.service.UserService;
+import com.service.popcornreview.vo.User;
+
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
-	private NoticeService noticeService;
-	@Autowired
-	private ReportService reportService;
-	@Autowired
 	private UserService userService;
-	@Autowired
-	private ReviewService reviewService;
-	@Autowired
-	private CommentService commentService;
 
-	// SORT-01: 메인 페이지 영화 목록 (GET)
-
-	
-	// USER-01: 로그인 (POST)
-	@PostMapping("/user/login")
-	public String doLogin() {
-		// 사용자 로그인 처리 로직
-		return "redirect:/"; // or other page
+	/**
+	 * 로그인 처리
+	 * @param user JSP의 form에서 name(id, password)에 맞춰 User 객체로 데이터를 받습니다.
+	 * @param session 로그인 성공 시 사용자 정보를 저장할 세션 객체입니다.
+	 * @param redirectAttributes 로그인 실패 시 메시지를 전달하기 위한 객체입니다.
+	 */
+	@PostMapping("/login")
+	public String doLogin(User user, HttpSession session, RedirectAttributes redirectAttributes) {
+		User foundUser = userService.getUser(user); // DB에서 사용자 정보 조회
+		
+		if (foundUser != null) {
+			// 로그인 성공
+			session.setAttribute("loginUser", foundUser); // 세션에 "loginUser"라는 이름으로 사용자 정보 저장
+			System.out.println(foundUser.getName() + "님 로그인 성공");
+		} else {
+			// 로그인 실패
+			// addFlashAttribute: 리다이렉트 후에도 데이터가 한번 유지되도록 함
+			redirectAttributes.addFlashAttribute("loginError", "아이디 또는 비밀번호가 일치하지 않습니다.");
+			System.out.println("로그인 실패");
+			return "/loginfail";
+		}
+		return "redirect:/"; // 메인 페이지로 리다이렉트
 	}
 
-	// USER-02: 회원가입 (POST)
-	@PostMapping("/user/register")
-	public String addUser() {
-		// 신규 회원 정보를 DB에 추가하는 로직
-		return "redirect:/user/login";
+	/**
+	 * 회원가입 처리
+	 * @param user JSP의 form에서 각 input의 name에 맞춰 User 객체로 데이터를 받습니다.
+	 */
+	@PostMapping("/register")
+	public String addUser(User user) {
+		userService.addUser(user);
+		System.out.println("회원가입 성공: " + user.getId());
+		return "redirect:/"; // 회원가입 성공 후 메인 페이지로
 	}
 	
-	// USER-03: 아이디/비밀번호 찾기 (POST)
-	@PostMapping("/user/find")
-	public String doFindUser() {
-		// 아이디 또는 비밀번호를 찾는 로직
+	/**
+	 * 아이디/비밀번호 찾기
+	 */
+	@PostMapping("/find")
+	public String doFindUser(User user) {
+		User foundUser = userService.getUser(user);
+		// 여기에 찾은 정보를 보여주는 로직이 필요합니다.
+		// 지금은 임시로 findResult.jsp로 이동합니다.
 		return "findResult";
 	}
-
-	// USER-04: 회원 정보 수정 (POST)
-	@PostMapping("/user/update")
-	public String doUpdateUser() {
-		// 회원 정보 수정 로직
-		return "mypage";
-	}
-
-	// USER-05: 회원 탈퇴 (POST)
-	@PostMapping("/user/delete")
-	public String doDeleteUser() {
-		// 회원 탈퇴 처리 로직
-		return "redirect:/";
-	}
-
-	// USER-06: 공지사항 목록 조회 (GET)
-	@GetMapping("/user/notice")
-	public String dogetNotice() {
-		// 사용자가 공지사항 목록을 조회하는 로직
-		return "index";
-	}
-
-	// REVIEW-01: 최신 리뷰 (GET)
-	@GetMapping("/review/fastest")
-	public String doFastestReview() {
-		// DB에서 최신 리뷰를 가져오는 로직
-		return "index";
-	}
-
-	// REVIEW-02, 03, 10: 리뷰 상세 보기 (GET)
-	@GetMapping("/review/detailreview")
-	public String dogetReview() {
-		// DB에서 특정 리뷰의 상세 정보를 가져오는 로직
-		return "reviewdetail";
-	}
-
-	// REVIEW-04: 리뷰 등록 (POST)
-	@PostMapping("/review/add")
-	public String doaddReview() {
-		// 사용자가 작성한 리뷰를 DB에 등록하는 로직
-		return "reviewdetail";
-	}
-
-	// REVIEW-05: 리뷰 삭제 (POST)
-	@PostMapping("/review/delete")
-	public String doDeleteReview() {
-		// 사용자가 자신의 리뷰를 삭제하는 로직
-		return "mypage";
+	
+	/**
+	 * 마이페이지
+	 */
+	@GetMapping("/mypage")
+	public String mypage() {
+		// 세션 인터셉터 등을 통해 로그인 여부를 확인하는 로직이 추가되면 좋습니다.
+		return "mypage"; // mypage.jsp로 이동
 	}
 	
-	// REVIEW-06: 리뷰 수정 (POST)
-	@PostMapping("/review/update")
-	public String doUpdateReview() {
-		// 사용자가 자신의 리뷰를 수정하는 로직
-		return "reviewdetail";
+	@GetMapping("/logout")
+	public String doLogout(HttpSession session) {
+		session.invalidate(); // 현재 세션을 무효화시킴
+		System.out.println("로그아웃 되었습니다.");
+		return "redirect:/"; // 메인 페이지로 리다이렉트
 	}
-
-	// REVIEW-07: 리뷰 신고 (POST)
-	@PostMapping("/review/reported")
-	public String doAddReported() {
-		// 사용자가 불쾌한 리뷰를 신고하는 로직
-		return "reviewdetail";
-	}
-	
-	// REVIEW-08: 내 리뷰 목록 (GET)
-	@GetMapping("/review/mypage")
-	public String doUserReviews() {
-		// 마이페이지에서 내가 작성한 모든 리뷰 목록을 가져오는 로직
-		return "mypage";
-	}
-
-	// REVIEW-09: 내 댓글 목록 (GET)
-	@GetMapping("/review/my-comments")
-	public String getMyCommentList() {
-		// 마이페이지에서 내가 작성한 모든 댓글 목록을 가져오는 로직
-		return "mypage";
-	}
-
-	// SEARCH-01: 영화 검색 (GET)
-	@GetMapping("/search")
-	public String doSearch() {
-		// 키워드로 영화를 검색하는 로직
-		return "search";
-	}
-
 
 }

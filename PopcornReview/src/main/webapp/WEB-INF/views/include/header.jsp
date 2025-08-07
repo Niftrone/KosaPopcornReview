@@ -15,7 +15,7 @@
 <body>
     <header>
         <div class="inner">
-            <a href="../index.jsp" class="logo-area">
+            <a href="/" class="logo-area">
                 <div class="logo">
                     <img src="../image/popcorn.png" alt="logo"/>
                 </div>
@@ -28,28 +28,31 @@
                 <input type="text" placeholder="영화를 검색해주세요" id="searchInput" />
             </div>
             
-            <%-- =======================================================
-                 [수정] 로그인 상태에 따라 다른 버튼 표시 
-                 ======================================================= --%>
             <div class="header-buttons">
                 <c:choose>
-                    <%-- 1. 세션에 userNickname이 없는 경우 (로그아웃 상태) --%>
-                    <c:when test="${empty sessionScope.userNickname}">
+                    <c:when test="${empty sessionScope.loginUser}">
                         <button class="btn-login">로그인</button>
                     </c:when>
                     
-                    <%-- 2. 세션에 userNickname이 있는 경우 (로그인 상태) --%>
                     <c:otherwise>
-                        <%-- 링크(a) 태그에 버튼 스타일을 적용하여 버튼처럼 보이게 합니다. --%>
-                        <a href="../mypage/mypage.jsp" class="btn-user">
-                            ${sessionScope.userNickname} 님
-                        </a>
+                        <%-- 버튼은 이제 드롭다운을 여는 역할만 합니다. --%>
+                        <button type="button" class="btn-user" id="userMenuButton">
+                            ${sessionScope.loginUser.name} 님
+                            <span>▼</span> <%-- 아래 화살표 아이콘 --%>
+                        </button>
+                        
+                        <%-- 실제 링크가 담긴 드롭다운 메뉴 --%>
+                        <div class="dropdown-menu" id="userDropdownMenu">
+                            <a href="/user/mypage">마이페이지</a>
+                            <a href="/user/logout">로그아웃</a>
+                        </div>
                     </c:otherwise>
                 </c:choose>
             </div>
         </div>
     </header>
 
+    <%-- 로그인 모달 --%>
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content">
             <header class="modal-header">
@@ -58,9 +61,10 @@
             </header>
             <div class="modal-body">
                 <p class="subtitle">PopcornReview에서 여러분의 리뷰를 남겨주세요!</p>
-                <form action="#" class="modal-form login-form">
-                    <input type="text" placeholder="아이디" required>
-                    <input type="password" placeholder="비밀번호" required>
+                <%-- [수정] action, method를 지정하고 input에 name 속성을 추가합니다. --%>
+                <form action="/user/login" method="post" class="modal-form login-form">
+                    <input type="text" name="id" placeholder="아이디" required>
+                    <input type="password" name="pwd" placeholder="비밀번호" required>
                     <button type="submit" class="btn-submit">로그인</button>
                 </form>
             </div>
@@ -70,6 +74,7 @@
         </div>
     </div>
 
+    <%-- 회원가입 모달 --%>
     <div id="signupModal" class="modal-overlay">
         <div class="modal-content">
             <header class="modal-header">
@@ -77,14 +82,15 @@
                 <a class="link login-link">로그인</a>
             </header>
             <div class="modal-body">
-                <form action="#" class="modal-form signup-form">
-                    <input type="text" placeholder="아이디를 입력하세요." required>
-                    <input type="password" placeholder="비밀번호를 입력하세요." required>
+                 <%-- [수정] action, method를 지정하고 모든 input에 name 속성을 추가합니다. --%>
+                <form action="/user/register" method="post" class="modal-form signup-form">
+                    <input type="text" name="id" placeholder="아이디를 입력하세요." required>
+                    <input type="password" name="password" placeholder="비밀번호를 입력하세요." required>
                     <input type="password" placeholder="비밀번호를 다시 입력하세요." required>
-                    <input type="email" placeholder="이메일" required>
-                    <input type="text" placeholder="이름을 입력해주세요." required>
-                    <input type="tel" placeholder="생년월일 (예: 2000-01-01)" required>
-                    <input type="tel" placeholder="핸드폰 번호를 입력하세요" required>
+                    <input type="email" name="email" placeholder="이메일" required>
+                    <input type="text" name="name" placeholder="이름을 입력해주세요." required>
+                    <input type="tel" name="birth" placeholder="생년월일 (예: 2000-01-01)" required>
+                    <input type="tel" name="phone" placeholder="핸드폰 번호를 입력하세요" required>
                     <div class="gender-selection">
                         <span>성별:</span>
                         <input type="radio" id="male" name="gender" value="M" checked>
