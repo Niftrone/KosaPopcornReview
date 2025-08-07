@@ -1,40 +1,37 @@
 package com.service.popcornreview.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.service.popcornreview.service.MovieService;
+import com.service.popcornreview.service.CommentService;
 import com.service.popcornreview.service.NoticeService;
 import com.service.popcornreview.service.ReportService;
-import com.service.popcornreview.service.UserService;
 import com.service.popcornreview.service.ReviewService;
-import com.service.popcornreview.service.CommentService;
+import com.service.popcornreview.service.UserService;
+
 
 @Controller
 public class UserController {
 	
 	@Autowired
-	MovieService movieService;
+	private NoticeService noticeService;
 	@Autowired
-	NoticeService noticeService;
+	private ReportService reportService;
 	@Autowired
-	ReportService reportService;
+	private UserService userService;
 	@Autowired
-	UserService userService;
+	private ReviewService reviewService;
 	@Autowired
-	ReviewService reviewService;
-	@Autowired
-	CommentService commentService;
+	private CommentService commentService;
 
 	// SORT-01: 메인 페이지 영화 목록 (GET)
-	@GetMapping("/")
-	public String getMovieList() {
-		// 메인 페이지에 영화 목록을 정렬하여 표시하는 로직
-		return "index";
-	}
 
+	
 	// USER-01: 로그인 (POST)
 	@PostMapping("/user/login")
 	public String doLogin() {
@@ -140,10 +137,5 @@ public class UserController {
 		return "search";
 	}
 
-	// SERVICE-01: 영화 메인 페이지 (GET)
-	@GetMapping("/movietalk/index")
-	public String getStats() {
-		// 영화 메인 페이지의 통계 및 추천 목록을 표시하는 로직
-		return "movietalkIndex";
-	}
+
 }

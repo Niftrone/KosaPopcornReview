@@ -166,7 +166,7 @@
 <%-- --- [수정됨] --- --%>
 <%-- 이 부분의 경로가 올바르지 않으면 404 에러가 발생할 수 있습니다. --%>
 <%-- 테스트를 위해 잠시 주석 처리하거나, 실제 header.jsp 파일 위치에 맞게 경로를 수정하세요. --%>
-	<jsp:include page="/include/header.jsp" />
+	<jsp:include page="include/header.jsp" />
 
     <div class="container">
         <div class="page-header">
