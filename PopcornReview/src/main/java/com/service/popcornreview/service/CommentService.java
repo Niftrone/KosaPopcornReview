@@ -12,26 +12,26 @@ import com.service.popcornreview.vo.Comment;
 public class CommentService {
 
 	@Autowired
-	private CommentDao commentDaoImpl;
+	private CommentDao commentDao;
 
 	public int addComment(Comment comment) {
 		System.out.println("CommentService...addComment");
-		return commentDaoImpl.addComment(comment);
+		return commentDao.addComment(comment);
 	}
 
 	public int deleteComment(int cId) {
 		System.out.println("CommentService...deleteComment");
-		return commentDaoImpl.deleteComment(cId);
+		return commentDao.deleteComment(cId);
 	}
 
 	public int updateComment(Comment comment) {
 		System.out.println("CommentService...updateComment");
-		return commentDaoImpl.updateComment(comment);
+		return commentDao.updateComment(comment);
 	}
 
 	public List<Comment> getComments(Comment comment) {
 		System.out.println("CommentService...getComments");
-		return commentDaoImpl.getComments(comment);
+		return commentDao.getComments(comment);
 	}
 
 }

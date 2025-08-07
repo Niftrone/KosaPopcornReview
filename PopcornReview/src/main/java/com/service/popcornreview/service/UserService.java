@@ -10,25 +10,25 @@ import com.service.popcornreview.vo.User;
 public class UserService {
 
 	@Autowired
-	private UserDao userDaoImpl;
+	private UserDao userDao;
 
 	public int addUser(User user) {
 		System.out.println("UserService...addUser");
-		return userDaoImpl.addUser(user);
+		return userDao.addUser(user);
 	}
 
 	public int updateUser(User user) {
 		System.out.println("UserService...updateUser");
-		return userDaoImpl.updateUser(user);
+		return userDao.updateUser(user);
 	}
 
 	public int deleteUser(String id) {
 		System.out.println("UserService...deleteUser");
-		return userDaoImpl.deleteUser(id);
+		return userDao.deleteUser(id);
 	}
 
 	public User getUser(User user) {
 		System.out.println("UserService...getUser");
-		return userDaoImpl.getUser(user);
+		return userDao.getUser(user);
 	}
 }

@@ -14,27 +14,34 @@
     --text-white: #ffffff;
     --bg-overlay: #141822;
     --sub-bg-overlay: #1F2937;
-    
+
     /* Typography */
     --font-family-base: 'Noto Sans KR', sans-serif;
-    --font-size-base: 16px; /* 기본 폰트 크기 */
-    --font-size-sm: 14px;  /* 작은 폰트 크기 */
-    --font-size-xs: 12px;  /* 더 작은 폰트 크기 */
-    --font-size-lg: 18px;  /* 큰 폰트 크기 (섹션 제목 등) */
-    --font-size-xl: 24px;  /* 더 큰 폰트 크기 (메인 타이틀 등) */
+    --font-size-base: 16px;
+    /* 기본 폰트 크기 */
+    --font-size-sm: 14px;
+    /* 작은 폰트 크기 */
+    --font-size-xs: 12px;
+    /* 더 작은 폰트 크기 */
+    --font-size-lg: 18px;
+    /* 큰 폰트 크기 (섹션 제목 등) */
+    --font-size-xl: 24px;
+    /* 더 큰 폰트 크기 (메인 타이틀 등) */
 
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-bold: 700;
 
-    --coolGray-100: #121619; /* 메인 배경색 */
+    --coolGray-100: #121619;
+    /* 메인 배경색 */
 
     /* System Colors */
-    --btn-color: #EAB308 ;
-    --modal-btn:  #30363D;
+    --btn-color: #EAB308;
+    --modal-btn: #30363D;
 
     --system-error: #DA1E28;
-    --system-warning: #F1A21B; /* 로그인 버튼이나 별점에 사용될 수 있는 색상 */
+    --system-warning: #F1A21B;
+    /* 로그인 버튼이나 별점에 사용될 수 있는 색상 */
     --system-success: #0A7E28;
 }
 
@@ -51,14 +58,15 @@
 }
 
 /* HTML 전체에 기본 스타일 적용 */
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: var(--bg-overlay); 
-    color: var(--text-white); 
-    font-size: 16px; 
-    line-height: 1.5; 
+    background-color: #0E1116;
+    color: var(--text-white);
+    font-size: 16px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -70,7 +78,8 @@ a {
 }
 
 /* 목록의 기본 스타일 제거 */
-ul, ol {
+ul,
+ol {
     list-style: none;
 }
 
@@ -87,16 +96,18 @@ button {
 header {
     background-color: var(--color-background-darkest);
     width: 100%;
-    height: 80px; /* 헤더 높이 지정 */
+    height: 80px;
+    /* 헤더 높이 지정 */
     display: flex;
     align-items: center;
-    padding: 0 2rem; /* 좌우 여백 */
+    padding: 0 2rem;
+    /* 좌우 여백 */
 }
 
 /* 헤더 내부 콘텐츠 정렬용 */
 header .inner {
     width: 100%;
-    max-width: 1280px; 
+    max-width: 1280px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -109,36 +120,39 @@ header .inner {
 }
 
 /* 로고와 타이틀을 묶는 영역 */
-.logo-area{
+.logo-area {
     display: flex;
     align-items: center;
 }
 
 /* 로고 이미지 크기 */
 .logo-area .logo img {
-    height: 50px; 
+    height: 50px;
 }
 
 .logo-area .title h1 {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-primary);
-    margin: 0; /* h1 기본 마진 제거 */
+    margin: 0;
+    /* h1 기본 마진 제거 */
 }
 
 /* 검색창 영역 */
 header .search {
-    flex-grow: 1; /* 남는 공간을 모두 차지하도록 설정 */
-    margin: 0 2rem; /* 좌우 다른 요소와 간격 확보 */
+    flex-grow: 1;
+    /* 남는 공간을 모두 차지하도록 설정 */
+    margin: 0 2rem;
+    /* 좌우 다른 요소와 간격 확보 */
     position: relative;
 }
 
 header .search #searchInput {
     width: 100%;
     height: 44px;
-    background-color: #4E576A; 
+    background-color: #4E576A;
     border: 1px solid var(--color-border);
-    border-radius: 50px; 
+    border-radius: 50px;
     padding: 0 20px;
     font-size: var(--font-size-sm);
     color: var(--color-text-primary);
@@ -173,15 +187,42 @@ header .search #searchInput::placeholder {
     text-decoration: none;
 }
 
+.btn-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto; /* 닉네임 길이에 따라 너비가 유연하게 변하도록 auto로 설정 */
+    min-width: 90px;
+    height: 44px;
+    padding: 0 1.2rem; /* 좌우 여백을 추가해줍니다 */
+    background-color: var(--btn-color);
+    color: var(--bg-overlay);
+    border-radius: 50px;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.btn-user:hover {
+    color: var(--bg-overlay); /* 링크 호버 시 텍스트 색상 유지 */
+    opacity: 0.9;
+    text-decoration: none;
+}
+
 /* 모달 배경 (어두운 오버레이) */
 .modal-overlay {
-    position: fixed; /* 화면에 고정 */
+    position: fixed;
+    /* 화면에 고정 */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(20, 24, 34, 0.9); /* 반투명 검은색 배경 */
-    display: none; 
+    background-color: rgba(20, 24, 34, 0.8);
+    /* 반투명 검은색 배경 (수정 없음) */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -196,12 +237,14 @@ header .search #searchInput::placeholder {
 .modal-overlay .modal-content {
     width: 100%;
     max-width: 550px;
-    background-color: var(--color-background-dark);
     border: none;
     border-radius: 16px;
-    padding: 2.5rem; /* 내부 여백 */
-    color: var(--color-text-primary);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    padding: 2.5rem;
+    color: var(--text-white); /* color 변수를 정의된 --text-white로 수정 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    backdrop-filter: none;
+    /* [수정] 정의된 변수를 사용하여 불투명한 배경색으로 변경 */
+    background-color: var(--bg-overlay); 
 }
 
 /* 모달 헤더 */
@@ -227,6 +270,7 @@ header .search #searchInput::placeholder {
     transition: opacity 0.2s;
     cursor: pointer;
 }
+
 .modal-overlay .link:hover {
     opacity: 0.8;
 }
@@ -249,7 +293,9 @@ header .search #searchInput::placeholder {
 }
 
 .modal-form input[type="text"],
-.modal-form input[type="password"] {
+.modal-form input[type="password"],
+.modal-form input[type="tel"],
+.modal-form input[type="email"] {
     width: 100%;
     height: 52px;
     background-color: var(--sub-bg-overlay);
@@ -275,6 +321,7 @@ header .search #searchInput::placeholder {
     color: var(--color-text-primary);
     font-size: var(--font-size-base);
 }
+
 .modal-form input::placeholder {
     color: var(--color-text-secondary);
 }
@@ -284,9 +331,10 @@ header .search #searchInput::placeholder {
 
 /* 회원가입 폼의 성별 선택 부분 */
 .modal-form .gender-selection {
-        margin-bottom: 1rem;
-        color: var(--color-text-primary);
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
 }
+
 .modal-form .gender-selection label {
     margin-left: 5px;
     margin-right: 15px;
@@ -297,7 +345,8 @@ header .search #searchInput::placeholder {
     width: 100%;
     height: 52px;
     background-color: var(--modal-btn);
-    color: var(--color-text-primary); /* 텍스트 색상 수정 */
+    color: var(--color-text-primary);
+    /* 텍스트 색상 수정 */
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
     border-radius: var(--border-radius-md);
@@ -307,6 +356,7 @@ header .search #searchInput::placeholder {
     transition: background-color 0.2s;
     cursor: pointer;
 }
+
 .modal-form .btn-submit:hover {
     background-color: #414b56;
 }
@@ -322,7 +372,8 @@ header .search #searchInput::placeholder {
 .modal-overlay .btn-find-account {
     width: 100%;
     height: 52px;
-    background-color:  var(--modal-btn); /* 배경 투명으로 변경 */
+    background-color: var(--modal-btn);
+    /* 배경 투명으로 변경 */
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-md);
     color: var(--color-text-primary);
@@ -335,5 +386,39 @@ header .search #searchInput::placeholder {
     background-color: #414b56;
 }
 
+.find-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
+}
 
+.find-tabs .tab-link {
+    padding: 10px 5px;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-secondary);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
 
+.find-tabs .tab-link.active {
+    color: #2F81F7;
+    border-bottom-color: var(--link-color-active);
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.tab-pane .description {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+}

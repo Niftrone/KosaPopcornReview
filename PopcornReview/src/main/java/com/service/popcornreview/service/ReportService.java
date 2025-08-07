@@ -12,20 +12,20 @@ import com.service.popcornreview.vo.ReportedReview;
 public class ReportService {
 
 	@Autowired
-	private ReportDao reportDaoImpl;
+	private ReportDao reportDao;
 
 	public int insertReported(ReportedReview reportedReview) {
 		System.out.println("ReportService...insertReported");
-		return reportDaoImpl.insertReported(reportedReview);
+		return reportDao.insertReported(reportedReview);
 	}
 
 	public int deleteReported(int rrId) {
 		System.out.println("ReportService...deleteReported");
-		return reportDaoImpl.deleteReported(rrId);
+		return reportDao.deleteReported(rrId);
 	}
 
 	public List<ReportedReview> getReported() {
 		System.out.println("ReportService...getReported");
-		return reportDaoImpl.getReported();
+		return reportDao.getReported();
 	}
 }
