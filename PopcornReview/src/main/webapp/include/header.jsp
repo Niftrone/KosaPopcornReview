@@ -5,12 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Insert title here</title>
-
-    
-
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-
+<!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+ -->
     <link rel="stylesheet" href="../CSS/common.css" />
     <link rel="stylesheet" href="../CSS/header.css" />
 </head>
@@ -81,6 +78,40 @@
             </div>
         </div>
     </div>
+
+    <div id="findAccountModal" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h5 class="modal-title">아이디/비밀번호 찾기</h5>
+                <a class="link login-link">로그인</a>
+            </header>
+            <div class="modal-body">
+                <nav class="find-tabs">
+                    <a class="tab-link active" data-tab="find-id">아이디 찾기</a>
+                    <a class="tab-link" data-tab="find-pw">비밀번호 찾기</a>
+                </nav>
+
+                <div id="find-id" class="tab-pane active">
+                    <p class="description">회원 정보에 등록된 정보로 아이디를 찾을 수 있습니다.</p>
+                    <form action="#" class="modal-form">
+                        <input type="text" placeholder="이름을 입력해주세요." required>
+                        <input type="tel" placeholder="핸드폰 번호를 입력하세요" required>
+                        <button type="submit" class="btn-submit">아이디 찾기</button>
+                    </form>
+                </div>
+
+                <div id="find-pw" class="tab-pane">
+                    <p class="description">가입 시 등록한 아이디와 이메일 주소를 입력해주세요.</p>
+                     <form action="#" class="modal-form">
+                        <input type="text" placeholder="아이디를 입력해주세요." required>
+                        <input type="email" placeholder="이메일 주소를 입력하세요" required>
+                        <button type="submit" class="btn-submit">비밀번호 찾기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../JS/common.js"></script>
 </body>
 
