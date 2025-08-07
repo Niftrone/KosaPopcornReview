@@ -1,0 +1,158 @@
+@charset "UTF-8";
+@charset "UTF-8";
+
+/* ===== 색상 토큰 (common.css에 이미 있으면 이 블록은 생략해도 OK) ===== */
+:root{
+  --bg:#0E1116;
+  --panel:#12161D;
+  --card:#151B23;
+  --muted:#9AA3AD;
+  --text:#EDEFF3;
+  --border:#232A33;
+  --ring:#60A5FA55;
+}
+
+/* 페이지 배경 + 기본 폰트 */
+.actor-body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+
+/* ===== 중앙 정렬 컨테이너 ===== */
+.actor-container{
+  /* 화면 전체가 아닌 ‘가운데 박스’로 보이게 */
+  max-width: 1200px;         /* 캡쳐 느낌에 맞춘 폭 */
+  margin: 0 auto;            /* ★ 가운데 정렬 핵심 */
+  padding: 28px 24px;
+}
+
+/* Back 버튼을 컨테이너 안(가운데 영역의 좌측)으로 */
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#151922;
+  color:var(--text);
+  text-decoration:none;
+  line-height:1;
+  box-shadow:0 2px 10px rgba(0,0,0,.25);
+  margin-bottom:18px;
+}
+.back-btn:hover{ filter:brightness(1.05); }
+
+/* ===== 좌우 2열 그리드 ===== */
+.actor-grid{
+  display:grid;
+  grid-template-columns: 520px 1fr;  /* 좌: 이미지, 우: 카드 */
+  gap: 32px;
+  align-items: start;
+}
+
+/* ===== 왼쪽: 프로필 이미지 카드 ===== */
+.photo-card{
+  position:relative;
+  border-radius:18px;
+  overflow:hidden;
+  /* 살짝 안쪽 그림자 느낌 */
+  box-shadow:0 8px 30px rgba(0,0,0,.35);
+}
+.photo{
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius:18px;
+}
+.photo-tag{
+  position:absolute;
+  left:10px; bottom:10px;
+  font-size:12px;
+  background:#0f131a;
+  border:1px solid var(--border);
+  padding:4px 6px;
+  border-radius:6px;
+  letter-spacing:.06em;
+  opacity:.9;
+}
+
+/* ===== 오른쪽: 정보 카드 ===== */
+.info-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:24px 28px;
+  box-shadow:0 10px 40px rgba(0,0,0,.35);
+}
+.actor-name{
+  font-size:32px;
+  font-weight:800;
+  margin:4px 0 18px 0;
+}
+
+/* 행 리스트(섹션) */
+.section-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.section-row{
+  display:grid;
+  grid-template-columns: 150px 1fr; /* 제목 폭 고정 */
+  gap:12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px 14px;
+}
+.row-title{
+  color:#cfd6dd;
+  font-weight:700;
+}
+.row-body{ line-height:1.6; }
+
+/* 칩 UI */
+.chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip{
+  display:inline-block;
+  padding:6px 10px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  font-size:14px;
+  background:#11161d;
+}
+
+/* 불릿 목록(대표 활동/특징/향후) */
+.bullets ul{
+  margin:0;
+  padding-left:1.1em;
+}
+.bullets li{
+  margin:4px 0;
+}
+
+/* 보조 텍스트 */
+.muted{ color:var(--muted); }
+
+/* ===== 반응형 (태블릿/모바일) ===== */
+@media (max-width: 1024px){
+  .actor-grid{
+    grid-template-columns: 1fr;
+    gap:20px;
+  }
+  .section-row{
+    grid-template-columns: 120px 1fr;
+  }
+}
+
+@media (max-width: 640px){
+  .actor-container{ padding:18px 14px; }
+  .actor-name{ font-size:26px; }
+  .section-row{ grid-template-columns: 1fr; }
+  .row-title{ margin-bottom:6px; }
+}
