@@ -231,11 +231,139 @@
         margin-right: 15px; /* 라벨과 막대그래프 사이 간격 */
     }
     
+/* ================================================ */
+/* 👇 리뷰 모달 관련 CSS (전체 교체) 👇         */
+/* ================================================ */
+
+/* 리뷰 모달창 관련 스타일 */
+#reviewModal .modal-review {
+    background-color: #1B232F;
+    color: #e0e0e0;
+    border: 1px solid #444;
+} {
+    background-color: #1B232F; /* 요청하신 배경색 */
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+.modal-review .modal-header,
+.modal-review .modal-footer {
+    border-color: #444; /* 헤더와 푸터의 구분선 색상 */
+}
+.modal-review .modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 모달 푸터(버튼) 정렬 */
+.modal-review .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* 영화 정보 (포스터 + 제목) */
+.modal-movie-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+.modal-poster-img {
+    width: 80px;
+    border-radius: 5px;
+}
+.modal-movie-details h4 {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+.modal-movie-details p,
+.modal-movie-details span {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin: 0;
+}
+
+/* 👇 [최종 교체] 기존의 rating-section 관련 모든 CSS를 이 코드로 대체해주세요. */
+
+/* 별점 시스템 전체 컨테이너 */
+#reviewModal .rating-section {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* 'Your Rating' 텍스트 */
+#reviewModal .rating-section > span:first-child {
+    font-weight: 700;
+    color: #aaa;
+    margin-right: 15px;
+}
+
+/* 팝콘 아이콘 그룹 */
+#reviewModal .popcorn-rating {
+    display: flex;
+    align-items: center;
+}
+
+/* 팝콘 아이콘 크기 및 간격 */
+#reviewModal .popcorn-rating img {
+    height: 50px;        /* ★★★ 팝콘 아이콘 크기를 50px로 키움 ★★★ */
+    width: auto;
+    margin-right: 10px;  /* ★★★ 아이콘 사이 간격을 10px로 조정 ★★★ */
+    transition: transform 0.1s ease;
+}
+#reviewModal .popcorn-rating img:hover {
+    transform: scale(1.1);
+}
+#reviewModal .popcorn-rating img:last-child {
+    margin-right: 0;
+}
+
+/* '0/5' 점수 텍스트 */
+#reviewModal #scoreDisplay {
+    margin-left: auto;
+    font-size: 1.8rem; /* ★★★ 점수 텍스트 크기도 키움 ★★★ */
+    font-weight: 700;
+    color: #f5c518;
+}
+
+/* 리뷰 텍스트 입력창 */
+.review-textarea {
+    width: 100%;
+    background-color: #252F48; /* 요청하신 입력칸 배경색 */
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 10px;
+    color: #e0e0e0;
+}
+.review-textarea::placeholder {
+    color: #8a95a3;
+}
+.review-textarea:focus {
+    background-color: #252F48;
+    color: #e0e0e0;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.5); /* 포커스 시 테두리 효과 */
+}
+
+/* 등록 버튼 */
+#reviewModal .btn-submit-review {
+    background-color: #f5c518;
+    color: #121212;
+    font-weight: 700;
+    border: none;
+}
+#reviewModal .btn-submit-review:hover {
+    background-color: #e0b400;
+    color: #121212;
+}
+	
 
 </style>
 </head>
 <body>
-<jsp:include page="include/header.jsp" />
+<jsp:include page="/WEB-INF/views/include/header.jsp" />
 <div class="container">
     <div class="movie-header mb-4">
         <h1>${movie.mTitle}</h1>
@@ -246,7 +374,7 @@
         <div class="col-md-6">
             <c:choose>
                 <c:when test="${not empty movie.mUrlImage}">
-                    <img src="${pageContext.request.contextPath}/images/${movie.mUrlImage}" alt="${movie.mTitle} Poster" class="poster-img">
+                    <img src="${movie.mUrlImage}" alt="${movie.mTitle} Poster" class="poster-img">
                 </c:when>
                 <c:otherwise>
                     <img src="${pageContext.request.contextPath}/images/movie_poster.jpg" alt="기본 포스터" class="poster-img">
@@ -254,10 +382,10 @@
             </c:choose>
         </div>
         <div class="col-md-6">
-	    <div class="ratio ratio-16x9 h-100">
-	        <%-- 항상 기본 예고편(movie.mp4)을 표시하도록 고정 --%>
-	        <iframe src="${pageContext.request.contextPath}/videos/movie.mp4" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-	    </div>
+		    <div class="ratio ratio-16x9 h-100">
+		        <%-- 항상 기본 예고편(movie.mp4)을 표시하도록 고정 --%>
+		        <iframe src="${pageContext.request.contextPath}/videos/movie.mp4" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		    </div>
 		</div>
     </div>
     
@@ -267,15 +395,17 @@
     <div class="row flex-nowrap overflow-x-auto pb-3">
         <c:forEach items="${movie.actors}" var="actor">
             <div class="col-auto actor-circle me-3">
-                <c:choose>
-                    <c:when test="${not empty actor.aUrlImage}">
-                        <img src="${pageContext.request.contextPath}/images/${actor.aUrlImage}" alt="${actor.aName}" class="actor-img">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/images/actor01.jpg" alt="기본 배우 이미지" class="actor-img">
-                    </c:otherwise>
-                </c:choose>
-                <p class="actor-name">${actor.aName}</p>
+				<a href="/movie/actordetail?aId=${actor.aId}">            
+	                <c:choose>
+	                    <c:when test="${not empty actor.aUrlImage}">
+	                        <img src="${pageContext.request.contextPath}/images/${actor.aUrlImage}" alt="${actor.aName}" class="actor-img">
+	                    </c:when>
+	                    <c:otherwise>
+	                        <img src="${pageContext.request.contextPath}/images/actor01.jpg" alt="기본 배우 이미지" class="actor-img">
+	                    </c:otherwise>
+	                </c:choose>
+	            </a>
+	            <p class="actor-name">${actor.aName}</p>
             </div>
         </c:forEach>
     </div>
@@ -311,82 +441,90 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <h2 class="section-title">관람객 통계</h2>
-            <div>
-                <p>성별</p>
+        <%-- ========================================================= --%>
+    <%-- ▼▼▼ [수정 시작] 관람객 통계 ▼▼▼                         --%>
+    <%-- ========================================================= --%>
+    <div class="col-md-6">
+        <h2 class="section-title">관람객 통계</h2>
+        <div>
+            <p>성별</p>
+            <c:if test="${not empty audienceStats.genderDistribution}">
                 <div class="progress rounded-pill" style="height: 25px; font-size: 0.9rem;">
-                  <div class="progress-bar bg-info" role="progressbar" style="width: 45.8%;" aria-valuenow="45.8" aria-valuemin="0" aria-valuemax="100">남성 45.8%</div>
-                  <div class="progress-bar bg-danger" role="progressbar" style="width: 54.2%;" aria-valuenow="54.2" aria-valuemin="0" aria-valuemax="100">여성 54.2%</div>
+                    <div class="progress-bar bg-info" role="progressbar" style="width: ${audienceStats.genderDistribution['남성']}%;" aria-valuenow="${audienceStats.genderDistribution['남성']}">
+                        남성 <fmt:formatNumber value="${audienceStats.genderDistribution['남성']}" maxFractionDigits="1"/>%
+                    </div>
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: ${audienceStats.genderDistribution['여성']}%;" aria-valuenow="${audienceStats.genderDistribution['여성']}">
+                        여성 <fmt:formatNumber value="${audienceStats.genderDistribution['여성']}" maxFractionDigits="1"/>%
+                    </div>
                 </div>
-                <p class="mt-4">연령</p>
-                <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;"><div class="progress-bar bg-danger" role="progressbar" style="width: 10%;">10대</div></div>
-                <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;"><div class="progress-bar bg-danger" role="progressbar" style="width: 45%;">20대</div></div>
-                <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;"><div class="progress-bar bg-danger" role="progressbar" style="width: 30%;">30대</div></div>
-            </div>
+            </c:if>
+
+            <p class="mt-4">연령</p>
+            <c:if test="${not empty audienceStats.ageDistribution}">
+                <c:forEach items="${audienceStats.ageDistribution}" var="ageStat">
+                    <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${ageStat.value}%;">${ageStat.key}</div>
+                    </div>
+                </c:forEach>
+            </c:if>
         </div>
+    </div>
+    <%-- ========================================================= --%>
+    <%-- ▲▲▲ [수정 끝] 관람객 통계 ▲▲▲                           --%>
+    <%-- ========================================================= --%>
+    
 
     </div>
 
        <hr class="my-5"> 
 
+        <%-- ========================================================= --%>
+    <%-- ▼▼▼ [수정 시작] 유저 리뷰 리포트 ▼▼▼                      --%>
+    <%-- ========================================================= --%>
     <h2 class="section-title">유저 리뷰 리포트</h2>
-
     <div class="user-report-container">
-        
         <div class="average-score-section">
             <div class="d-flex align-items-center">
                 <span style="font-size: 3.5rem;">🍿</span>
-                <span class="fs-1 fw-bold ps-3">평균: <fmt:formatNumber value="${movie.mAverageScore}" maxFractionDigits="1"/>점</span>
+                <%-- 평균 평점 --%>
+                <span class="fs-1 fw-bold ps-3">평균: ${reviewStats.averageScore}점</span>
             </div>
         </div>
 
         <div class="rating-graph-section">
             <div class="rating-distribution">
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">5점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 70%;">70%</div>
+                <%-- 점수 분포도 --%>
+                <c:forEach items="${reviewStats.scoreDistribution}" var="dist">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="rating-label">${dist.key}점</span>
+                        <div class="progress rating-bar w-100" style="height:12px;">
+                            <div class="progress-bar bg-danger" style="width: ${dist.value}%;">
+                                <fmt:formatNumber value="${dist.value}" maxFractionDigits="0"/>%
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">4점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 15%;">15%</div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">3점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 8%;">8%</div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">2점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 4%;">4%</div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">1점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 3%;">3%</div>
-                    </div>
-                </div>
+                </c:forEach>
             </div>
         </div>
-
     </div>
+    <%-- ========================================================= --%>
+    <%-- ▲▲▲ [수정 끝] 유저 리뷰 리포트 ▲▲▲                        --%>
+    <%-- ========================================================= --%>
 
+
+    <%-- ========================================================= --%>
+    <%-- ▼▼▼ [수정 시작] 리뷰 요약 ▼▼▼                            --%>
+    <%-- ========================================================= --%>
     <div class="review-summary">
         <h4 class="fw-bold">&lt;리뷰 요약&gt;</h4>
         <p class="text-muted mt-3">
-            이 영화는 강렬한 액션, 성숙한 주제, 그리고 복잡한 도덕적 딜레마를 다루고 있어 시청자들에게 깊은 인상을 남깁니다. 
-            정의와 복수, 그리고 트라우마라는 어두운 주제를 탐구하며 캐릭터의 다층적인 면모를 보여줍니다. 
-            일부 시청자들은 영화의 전개가 다소 길고 지루하게 느껴질 수 있다고 평가했지만, 
-            결함이 있는 인간적인 영웅의 모습은 기존의 히어로물과는 다른 신선한 관점을 제공한다는 긍정적인 평가가 많습니다.
+            ${summary}
         </p>
     </div>
+    <%-- ========================================================= --%>
+    <%-- ▲▲▲ [수정 끝] 리뷰 요약 ▲▲▲                              --%>
+    <%-- ========================================================= --%>
+
 
 
     <hr class="mt-5 mb-4">
@@ -404,29 +542,28 @@
                 <a href="#" class="btn btn-danger btn-sm">+ 리뷰 추가</a>
             </div>
             <div class="review-controls">
-                <div class="dropdown">
-                    <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">RATING</button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">🍿 5점</a></li>
-                        <li><a class="dropdown-item" href="#">🍿 4점</a></li>
-                        <li><a class="dropdown-item" href="#">🍿 3점</a></li>
-                        <li><a class="dropdown-item" href="#">🍿 2점</a></li>
-                        <li><a class="dropdown-item" href="#">🍿 1점</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">SORT</button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">최신순</a></li>
-                        <li><a class="dropdown-item" href="#">별점 높은 순</a></li>
-                    </ul>
-                </div>
-            </div>
+			    <div class="dropdown">
+			        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">RATING</button>
+			        <ul class="dropdown-menu" id="review-rating-options">  <li><a class="dropdown-item" href="#" data-rating="0">All Ratings</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="5">🍿 5점</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="4">🍿 4점</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="3">🍿 3점</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="2">🍿 2점</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="1">🍿 1점</a></li>
+			        </ul>
+			    </div>
+			    <div class="dropdown">
+			        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">SORT</button>
+			        <ul class="dropdown-menu" id="review-sort-options"> <li><a class="dropdown-item" href="#" data-sort="latest">최신순</a></li>
+			            <li><a class="dropdown-item" href="#" data-sort="rating">별점 높은 순</a></li>
+			        </ul>
+			    </div>
+			</div>
         </div>
     </div>
 
 
-    <div class="chat-container">
+<div class="chat-container" id="review-container">
     <c:choose>
         <c:when test="${not empty reviews}">
             <c:forEach items="${reviews}" var="review">
@@ -474,36 +611,171 @@
         </c:otherwise>
     </c:choose>
 </div>
-<div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content bg-dark">
-      <div class="modal-header">
-        <h5 class="modal-title" id="trailerModalLabel">${movie.mTitle} 예고편</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="ratio ratio-16x9">
 
-          <%-- 이 부분이 수정되었습니다. --%>
-          <c:choose>
-              <%-- movie.mUrlMovie에 파일 이름이 있을 경우 --%>
-              <c:when test="${not empty movie.mUrlMovie}">
-                <iframe src="${pageContext.request.contextPath}/videos/${movie.mUrlMovie}" title="영화 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </c:when>
-              <%-- movie.mUrlMovie가 비어있을 경우 --%>
-              <c:otherwise>
-                <iframe src="${pageContext.request.contextPath}/videos/movie.mp4" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </c:otherwise>
-          </c:choose>
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content modal-review">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">User Review</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-movie-info">
+                    <img src="${pageContext.request.contextPath}/images/${movie.mUrlImage}" alt="${movie.mTitle}" class="modal-poster-img">
+                    <div class="modal-movie-details">
+                        <h4>${movie.mTitle}</h4>
+                        <p>${movie.mSubtitle}</p>
+                        <span>${movie.mCategories}</span>
+                    </div>
+                </div>
 
+                <form id="reviewForm" action="/review/add" method="post">
+                    <input type="hidden" name="movieId" value="${movie.mId}">
+                    <input type="hidden" name="rating" id="ratingValue" value="0">
+                    
+                    <div class="rating-section">
+                        <span>Your Rating</span>
+                        <div class="popcorn-rating">
+						    <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="1점" data-value="1">
+					        <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="2점" data-value="2">
+					        <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="3점" data-value="3">
+					        <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="4점" data-value="4">
+					        <img src="${pageContext.request.contextPath}/image/nopopcorn.png" alt="5점" data-value="5">
+						</div>
+                        <span id="scoreDisplay">0/5</span>
+                    </div>
+
+                    <textarea name="plot" class="review-textarea" rows="5" placeholder="이 영화에 대한 감상을 남겨주세요..."></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+	            <button type="submit" form="reviewForm" class="btn btn-submit-review">등록</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>            
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
 <script>
+$(document).ready(function() {
+    // --- RATING 필터 기능 ---
+    $('#review-rating-options').on('click', 'a', function(e) {
+        e.preventDefault(); // a 태그의 기본 동작(페이지 이동) 방지
+        const selectedRating = parseInt($(this).data('rating')); // 클릭된 항목의 data-rating 값 가져오기
+
+        // 'All Ratings' (0점)을 선택하면 모든 리뷰를 보여줌
+        if (selectedRating === 0) {
+            $('#review-container .chat-message').show();
+        } else {
+            // 다른 평점을 선택하면 일단 모든 리뷰를 숨김
+            $('#review-container .chat-message').hide();
+            
+            // 각 리뷰를 순회하며 평점이 일치하는 것만 다시 보여줌
+            $('#review-container .chat-message').each(function() {
+                // 리뷰 텍스트에서 숫자(평점)를 추출 (예: "🍿 5점" -> 5)
+                const reviewRatingText = $(this).find('.bubble-rating').text();
+                const reviewRating = parseInt(reviewRatingText.match(/(\d+)점/)[1]);
+
+                if (reviewRating === selectedRating) {
+                    $(this).show(); // 평점이 일치하면 보여주기
+                }
+            });
+        }
+    });
+
+    // --- SORT 정렬 기능 ---
+    $('#review-sort-options').on('click', 'a', function(e) {
+        e.preventDefault(); // a 태그의 기본 동작 방지
+        const sortBy = $(this).data('sort'); // 클릭된 항목의 data-sort 값 가져오기 (latest 또는 rating)
+        let reviews = $('#review-container .chat-message').get(); // 모든 리뷰 요소를 배열로 가져오기
+
+        reviews.sort(function(a, b) {
+            if (sortBy === 'rating') {
+                // '별점 높은 순'으로 정렬
+                const ratingA = parseInt($(a).find('.bubble-rating').text().match(/(\d+)점/)[1]);
+                const ratingB = parseInt($(b).find('.bubble-rating').text().match(/(\d+)점/)[1]);
+                return ratingB - ratingA; // 내림차순 정렬 (높은 점수가 위로)
+            } else {
+                // '최신순'으로 정렬
+                const dateA = new Date($(a).find('.chat-date').text());
+                const dateB = new Date($(b).find('.chat-date').text());
+                return dateB - dateA; // 내림차순 정렬 (최신 날짜가 위로)
+            }
+        });
+
+        // 정렬된 순서대로 리뷰들을 다시 컨테이너에 추가
+        $.each(reviews, function(index, review) {
+            $('#review-container').append(review);
+        });
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const nopopcornPath = "${pageContext.request.contextPath}/image/nopopcorn.png";
+    const popcornPath = "${pageContext.request.contextPath}/image/popcorn.png";
+
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewForm = document.getElementById('reviewForm');
+    const popcorns = document.querySelectorAll('.popcorn-rating img');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const ratingValueInput = document.getElementById('ratingValue');
+
+    let currentRating = 0;
+
+    const updatePopcorns = (rating) => {
+        popcorns.forEach(popcorn => {
+            const popcornValue = parseInt(popcornbataset.value);
+            if (popcornValue <= rating) {
+                popcorn.src = popcornPath;
+            } else {
+                popcorn.src = nopopcornPath;
+            }
+        });
+    };
+
+    popcorns.forEach(popcorn => {
+        popcorn.addEventListener('mouseover', () => {
+            updatePopcorns(parseInt(popcorn.dataset.value));
+        });
+
+        popcorn.addEventListener('mouseout', () => {
+            updatePopcorns(currentRating);
+        });
+
+        popcorn.addEventListener('click', () => {
+            currentRating = parseInt(popcorn.dataset.value);
+            ratingValueInput.value = currentRating;
+            scoreDisplay.textContent = `\${currentRating}/5`;
+            updatePopcorns(currentRating);
+        });
+    });
+
+    reviewForm.addEventListener('submit', function(event) {
+        if (ratingValueInput.value === '0') {
+            alert('평점을 선택해주세요.');
+            event.preventDefault();
+            return;
+        }
+        const plotText = this.querySelector('textarea[name="plot"]').value;
+        if (plotText.trim() === '') {
+            alert('리뷰 내용을 입력해주세요.');
+            event.preventDefault();
+            return;
+        }
+        alert('리뷰가 등록되었습니다.');
+    });
+
+    reviewModal.addEventListener('hidden.bs.modal', function () {
+        reviewForm.reset();
+        currentRating = 0;
+        ratingValueInput.value = '0';
+        scoreDisplay.textContent = '0/5';
+        updatePopcorns(0);
+    });
+});
 </script>
 
 </body>
