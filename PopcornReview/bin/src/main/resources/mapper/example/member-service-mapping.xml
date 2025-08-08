@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ns.sql.MemberMapper">
+<!-- 동적쿼리 : 회원검색 + 로그인 -->
+	<select id="selectUser" parameterType="member" resultType="member">
+		SELECT 
+		id, password, name, address
+		FROM member
+		WHERE id=#{id}
+		<if test="password !=null">
+			AND password LIKE #{password}
+		</if> 
+	</select>
+</mapper>
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
