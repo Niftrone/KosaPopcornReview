@@ -36,8 +36,8 @@
                 </div>
             </a>
             <div class="search">
-                <input type="text" placeholder="영화를 검색해주세요" id="searchInput" />
-            </div>
+			    <input type="text" placeholder="영화를 검색해주세요" id="searchInput" />
+			</div>
             
             <div class="header-buttons">
                 <c:choose>

@@ -36,7 +36,7 @@
 					<c:when test="${not empty bannerMovies}" >
 						<c:forEach var="movie" items="${bannerMovies}">
 							<div class="banner-slide">
-								<a class="banner-slide-content" href="/movie/${movie.mId}">
+								<a class="banner-slide-content" href="/movie/detail?mId=${movie.mId}">
 									<div class="banner-poster">
 										<img src="${movie.mUrlImage}" alt="${movie.mTitle} 포스터">
 									</div>
@@ -69,7 +69,7 @@
 				<c:choose>
 					<c:when test="${not empty recommendedMovies}">
 						<c:forEach var="movie" items="${recommendedMovies}">
-							<a class="movie-card" href="/movie/${movie.mId}"> <img
+							<a class="movie-card" href="/movie/detail?mId=${movie.mId}"> <img
 								src="${movie.mUrlImage}" alt="${movie.mTitle} 포스터">
 								<div class="card-info">
 									<span class="movie-title">${movie.mTitle}</span>
@@ -127,7 +127,7 @@
 				<c:choose>
 					<c:when test="${not empty top10Movies}">
 						<c:forEach var="movie" items="${top10Movies}">
-							<a class="movie-card" href="/movie/${movie.mId}"> <img
+							<a class="movie-card" href="/movie/detail?mId=${movie.mId}"> <img
 								src="${movie.mUrlImage}" alt="${movie.mTitle} 포스터">
 								<div class="card-info">
 									<span class="movie-title">${movie.mTitle}</span>
@@ -155,7 +155,7 @@
 				<c:choose>
 					<c:when test="${not empty upcomingMovies}">
 						<c:forEach var="movie" items="${upcomingMovies}">
-							<a class="movie-card" href="/movie/${movie.mId}"> <img
+							<a class="movie-card" href="/movie/detail?mId=${movie.mId}"> <img
 								src="${movie.mUrlImage}" alt="${movie.mTitle} 포스터">
 								<div class="card-info">
 									<span class="movie-title">${movie.mTitle}</span>

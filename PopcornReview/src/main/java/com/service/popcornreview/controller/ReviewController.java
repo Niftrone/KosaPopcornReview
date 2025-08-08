@@ -56,11 +56,22 @@ public class ReviewController {
     
 
 	// REVIEW-04: 리뷰 등록 (POST /review/add)
-	@PostMapping("/add")
-	public String addReview() {
-		// 사용자가 작성한 리뷰를 DB에 등록하는 로직
-		return "redirect:/review/detailreview?id=..."; // 작성한 리뷰 상세 페이지로
-	}
+	@PostMapping("/review/add")
+	public String getaddReview(Review review) {
+		
+		try {
+            reviewService.addReview(review);
+            
+            // ★★★ [핵심] ★★★
+            // 리뷰 등록 후, 현재 영화 상세 페이지로 '다시 접속(redirect)'하게 만듭니다.
+            // 이렇게 해야 새로고침해도 리뷰가 중복 등록되지 않습니다.
+            return "redirect:/movie/detail?mId=" + review.getMovie().getmId();
+
+        } catch(Exception e) {
+            e.printStackTrace(); // 에러 로그를 콘솔에 출력
+            return "error"; // 에러 발생 시 error.jsp 페이지로 이동
+        }
+    }
 
 	// REVIEW-05: 리뷰 삭제 (POST /review/delete)
 	@PostMapping("/delete")

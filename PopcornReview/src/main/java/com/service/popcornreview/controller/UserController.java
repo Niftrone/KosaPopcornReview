@@ -1,5 +1,7 @@
 package com.service.popcornreview.controller;
 
+import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,10 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import com.service.popcornreview.service.CommentService;
+import com.service.popcornreview.service.NoticeService;
+import com.service.popcornreview.service.ReportService;
 import com.service.popcornreview.service.UserService;
+import com.service.popcornreview.vo.Movie;
+import com.service.popcornreview.vo.Review;
 import com.service.popcornreview.vo.Notice;
 import com.service.popcornreview.vo.User;
+import ch.qos.logback.core.net.SyslogOutputStream;
+import com.service.popcornreview.service.ReviewService;
+
+
 
 import jakarta.servlet.http.HttpSession;
 
@@ -20,6 +30,7 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+
 
 	/**
 	 * 로그인 처리
@@ -61,6 +72,7 @@ public class UserController {
 		
 		return "redirect:/"; // 회원가입 성공 후 메인 페이지로
 	}
+
 	
 	/**
 	 * 아이디/비밀번호 찾기

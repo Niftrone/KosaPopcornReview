@@ -55,6 +55,7 @@ public class MovieUnit {
         movie.setmRelease("2025-12-25"); // 날짜 형식
         movie.setmShowtime("120"); // [수정] VO 필드 타입에 맞게 String으로 변경
         movie.setmPlot("이것은 테스트를 위한 영화 줄거리입니다.");
+
         movie.setmCategory("액션");
         movie.setmScreeningType("2D");
         movie.setmMovieTheater("일반관");

@@ -2,18 +2,22 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>${movie.mTitle} - 영화 상세 정보</title>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> 
 <style>
     body {
         background-color: #121212;
@@ -158,10 +162,10 @@
     }
     
 
-    /* 내 리뷰 (오른쪽 정렬) */
-    .message-right {
-        align-items: flex-end; /* 오른쪽 정렬 */
-    }
+	/* 내가 쓴 리뷰의 말풍선과 날짜를 오른쪽으로 보내기 위한 스타일 추가 */
+	.message-right .content-line {
+	    justify-content: flex-end;
+	}
     .message-right .chat-author {
         align-self: flex-end;
     }
@@ -363,7 +367,7 @@
 </style>
 </head>
 <body>
-<jsp:include page="include/header.jsp" />
+<jsp:include page="/WEB-INF/views/include/header.jsp" />
 <div class="container">
     <div class="movie-header mb-4">
         <h1>${movie.mTitle}</h1>
@@ -371,23 +375,31 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-6">
             <c:choose>
                 <c:when test="${not empty movie.mUrlImage}">
-                    <img src="${pageContext.request.contextPath}/images/${movie.mUrlImage}" alt="${movie.mTitle} Poster" class="poster-img">
+                    <img src="${movie.mUrlImage}" alt="${movie.mTitle} Poster" class="poster-img">
                 </c:when>
                 <c:otherwise>
                     <img src="${pageContext.request.contextPath}/images/movie_poster.jpg" alt="기본 포스터" class="poster-img">
                 </c:otherwise>
             </c:choose>
         </div>
-        <div class="col-md-6">
-		    <div class="ratio ratio-16x9 h-100">
-		        <%-- 항상 기본 예고편(movie.mp4)을 표시하도록 고정 --%>
-		        <iframe src="${pageContext.request.contextPath}/videos/movie.mp4" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-		    </div>
-		</div>
-    </div>
+        <div class="col-6">
+	        <%-- 1. "youtu.be/" 뒤의 영상 ID 추출 --%>
+				<%-- 예: https://youtu.be/nJmXYoKC5C0 -> nJmXYoKC5C0 추출 --%>
+				<c:set var="videoId" value="${fn:substringAfter(movie.mUrlMovie, 'youtu.be/')}" />
+				
+				<%-- 2. 추출한 ID로 최종 embed URL 생성 + 파라미터 추가 --%>
+				<c:set var="finalUrl" value="https://www.youtube.com/embed/${videoId}" />
+				
+				
+				<%-- 3. 완성된 URL을 iframe의 src로 사용 --%>
+				<div class="ratio ratio-16x9 h-100">
+				    <iframe src="${finalUrl}" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				</div>
+      </div>
+   </div>
     
     <hr class="my-5">
 
@@ -395,15 +407,17 @@
     <div class="row flex-nowrap overflow-x-auto pb-3">
         <c:forEach items="${movie.actors}" var="actor">
             <div class="col-auto actor-circle me-3">
-                <c:choose>
-                    <c:when test="${not empty actor.aUrlImage}">
-                        <img src="${pageContext.request.contextPath}/images/${actor.aUrlImage}" alt="${actor.aName}" class="actor-img">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/images/actor01.jpg" alt="기본 배우 이미지" class="actor-img">
-                    </c:otherwise>
-                </c:choose>
-                <p class="actor-name">${actor.aName}</p>
+				<a href="/movie/actordetail?aId=${actor.aId}">            
+	                <c:choose>
+	                    <c:when test="${not empty actor.aUrlImage}">
+	                        <img src="${actor.aUrlImage}" alt="${actor.aName}" class="actor-img">
+	                    </c:when>
+	                    <c:otherwise>
+	                        <img src="${pageContext.request.contextPath}/images/actor01.jpg" alt="기본 배우 이미지" class="actor-img">
+	                    </c:otherwise>
+	                </c:choose>
+	            </a>
+	            <p class="actor-name">${actor.aName}</p>
             </div>
         </c:forEach>
     </div>
@@ -434,87 +448,95 @@
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>상영 시간</strong>
-                    <p class="text-muted mb-0">${movie.mShowtime}분</p>
+                    <p class="text-muted mb-0">${movie.mShowtime}</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <h2 class="section-title">관람객 통계</h2>
-            <div>
-                <p>성별</p>
+        <%-- ========================================================= --%>
+    <%-- ▼▼▼ [수정 시작] 관람객 통계 ▼▼▼                         --%>
+    <%-- ========================================================= --%>
+    <div class="col-md-6">
+        <h2 class="section-title">관람객 통계</h2>
+        <div>
+            <p>성별</p>
+            <c:if test="${not empty audienceStats.genderDistribution}">
                 <div class="progress rounded-pill" style="height: 25px; font-size: 0.9rem;">
-                  <div class="progress-bar bg-info" role="progressbar" style="width: 45.8%;" aria-valuenow="45.8" aria-valuemin="0" aria-valuemax="100">남성 45.8%</div>
-                  <div class="progress-bar bg-danger" role="progressbar" style="width: 54.2%;" aria-valuenow="54.2" aria-valuemin="0" aria-valuemax="100">여성 54.2%</div>
+                    <div class="progress-bar bg-info" role="progressbar" style="width: ${audienceStats.genderDistribution['남성']}%;" aria-valuenow="${audienceStats.genderDistribution['남성']}">
+                        남성 <fmt:formatNumber value="${audienceStats.genderDistribution['남성']}" maxFractionDigits="1"/>%
+                    </div>
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: ${audienceStats.genderDistribution['여성']}%;" aria-valuenow="${audienceStats.genderDistribution['여성']}">
+                        여성 <fmt:formatNumber value="${audienceStats.genderDistribution['여성']}" maxFractionDigits="1"/>%
+                    </div>
                 </div>
-                <p class="mt-4">연령</p>
-                <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;"><div class="progress-bar bg-danger" role="progressbar" style="width: 10%;">10대</div></div>
-                <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;"><div class="progress-bar bg-danger" role="progressbar" style="width: 45%;">20대</div></div>
-                <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;"><div class="progress-bar bg-danger" role="progressbar" style="width: 30%;">30대</div></div>
-            </div>
+            </c:if>
+
+            <p class="mt-4">연령</p>
+            <c:if test="${not empty audienceStats.ageDistribution}">
+                <c:forEach items="${audienceStats.ageDistribution}" var="ageStat">
+                    <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${ageStat.value}%;">${ageStat.key}</div>
+                    </div>
+                </c:forEach>
+            </c:if>
         </div>
+    </div>
+    <%-- ========================================================= --%>
+    <%-- ▲▲▲ [수정 끝] 관람객 통계 ▲▲▲                           --%>
+    <%-- ========================================================= --%>
+    
 
     </div>
 
        <hr class="my-5"> 
 
+        <%-- ========================================================= --%>
+    <%-- ▼▼▼ [수정 시작] 유저 리뷰 리포트 ▼▼▼                      --%>
+    <%-- ========================================================= --%>
     <h2 class="section-title">유저 리뷰 리포트</h2>
-
     <div class="user-report-container">
-        
         <div class="average-score-section">
             <div class="d-flex align-items-center">
                 <span style="font-size: 3.5rem;">🍿</span>
-                <span class="fs-1 fw-bold ps-3">평균: <fmt:formatNumber value="${movie.mAverageScore}" maxFractionDigits="1"/>점</span>
+                <%-- 평균 평점 --%>
+                <span class="fs-1 fw-bold ps-3">평균: ${reviewStats.averageScore}점</span>
             </div>
         </div>
 
         <div class="rating-graph-section">
             <div class="rating-distribution">
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">5점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 70%;">70%</div>
+                <%-- 점수 분포도 --%>
+                <c:forEach items="${reviewStats.scoreDistribution}" var="dist">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="rating-label">${dist.key}점</span>
+                        <div class="progress rating-bar w-100" style="height:12px;">
+                            <div class="progress-bar bg-danger" style="width: ${dist.value}%;">
+                                <fmt:formatNumber value="${dist.value}" maxFractionDigits="0"/>%
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">4점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 15%;">15%</div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">3점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 8%;">8%</div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">2점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 4%;">4%</div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="rating-label">1점</span>
-                    <div class="progress rating-bar w-100" style="height:12px;">
-                        <div class="progress-bar bg-danger" style="width: 3%;">3%</div>
-                    </div>
-                </div>
+                </c:forEach>
             </div>
         </div>
-
     </div>
+    <%-- ========================================================= --%>
+    <%-- ▲▲▲ [수정 끝] 유저 리뷰 리포트 ▲▲▲                        --%>
+    <%-- ========================================================= --%>
 
+
+    <%-- ========================================================= --%>
+    <%-- ▼▼▼ [수정 시작] 리뷰 요약 ▼▼▼                            --%>
+    <%-- ========================================================= --%>
     <div class="review-summary">
         <h4 class="fw-bold">&lt;리뷰 요약&gt;</h4>
         <p class="text-muted mt-3">
-            이 영화는 강렬한 액션, 성숙한 주제, 그리고 복잡한 도덕적 딜레마를 다루고 있어 시청자들에게 깊은 인상을 남깁니다. 
-            정의와 복수, 그리고 트라우마라는 어두운 주제를 탐구하며 캐릭터의 다층적인 면모를 보여줍니다. 
-            일부 시청자들은 영화의 전개가 다소 길고 지루하게 느껴질 수 있다고 평가했지만, 
-            결함이 있는 인간적인 영웅의 모습은 기존의 히어로물과는 다른 신선한 관점을 제공한다는 긍정적인 평가가 많습니다.
+            ${summary}
         </p>
     </div>
+    <%-- ========================================================= --%>
+    <%-- ▲▲▲ [수정 끝] 리뷰 요약 ▲▲▲                              --%>
+    <%-- ========================================================= --%>
+
 
 
     <hr class="mt-5 mb-4">
@@ -529,45 +551,51 @@
         <div class="text-end">
             <%-- ★★★ "리뷰 추가" 버튼 위치 변경 ★★★ --%>
             <div class="mb-2">
-                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal"> + 리뷰 추가 </button>
+                <a href="#" class="btn btn-danger btn-sm" id="addReviewBtn">+ 리뷰 추가</a>
             </div>
+            
+            
+            
             <div class="review-controls">
-                <div class="dropdown">
-                    <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">RATING</button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">🍿 5점</a></li>
-                        <li><a class="dropdown-item" href="#">🍿 4점</a></li>
-                        <li><a class="dropdown-item" href="#">🍿 3점</a></li>
-                        <li><a class="dropdown-item" href="#">🍿 2점</a></li>
-                        <li><a class="dropdown-item" href="#">🍿 1점</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">SORT</button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">최신순</a></li>
-                        <li><a class="dropdown-item" href="#">별점 높은 순</a></li>
-                    </ul>
-                </div>
-            </div>
+			    <div class="dropdown">
+			        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">RATING</button>
+			        <ul class="dropdown-menu" id="review-rating-options">  <li><a class="dropdown-item" href="#" data-rating="0">All Ratings</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="5">🍿 5점</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="4">🍿 4점</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="3">🍿 3점</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="2">🍿 2점</a></li>
+			            <li><a class="dropdown-item" href="#" data-rating="1">🍿 1점</a></li>
+			        </ul>
+			    </div>
+			    <div class="dropdown">
+			        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">SORT</button>
+			        <ul class="dropdown-menu" id="review-sort-options"> <li><a class="dropdown-item" href="#" data-sort="latest">최신순</a></li>
+			            <li><a class="dropdown-item" href="#" data-sort="rating">별점 높은 순</a></li>
+			        </ul>
+			    </div>
+			</div>
         </div>
     </div>
 
 
-    <div class="chat-container">
+<div class="chat-container" id="review-container">
     <c:choose>
         <c:when test="${not empty reviews}">
             <c:forEach items="${reviews}" var="review">
                 <c:choose>
                     <%-- 내 리뷰 (오른쪽) --%>
-                    <c:when test="${review.user.id == sessionScope.user.id}">
+                    <c:when test="${review.user.id == sessionScope.loginUser.id}">
                         <div class="chat-message message-right">
                             <%-- ★★★ 구조 변경: 작성자를 위로 빼냅니다 ★★★ --%>
                             <span class="chat-author">${review.user.id}</span>
                             
                             <%-- ★★★ 구조 변경: 말풍선과 날짜를 content-line으로 묶습니다 ★★★ --%>
                             <div class="content-line">
-                                <span class="chat-date">${review.rDate}</span>
+                                <%-- [수정 후] --%>
+					<%-- 이전에 수정했던 두 곳의 날짜 부분을 모두 아래와 같이 원래 코드로 복원합니다. --%>
+<span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
+    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
+</span>
                                 <div class="chat-bubble">
                                     <div class="bubble-rating"><span>🍿</span> ${review.rRating}점</div>
                                     <p class="bubble-plot">${review.rPlot}</p>
@@ -588,7 +616,9 @@
                                     <div class="bubble-rating"><span>🍿</span> ${review.rRating}점</div>
                                     <p class="bubble-plot">${review.rPlot}</p>
                                 </div>
-                                <span class="chat-date">${review.rDate}</span>
+                                <span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
+								    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
+								</span>
                             </div>
                         </div>
                     </c:otherwise>
@@ -612,7 +642,7 @@
             </div>
             <div class="modal-body">
                 <div class="modal-movie-info">
-                    <img src="${pageContext.request.contextPath}/images/${movie.mUrlImage}" alt="${movie.mTitle}" class="modal-poster-img">
+                    <img src="${movie.mUrlImage}" alt="${movie.mTitle}" class="modal-poster-img">
                     <div class="modal-movie-details">
                         <h4>${movie.mTitle}</h4>
                         <p>${movie.mSubtitle}</p>
@@ -620,9 +650,9 @@
                     </div>
                 </div>
 
-                <form id="reviewForm" action="addReview.do" method="post">
-                    <input type="hidden" name="movieId" value="${movie.mId}">
-                    <input type="hidden" name="rating" id="ratingValue" value="0">
+                <form id="reviewForm" action="/review/add" method="post">
+                    <input type="hidden" name="movie.mId" value="${movie.mId}">
+                    <input type="hidden" name="rRating" id="ratingValue" value="0">
                     
                     <div class="rating-section">
                         <span>Your Rating</span>
@@ -636,7 +666,7 @@
                         <span id="scoreDisplay">0/5</span>
                     </div>
 
-                    <textarea name="plot" class="review-textarea" rows="5" placeholder="이 영화에 대한 감상을 남겨주세요..."></textarea>
+                    <textarea name="rPlot" class="review-textarea" rows="5" placeholder="이 영화에 대한 감상을 남겨주세요..."></textarea>
                 </form>
             </div>
             <div class="modal-footer">
@@ -650,66 +680,118 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
+    // 1. 페이지 로드 시 스크롤 위치 복원
+    const scrollPosition = sessionStorage.getItem('scrollPosition');
+    if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition));
+        sessionStorage.removeItem('scrollPosition');
+    }
+
+    // 2. 리뷰 필터링 (RATING)
+    $('#review-rating-options').on('click', 'a', function(e) {
+        e.preventDefault();
+        const selectedRating = parseInt($(this).data('rating'));
+
+        if (selectedRating === 0) {
+            $('#review-container .chat-message').show();
+        } else {
+            // .hide()와 .each()를 연결(chaining)하여 코드를 간결하게 만듭니다.
+            $('#review-container .chat-message').hide().each(function() {
+                const reviewRatingText = $(this).find('.bubble-rating').text();
+                const match = reviewRatingText.match(/(\d+)점/);
+                if (match && parseInt(match[1]) === selectedRating) {
+                    $(this).show();
+                }
+            });
+        }
+    });
+
+    // 3. 리뷰 정렬 (SORT)
+    $('#review-sort-options').on('click', 'a', function(e) {
+        e.preventDefault();
+        const sortBy = $(this).data('sort');
+        let reviews = $('#review-container .chat-message').get();
+
+        reviews.sort(function(a, b) {
+            if (sortBy === 'rating') {
+                const textA = $(a).find('.bubble-rating').text();
+                const matchA = textA.match(/(\d+)점/);
+                const ratingA = matchA ? parseInt(matchA[1]) : 0;
+
+                const textB = $(b).find('.bubble-rating').text();
+                const matchB = textB.match(/(\d+)점/);
+                const ratingB = matchB ? parseInt(matchB[1]) : 0;
+                
+                return ratingB - ratingA;
+            } else { // 'latest'
+                const dateA = new Date($(a).find('.chat-date').data('date'));
+                const dateB = new Date($(b).find('.chat-date').data('date'));
+                return dateB - dateA;
+            }
+        });
+        $('#review-container').append(reviews);
+    });
+
+    // 4. 리뷰 추가 버튼 (+ 리뷰 추가)
+    const loginUser = '${sessionScope.loginUser}';
+    $('#addReviewBtn').on('click', function(e) {
+        e.preventDefault();
+        if (loginUser) {
+            $('#reviewModal').modal('show');
+        } else {
+            alert('로그인이 필요한 서비스입니다.');
+            // 헤더의 로그인 버튼이 .btn-login 클래스를 가지고 있다고 가정
+            $('.btn-login').trigger('click');
+        }
+    });
+
+    // 5. 리뷰 작성 모달 내부 기능 (jQuery 스타일로 통일)
     const nopopcornPath = "${pageContext.request.contextPath}/image/nopopcorn.png";
     const popcornPath = "${pageContext.request.contextPath}/image/popcorn.png";
-
-    const reviewModal = document.getElementById('reviewModal');
-    const reviewForm = document.getElementById('reviewForm');
-    const popcorns = document.querySelectorAll('.popcorn-rating img');
-    const scoreDisplay = document.getElementById('scoreDisplay');
-    const ratingValueInput = document.getElementById('ratingValue');
-
     let currentRating = 0;
 
     const updatePopcorns = (rating) => {
-        popcorns.forEach(popcorn => {
-            const popcornValue = parseInt(popcorn.dataset.value);
-            if (popcornValue <= rating) {
-                popcorn.src = popcornPath;
-            } else {
-                popcorn.src = nopopcornPath;
-            }
+        $('.popcorn-rating img').each(function() {
+            const popcornValue = $(this).data('value');
+            $(this).attr('src', popcornValue <= rating ? popcornPath : nopopcornPath);
         });
     };
 
-    popcorns.forEach(popcorn => {
-        popcorn.addEventListener('mouseover', () => {
-            updatePopcorns(parseInt(popcorn.dataset.value));
-        });
-
-        popcorn.addEventListener('mouseout', () => {
+    // 팝콘 아이콘 이벤트 핸들러
+    $('.popcorn-rating img').on({
+        'mouseover': function() { updatePopcorns($(this).data('value')); },
+        'mouseout': function() { updatePopcorns(currentRating); },
+        'click': function() {
+            currentRating = $(this).data('value');
+            $('#ratingValue').val(currentRating);
+            $('#scoreDisplay').text(currentRating + '/5');
             updatePopcorns(currentRating);
-        });
-
-        popcorn.addEventListener('click', () => {
-            currentRating = parseInt(popcorn.dataset.value);
-            ratingValueInput.value = currentRating;
-            scoreDisplay.textContent = `\${currentRating}/5`;
-            updatePopcorns(currentRating);
-        });
+        }
     });
 
-    reviewForm.addEventListener('submit', function(event) {
-        if (ratingValueInput.value === '0') {
+    // 리뷰 폼 제출 이벤트
+    $('#reviewForm').on('submit', function(e) {
+        if ($('#ratingValue').val() === '0') {
             alert('평점을 선택해주세요.');
-            event.preventDefault();
+            e.preventDefault();
             return;
         }
-        const plotText = this.querySelector('textarea[name="plot"]').value;
-        if (plotText.trim() === '') {
+        if ($('textarea[name="rPlot"]', this).val().trim() === '') {
             alert('리뷰 내용을 입력해주세요.');
-            event.preventDefault();
+            e.preventDefault();
             return;
         }
+        sessionStorage.setItem('scrollPosition', window.scrollY);
         alert('리뷰가 등록되었습니다.');
     });
 
-    reviewModal.addEventListener('hidden.bs.modal', function () {
-        reviewForm.reset();
+    // 모달이 닫힐 때 폼 초기화
+    $('#reviewModal').on('hidden.bs.modal', function () {
+        $('#reviewForm')[0].reset(); // jQuery 객체에서 DOM 요소의 reset() 메소드를 호출
         currentRating = 0;
-        ratingValueInput.value = '0';
-        scoreDisplay.textContent = '0/5';
+        $('#ratingValue').val('0');
+        $('#scoreDisplay').text('0/5');
         updatePopcorns(0);
     });
 });
