@@ -1,4 +1,5 @@
 package com.service.popcornreview.service;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -50,8 +51,17 @@ public class MovieService {
 	}
 
 	public int addMovie(Movie movie) {
-		System.out.println("MovieService...addMovie");
-		return movieDao.addMovie(movie);
+	    // 1. 전달받은 movie 객체의 ID가 비어있는지 확인합니다. (새로 등록하는 경우)
+	    if (movie.getmId() == null || movie.getmId().isBlank()) {
+	        // 2. 비어있다면, 중복되지 않는 고유 ID (UUID)를 생성하여 설정합니다.
+	        String newId = UUID.randomUUID().toString();
+	        movie.setmId(newId);
+	        System.out.println("신규 영화 ID 생성: " + newId); // ID 생성 확인용 로그
+	    }
+
+	    // 3. ID가 보장된 movie 객체를 DAO로 전달하여 DB에 저장합니다.
+	    System.out.println("MovieService...addMovie");
+	    return movieDao.addMovie(movie);
 	}
 
 	public int updateMovie(Movie movie) {

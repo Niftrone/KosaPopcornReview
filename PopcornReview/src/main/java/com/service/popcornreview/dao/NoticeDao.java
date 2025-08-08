@@ -34,5 +34,8 @@ public class NoticeDao {
 	public List<Notice> getNotices(Notice notice) {
 		System.out.println("NoticeDao...getNotices");
 		return sqlSession.selectList(NS + "getNotices", notice);
+//		List<Notice> noticeList = sqlSession.selectList(NS + "getNotices", notice); 
+//	    System.out.println("조회된 공지사항 목록: " + noticeList); 
+//	    return noticeList; // 리턴
 	}
 }

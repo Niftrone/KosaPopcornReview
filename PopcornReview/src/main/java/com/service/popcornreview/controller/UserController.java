@@ -13,6 +13,9 @@ import com.service.popcornreview.service.NoticeService;
 import com.service.popcornreview.service.ReportService;
 import com.service.popcornreview.service.ReviewService;
 import com.service.popcornreview.service.UserService;
+import com.service.popcornreview.vo.Notice;
+
+
 
 
 @Controller
@@ -30,6 +33,12 @@ public class UserController {
 	private CommentService commentService;
 
 	// SORT-01: 메인 페이지 영화 목록 (GET)
+
+@GetMapping("/mypage")
+public String adminPage(Model model) { 
+
+    return "mypage";
+}
 
 	
 	// USER-01: 로그인 (POST)
