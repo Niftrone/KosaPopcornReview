@@ -4,12 +4,13 @@
 
 <mapper namespace="ns.sql.NoticeMapper">
 
-	<insert id="addNotice" parameterType="notice">
-		INSERT INTO notice
-		(notice_id, notice, notice_plot, notice_date)
-		VALUES(#{noticeId},#{notice}, #{noticePlot}, curdate())
-	</insert>
-	
+<insert id="addNotice" parameterType="notice"
+        useGeneratedKeys="true" keyProperty="noticeId">
+    
+    INSERT INTO notice (notice, notice_plot, notice_date)
+    VALUES (#{notice}, #{noticePlot}, NOW())
+
+</insert>
 	<delete id="deleteNotice" parameterType="int">
 		DELETE FROM notice
 		WHERE notice_id = #{noticeId}
@@ -22,17 +23,23 @@
 	</update>
 	
 	<!-- 동적쿼리 : 공지사항 list + 공지사항 자세히 보기 -->
-	<select id="getNotices" parameterType="string" resultType="notice">
-		SELECT notice_id, notice, notice_plot, notice_date
-		FROM notice
-		WHERE 1=1
-		<if test="noticeId != null">
-			AND notice_id = #{noticeId}
-		</if>
-		<if test="notice != null">
-			AND notice LIKE CONCAT('%', #{notice}, '%')
-		</if>
-	</select>
+<select id="getNotices" parameterType="notice" resultType="notice">
+    SELECT 
+        notice_id, 
+        notice, 
+        notice_plot, 
+        notice_date
+    FROM 
+        notice
+    <where>
+        <if test="noticeId != null and noticeId != 0">
+            AND notice_id = #{noticeId}
+        </if>
+        <if test="notice != null and notice != ''">
+            AND notice LIKE CONCAT('%', #{notice}, '%')
+        </if>
+    </where>
+</select>
 </mapper>
 
  

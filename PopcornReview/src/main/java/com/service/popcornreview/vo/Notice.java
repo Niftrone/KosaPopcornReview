@@ -1,60 +1,62 @@
 package com.service.popcornreview.vo;
 
 public class Notice {
-	private int noticeId; // 공지사항 아이디 notice_id
-	private String notice; // 공지사항 제목 notice
-	private String noticePlot; // 공지사항 내용 notice_plot
-	private String noticeDate; // 작성일 notice_date
+    
+    // [수정] 필드 타입을 int에서 Integer로 변경합니다.
+    private Integer noticeId;
+    private String notice;
+    private String noticePlot;
+    private String noticeDate;
 
+    public Notice() {
 
-	public Notice() {
+    }
 
-	}
+    // [수정] 생성자의 파라미터 타입도 Integer로 변경합니다.
+    public Notice(Integer noticeId, String notice, String noticePlot, String noticeDate) {
+        super();
+        this.noticeId = noticeId;
+        this.notice = notice;
+        this.noticePlot = noticePlot;
+        this.noticeDate = noticeDate;
+    }
 
-	public Notice(int noticeId, String notice, String noticePlot, String noticeDate) {
-		super();
-		this.noticeId = noticeId;
-		this.notice = notice;
-		this.noticePlot = noticePlot;
-		this.noticeDate = noticeDate;
-	}
+    
+    public Integer getNoticeId() {
+        return noticeId;
+    }
 
-	public int getNoticeId() {
-		return noticeId;
-	}
+    public void setNoticeId(Integer noticeId) {
+        this.noticeId = noticeId;
+    }
 
-	public void setNoticeId(int noticeId) {
-		this.noticeId = noticeId;
-	}
+    public String getNotice() {
+        return notice;
+    }
 
-	public String getnotice() {
-		return notice;
-	}
+    public void setNotice(String notice) {
+        this.notice = notice;
+    }
 
-	public void setnotice(String notice) {
-		this.notice = notice;
-	}
+    public String getNoticePlot() {
+        return noticePlot;
+    }
 
-	public String getNoticePlot() {
-		return noticePlot;
-	}
+    public void setNoticePlot(String noticePlot) {
+        this.noticePlot = noticePlot;
+    }
 
-	public void setNoticePlot(String noticePlot) {
-		this.noticePlot = noticePlot;
-	}
+    public String getNoticeDate() {
+        return noticeDate;
+    }
 
-	public String getNoticeDate() {
-		return noticeDate;
-	}
+    public void setNoticeDate(String noticeDate) {
+        this.noticeDate = noticeDate;
+    }
 
-	public void setNoticeDate(String noticeDate) {
-		this.noticeDate = noticeDate;
-	}
-
-	@Override
-	public String toString() {
-		return "Notice [noticeId=" + noticeId + ", notice=" + notice + ", noticePlot=" + noticePlot
-				+ ", noticeDate=" + noticeDate + "]";
-	}
-
+    @Override
+    public String toString() {
+        return "Notice [noticeId=" + noticeId + ", notice=" + notice + ", noticePlot=" + noticePlot
+                + ", noticeDate=" + noticeDate + "]";
+    }
 }

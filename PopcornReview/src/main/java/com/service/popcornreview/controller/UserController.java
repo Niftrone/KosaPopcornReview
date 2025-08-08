@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.service.popcornreview.service.UserService;
+import com.service.popcornreview.vo.Notice;
 import com.service.popcornreview.vo.User;
 
 import jakarta.servlet.http.HttpSession;
