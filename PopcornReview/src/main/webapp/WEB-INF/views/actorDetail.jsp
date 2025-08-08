@@ -24,7 +24,7 @@
           <c:when test="${not empty actor.aUrlImage}">
             <%-- ★ 2. 이미지 경로를 실제 프로젝트에 맞게 수정합니다. --%>
             <%-- DB의 aUrlImage에 'haewon.jpg'와 같이 파일명만 있다면 아래 경로가 올바릅니다. --%>
-            <img class="photo" src="<c:url value='/images/actors/${actor.aUrlImage}'/>" alt="${actor.aName}">
+            <img class="photo" src="<c:url value='${actor.aUrlImage}'/>" alt="${actor.aName}">
           </c:when>
           <c:otherwise>
             <img class="photo" src="<c:url value='/images/placeholders/actor.png'/>" alt="no image">
