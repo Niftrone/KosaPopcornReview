@@ -1,10 +1,10 @@
 package com.service.popcornreview.vo;
-
+import java.util.Date;
 public class Review {
 	private int rId; // 리뷰 아이디 r_id
 	private int rRating; // 평점 r_rating
 	private String rPlot; // 리뷰 내용 r_plot
-	private String rDate; // 작성일 r_date
+	private Date rDate; // 작성일 r_date
 
 	private User user; // 리뷰를 작성한 사용자 정보
 	private Movie movie; // 리뷰가 달린 영화 정보
@@ -13,7 +13,7 @@ public class Review {
 
 	}
 
-	public Review(int rId, int rRating, String rPlot, String rDate, User user, Movie movie) {
+	public Review(int rId, int rRating, String rPlot, Date rDate, User user, Movie movie) {
 		super();
 		this.rId = rId;
 		this.rRating = rRating;
@@ -47,11 +47,11 @@ public class Review {
 		this.rPlot = rPlot;
 	}
 
-	public String getrDate() {
+	public Date getrDate() {
 		return rDate;
 	}
 
-	public void setrDate(String rDate) {
+	public void setrDate(Date rDate) {
 		this.rDate = rDate;
 	}
 

@@ -1,9 +1,9 @@
 package com.service.popcornreview.vo;
-
+import java.util.Date;
 public class Comment {
 	private int cId; // 댓글 아이디 c_id
 	private String cPlot; // 댓글 내용 c_plot
-	private String cDate; // 작성일 c_date
+	private Date cDate; // 작성일 c_date
 	private int rId;
 	private String id;
 
@@ -16,7 +16,7 @@ public class Comment {
 
 	}
 
-	public Comment(int cId, String cPlot, String cDate, User user, Review review) {
+	public Comment(int cId, String cPlot, Date cDate, User user, Review review) {
 		super();
 		this.cId = cId;
 		this.cPlot = cPlot;
@@ -58,11 +58,11 @@ public class Comment {
 		this.cPlot = cPlot;
 	}
 
-	public String getcDate() {
+	public Date getcDate() {
 		return cDate;
 	}
 
-	public void setcDate(String cDate) {
+	public void setcDate(Date cDate) {
 		this.cDate = cDate;
 	}
 

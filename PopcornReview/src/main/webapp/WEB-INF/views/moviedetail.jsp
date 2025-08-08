@@ -399,7 +399,7 @@
 				    <iframe src="${finalUrl}" title="기본 예고편" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 				</div>
       </div>
-   </div>
+    </div>
     
     <hr class="my-5">
 
@@ -448,7 +448,7 @@
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>상영 시간</strong>
-                    <p class="text-muted mb-0">${movie.mShowtime}</p>
+                    <p class="text-muted mb-0">${movie.mShowtime}분</p>
                 </div>
             </div>
         </div>
@@ -456,7 +456,7 @@
         <%-- ========================================================= --%>
     <%-- ▼▼▼ [수정 시작] 관람객 통계 ▼▼▼                         --%>
     <%-- ========================================================= --%>
-    <div class="col-md-6">
+     <div class="col-md-6">
         <h2 class="section-title">관람객 통계</h2>
         <div>
             <p>성별</p>
@@ -579,6 +579,12 @@
 
 
 <div class="chat-container" id="review-container">
+	<%-- ▼▼▼ 이 부분을 추가하세요 ▼▼▼ --%>
+    <div id="no-filter-results" class="text-center p-5 text-muted" style="display: none;">
+        <p>해당 조건에 맞는 리뷰가 없습니다.</p>
+    </div>
+
+    <%-- ▼▼▼ 기존 코드는 그대로 둡니다 ▼▼▼ --%>
     <c:choose>
         <c:when test="${not empty reviews}">
             <c:forEach items="${reviews}" var="review">
@@ -691,6 +697,12 @@ $(document).ready(function() {
     // 2. 리뷰 필터링 (RATING)
     $('#review-rating-options').on('click', 'a', function(e) {
         e.preventDefault();
+        
+        
+        // 1. 안내 메시지를 일단 숨깁니다.
+        $('#no-filter-results').hide();
+        
+        
         const selectedRating = parseInt($(this).data('rating'));
 
         if (selectedRating === 0) {
@@ -704,12 +716,21 @@ $(document).ready(function() {
                     $(this).show();
                 }
             });
+            
+         // 3. 필터링 후, 화면에 보이는 리뷰가 0개인지 확인합니다.
+            const visibleReviews = $('#review-container .chat-message:visible').length;
+            if (visibleReviews === 0) {
+                // 4. 보이는 리뷰가 없으면 안내 메시지를 보여줍니다.
+                $('#no-filter-results').show();
+            }
         }
     });
 
     // 3. 리뷰 정렬 (SORT)
     $('#review-sort-options').on('click', 'a', function(e) {
         e.preventDefault();
+
+        
         const sortBy = $(this).data('sort');
         let reviews = $('#review-container .chat-message').get();
 
