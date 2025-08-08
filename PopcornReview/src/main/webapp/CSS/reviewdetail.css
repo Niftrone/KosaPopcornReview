@@ -10,14 +10,14 @@
     padding: 2rem;
     box-sizing: border-box;
 
-    /* 배경 이미지 설정 (고스트 라이더 관련 이미지로 교체) */
-    background-image: url('https://image.tmdb.org/t/p/original/tS5f2nTwxdyBH7sW5aP5a1hT2PA.jpg');
+    /* 고정 이미지 제거 → JSP에서 style로 동적으로 적용할 것 */
     background-size: cover;
     background-position: center;
-    
+
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 /* 어두운 블러 오버레이 효과 */
@@ -30,19 +30,20 @@
     height: 100%;
     background-color: rgba(20, 24, 34, 0.7); /* 어두운 오버레이 */
     backdrop-filter: blur(8px); /* 배경 블러 효과 */
-    -webkit-backdrop-filter: blur(8px); /* Safari 브라우저 지원 */
+    -webkit-backdrop-filter: blur(8px); /* Safari 지원 */
     z-index: 1;
 }
 
-/* 배너 내부 컨텐츠 정렬 */
+/* 배너 내부 콘텐츠 정렬 */
 .banner-inner {
-    position: relative; /* 오버레이 위에 표시되도록 함 */
+    position: relative;
     z-index: 2;
     max-width: 1280px;
     width: 100%;
     color: var(--text-white);
 }
 
+/* 뒤로가기 버튼 */
 .back-button {
     background-color: transparent;
     color: var(--primary-30);
@@ -55,14 +56,15 @@
     font-size: 1rem;
 }
 
-.back-btn:hover {
+.back-button:hover {
     color: var(--text-white);
 }
 
+/* 배너 콘텐츠 */
 .banner-content {
     display: flex;
-    align-items: flex-end; /* 포스터와 제목을 세로 중앙 정렬 */
-    gap: 2rem; /* 포스터와 제목 사이 간격 */
+    align-items: flex-end;
+    gap: 2rem;
 }
 
 /* 포스터 이미지 */
@@ -83,7 +85,7 @@
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 
-/* 현재 위치 */
+/* 현재 위치 (ex: User Reviews) */
 .info-section .info-page {
     font-size: 3rem; 
     font-weight: var(--font-weight-bold);
