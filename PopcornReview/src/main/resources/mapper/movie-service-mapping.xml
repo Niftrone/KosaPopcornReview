@@ -13,7 +13,7 @@
 		<result property="mPlot" column="m_plot"/>
 		<result property="mScreeningType" column="m_screening_type"/>
 		<result property="mMovieTheater" column="m_movie_theater"/>
-		<result property="mCategories" column="m_category"/>
+		<result property="mCategory" column="m_category"/>
 		<result property="mUrlImage" column="m_url_image"/>
 		<result property="mUrlMovie" column="m_url_movie"/>
 		<result property="mAddedDate" column="m_added_date"/>
@@ -81,7 +81,7 @@
 		INSERT INTO movie 
 			(m_id, m_title, m_subtitle, m_release, m_showtime, m_plot, m_category, m_screening_type, m_movie_theater, m_url_image, m_url_movie, id, m_added_date)
 		VALUES 
-			(#{mId}, #{mTitle}, #{mSubtitle}, #{mRelease}, #{mShowtime}, #{mPlot}, #{mCategories}, #{mScreeningType}, #{mMovieTheater}, #{mUrlImage}, #{mUrlMovie}, #{id}, CURDATE())
+			(#{mId}, #{mTitle}, #{mSubtitle}, #{mRelease}, #{mShowtime}, #{mPlot}, #{mCategory}, #{mScreeningType}, #{mMovieTheater}, #{mUrlImage}, #{mUrlMovie}, #{id}, CURDATE())
 	</insert>
 
 	<update id="updateMovie" parameterType="movie">
@@ -90,7 +90,7 @@
 			m_title = #{mTitle}, 
 			m_release = #{mRelease}, 
 			m_plot = #{mPlot}, 
-			m_category = #{mCategories}
+			m_category = #{mCategory}
 		WHERE m_id = #{mId}
 	</update>
 

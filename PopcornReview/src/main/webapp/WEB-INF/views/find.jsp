@@ -4,7 +4,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>오류 발생</title>
+    <title>ID/PWD</title>
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -17,7 +17,7 @@
             margin: 0;
             text-align: center;
         }
-        .error-container {
+        .find-container {
             background-color: #1F2937;
             padding: 40px;
             border-radius: 12px;
@@ -25,7 +25,7 @@
             max-width: 500px;
         }
         h1 {
-            color: #F87171;
+            color: #007AFF;
             font-size: 24px;
             margin-bottom: 15px;
         }
@@ -33,17 +33,15 @@
             font-size: 16px;
             margin-bottom: 25px;
         }
-        .error-details {
+        .find-details {
         		font-family: 'Noto Sans KR', sans-serif;
-            background-color: #374151;
-            padding: 15px;
+     		width: 250px;
+     		height: 50px;
             border-radius: 8px;
-            font-size: 13px;
-            text-align: left;
-            white-space: pre-wrap; /* 줄 바꿈을 위해 추가 */
-            word-wrap: break-word; /* 긴 단어 줄 바꿈 */
+            font-size: 25px;
+            text-align: center;
             color: #D1D5DB;
-            margin-bottom: 25px;
+            margin: 25px 0px;
         }
         a.button {
             display: inline-block;
@@ -62,23 +60,13 @@
     </style>
 </head>
 <body>
-    <div class="error-container">
-    		<c:choose>
-    			<c:when test="${not empty errorTitle}">
-    				<h1>${errorTitle}</h1>
-    			</c:when>
-    			<c:otherwise>
-    				<h1>요청 처리 중 오류 발생</h1>
-    			</c:otherwise>
-    		</c:choose>
-        <p>서비스 이용에 불편을 드려 죄송합니다. 문제가 지속될 경우 관리자에게 문의해주세요.</p>
-        
-        <!-- 컨트롤러에서 전달한 에러 메시지 표시 -->
-        <c:if test="${not empty errorMessage}">
-	        <div class="error-details">
-	            <strong>오류 내용:</strong> ${errorMessage}
-	        </div>
-        </c:if>
+    <div class="find-container">
+    
+    		<h1>${findIdOrPw}</h1>
+
+        <div class="find-details">
+             ${findText}
+        </div>
 
         <a href="javascript:history.back()" class="button">이전 페이지로 돌아가기</a>
     </div>
