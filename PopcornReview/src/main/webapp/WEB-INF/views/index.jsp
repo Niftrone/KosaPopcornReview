@@ -93,29 +93,31 @@
 		<%-- ================== 3. 최신 리뷰 섹션 ================== --%>
 		<section class="review-section">
 			<h3 class="section-title">최신 리뷰</h3>
-			<div class="review-card-list">
-				<c:choose>
-					<c:when test="${not empty latestReviews}">
-						<c:forEach var="review" items="${latestReviews}">
-							<a href="/review/${review.rId}" class="review-card">
-								<div class="review-header">
-									<div class="rating">
-										<img src="./image/popcorn.png" class="icon-popcorn" alt="팝콘">
-										<span class="rating-value">${review.rRating}</span>
-									</div>
-									<span class="reviewer-id">${review.user.id}***</span>
-								</div>
-								<p class="review-text">${review.rPlot}</p>
-							</a>
-						</c:forEach>
-					</c:when>
-					<c:otherwise>
-						<div class="empty-message-box">
-							<h3>최신 리뷰를 준비 중입니다.</h3>
-						</div>
-					</c:otherwise>
-				</c:choose>
-			</div>
+		    <div class="review-card-list">
+		        <c:choose>
+		            <c:when test="${not empty latestReviews}">
+		                <c:forEach var="review" items="${latestReviews}">
+		                    <%-- [수정] 클릭 시 /review/{리뷰ID} 형태의 URL로 이동하도록 href를 수정합니다. --%>
+		                    <a href="/review/${review.rId}" class="review-card">
+		                        <div class="review-header">
+		                            <div class="rating">
+		                                <img src="./image/popcorn.png" class="icon-popcorn" alt="팝콘">
+		                                <span class="rating-value">${review.rRating}</span>
+		                            </div>
+		                            <%-- rId가 아닌 user.id를 사용해야 합니다. --%>
+		                            <span class="reviewer-id">${review.user.id}***</span>
+		                        </div>
+		                        <p class="review-text">${review.rPlot}</p>
+		                    </a>
+		                </c:forEach>
+		            </c:when>
+		            <c:otherwise>
+		                <div class="empty-message-box">
+		                    <h3>최신 리뷰를 준비 중입니다.</h3>
+		                </div>
+		            </c:otherwise>
+		        </c:choose>
+		    </div>
 		</section>
 
 		<%-- ================== 4. 이번주 TOP 10 섹션 ================== --%>

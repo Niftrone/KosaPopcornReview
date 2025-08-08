@@ -15,6 +15,7 @@ import com.service.popcornreview.service.ReportService;
 import com.service.popcornreview.service.UserService;
 import com.service.popcornreview.vo.Movie;
 import com.service.popcornreview.vo.Review;
+import com.service.popcornreview.vo.Notice;
 import com.service.popcornreview.vo.User;
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.service.popcornreview.service.ReviewService;

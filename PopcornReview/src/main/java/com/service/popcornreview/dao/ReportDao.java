@@ -27,7 +27,11 @@ public class ReportDao {
 	}
 
 	public List<ReportedReview> getReported() {
-		System.out.println("ReportDao...getReported");
-		return sqlSession.selectList(NS + "getReported");
+	    System.out.println("ReportDao...getReported");
+	    return sqlSession.selectList(NS + "getReported");
+	    
+//	    List<ReportedReview> reportedReviewList = sqlSession.selectList(NS + "getReported");
+//	    System.out.println("조회된 신고 리뷰 목록: " + reportedReviewList);
+//	    return reportedReviewList;
 	}
 }

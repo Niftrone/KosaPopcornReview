@@ -4,11 +4,14 @@ public class Comment {
 	private int cId; // 댓글 아이디 c_id
 	private String cPlot; // 댓글 내용 c_plot
 	private String cDate; // 작성일 c_date
+	private int rId;
+	private String id;
 
 	// 연관 객체 정보
 	private User user; // 댓글을 작성한 사용자 정보
 	private Review review; // 댓글이 달린 리뷰 정보
 
+	
 	public Comment() {
 
 	}
@@ -29,6 +32,23 @@ public class Comment {
 	public void setcId(int cId) {
 		this.cId = cId;
 	}
+	
+	public int getrId() {
+		return rId;
+	}
+
+	public void setrId(int rId) {
+		this.rId = rId;
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setid(String id) {
+		this.id = id;
+	}
+
 
 	public String getcPlot() {
 		return cPlot;

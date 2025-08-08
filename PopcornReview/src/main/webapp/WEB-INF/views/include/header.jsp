@@ -13,6 +13,17 @@
 </head>
 
 <body>
+	<c:if test="${not empty sessionScope.loginUser}">
+	    <script>
+	        const loginUser = {
+	            id: "${sessionScope.loginUser.id}",
+	            name: "${sessionScope.loginUser.name}"
+	        };
+	        localStorage.setItem("loginUser", JSON.stringify(loginUser));
+	        console.log("✅ 로그인 유저 localStorage 저장됨:", loginUser);
+	    </script>
+	</c:if>
+
     <header>
         <div class="inner">
             <a href="/" class="logo-area">

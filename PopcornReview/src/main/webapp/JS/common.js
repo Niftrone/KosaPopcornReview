@@ -71,4 +71,8 @@ $(document).ready(function() {
             $(this).removeClass('active');
         }
     });
+	
+	document.querySelector('a[href="/user/logout"]')?.addEventListener('click', () => {
+	    localStorage.removeItem("loginUser");
+	});
 });

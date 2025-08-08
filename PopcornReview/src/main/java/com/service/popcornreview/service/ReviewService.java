@@ -18,6 +18,11 @@ public class ReviewService {
 		System.out.println("ReviewService...getAllReviews");
 		return reviewDao.getAllReviews(review);
 	}
+	
+	public Review getReview(Review review) {
+		System.out.println("ReviewService...getReview");
+		return reviewDao.getReview(review);
+	}
 
 	public int addReview(Review review) {
 		System.out.println("ReviewService...addReview");
