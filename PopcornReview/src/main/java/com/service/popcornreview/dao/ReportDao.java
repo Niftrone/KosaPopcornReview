@@ -25,6 +25,11 @@ public class ReportDao {
 		System.out.println("ReportDao...deleteReported");
 		return sqlSession.delete(NS + "deleteReported", rrId);
 	}
+	// [추가] 리뷰 ID로 신고 내역을 삭제하는 메서드
+		public int deleteReportByReviewId(int rId) {
+			System.out.println("ReportDao...deleteReportByReviewId");
+			return sqlSession.delete(NS + "deleteReportByReviewId", rId);
+		}
 
 	public List<ReportedReview> getReported() {
 	    System.out.println("ReportDao...getReported");

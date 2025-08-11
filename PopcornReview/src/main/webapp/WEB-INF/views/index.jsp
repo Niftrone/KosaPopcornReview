@@ -78,6 +78,9 @@
 										<span class="rating-value">${movie.mAverageScore}</span>
 									</div>
 								</div>
+								<div class="movie-plot-overlay">
+				                    <p>${movie.mPlot}</p>
+				                </div>
 							</a>
 						</c:forEach>
 					</c:when>
@@ -97,18 +100,19 @@
 		        <c:choose>
 		            <c:when test="${not empty latestReviews}">
 		                <c:forEach var="review" items="${latestReviews}">
-		                    <%-- [수정] 클릭 시 /review/{리뷰ID} 형태의 URL로 이동하도록 href를 수정합니다. --%>
-		                    <a href="/review/${review.rId}" class="review-card">
-		                        <div class="review-header">
-		                            <div class="rating">
-		                                <img src="./image/popcorn.png" class="icon-popcorn" alt="팝콘">
-		                                <span class="rating-value">${review.rRating}</span>
-		                            </div>
-		                            <%-- rId가 아닌 user.id를 사용해야 합니다. --%>
-		                            <span class="reviewer-id">${review.user.id}***</span>
-		                        </div>
-		                        <p class="review-text">${review.rPlot}</p>
-		                    </a>
+							<a href="/review/${review.rId}" class="review-card">
+							    <div class="review-header">
+							        <div class="rating-title-group">
+							            <div class="rating">
+							                <img src="./image/popcorn.png" class="icon-popcorn" alt="팝콘">
+							                <span class="rating-value">${review.rRating}</span>
+							            </div>
+							            <span class="review-movie-title">${review.movie.mTitle}</span>
+							        </div>
+							        <span class="reviewer-name">${review.user.name}</span>
+							    </div>
+							    <p class="review-text">${review.rPlot}</p>
+							</a>
 		                </c:forEach>
 		            </c:when>
 		            <c:otherwise>
@@ -136,6 +140,9 @@
 										<span class="rating-value">${movie.mAverageScore}</span>
 									</div>
 								</div>
+								<div class="movie-plot-overlay">
+				                    <p>${movie.mPlot}</p>
+				                </div>
 							</a>
 						</c:forEach>
 					</c:when>
@@ -151,7 +158,7 @@
 		<%-- ================== 5. 출시 예정작 섹션 ================== --%>
 		<section class="latest-movie-list-section">
 			<h3 class="section-title">출시 예정작</h3>
-			<div class="movie-card-list">
+			<div class="movie-card-list" id="upcoming-movie-list">
 				<c:choose>
 					<c:when test="${not empty upcomingMovies}">
 						<c:forEach var="movie" items="${upcomingMovies}">
@@ -160,7 +167,11 @@
 								<div class="card-info">
 									<span class="movie-title">${movie.mTitle}</span>
 								</div>
+								<div class="movie-plot-overlay">
+				                    <p>${movie.mPlot}</p>
+				                </div>
 							</a>
+							
 						</c:forEach>
 					</c:when>
 					<c:otherwise>

@@ -33,6 +33,10 @@
 		DELETE FROM REPORTED_REVIEWS WHERE rr_id = #{value}
 	</delete>
 	
+	<delete id="deleteReportByReviewId" parameterType="int">
+    DELETE FROM REPORTED_REVIEWS WHERE r_id = #{value}
+	</delete>
+	
 	<select id="getReported" resultMap="ReportedReviewMap">
 		SELECT
 			rr.rr_id,

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam; // RequestParam을 사용하기 위해 import 추가
 
 import com.service.popcornreview.service.CommentService;
 import com.service.popcornreview.service.MovieService;
@@ -51,14 +52,14 @@ public class ReviewController {
         
         if (review != null) {
             // 2. [수정] 조회된 리뷰 객체에서 영화 ID를 꺼내 관련 영화 정보를 가져옵니다.
-            String movieId = review.getMovie().getmId();
+            // Movie VO의 getmId()는 Integer를 반환하므로 int 타입으로 받아야 합니다.
+            int movieId = review.getMovie().getmId();
             Movie movie = movieService.getMovie(movieId);
             Comment comment = new Comment();
             comment.setReview(review);
             
             List<Comment> foundComments = commentService.getComments(comment);
             
-            System.out.println(foundComments);
             // 3. [수정] Model을 사용해 JSP로 데이터를 전달합니다. (HttpSession 대신)
             model.addAttribute("reviewDetail", review);
             model.addAttribute("movieDetail", movie);
@@ -102,22 +103,25 @@ public class ReviewController {
 
 	// REVIEW-05: 리뷰 삭제 (POST /review/delete)
 	@PostMapping("/delete")
-	public String deleteReview() {
+	public String deleteReview(@RequestParam("rId") int rId) { // 어떤 리뷰를 삭제할지 ID를 받아야 합니다.
 		// 사용자가 자신의 리뷰를 삭제하는 로직
+        // reviewService.deleteReview(rId);
 		return "redirect:/mypage";
 	}
 	
 	// REVIEW-06: 리뷰 수정 (POST /review/update)
 	@PostMapping("/update")
-	public String updateReview() {
+	public String updateReview(Review review) { // 수정할 내용을 Review 객체로 받습니다.
 		// 사용자가 자신의 리뷰를 수정하는 로직
-		return "redirect:/review/detailreview?id=...";
+        // reviewService.updateReview(review);
+		return "redirect:/review/" + review.getrId(); // 수정된 리뷰의 상세 페이지로 이동합니다.
 	}
 
 	// REVIEW-07: 리뷰 신고 (POST /review/reported)
 	@PostMapping("/reported")
-	public String addReported() {
+	public String addReported(@RequestParam("rId") int rId) { // 어떤 리뷰를 신고할지 ID를 받아야 합니다.
 		// 사용자가 불쾌한 리뷰를 신고하는 로직
-		return "redirect:/review/detailreview?id=...";
+		// reportService.addReportedReview(...);
+		return "redirect:/review/" + rId; // 신고 후 해당 리뷰 상세 페이지로 다시 이동합니다.
 	}
 }
