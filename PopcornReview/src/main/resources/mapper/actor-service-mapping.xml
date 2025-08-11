@@ -42,6 +42,7 @@
         WHERE a_name = #{value}
     </select>
 
+
     <!-- (선택) ID로 단건 - 위 getActor와 동일 기능 -->
     <select id="getActorById" parameterType="string" resultMap="actorRM">
         SELECT a_id, a_name, a_plot, a_url_image

@@ -54,11 +54,11 @@
 	</select>
 
 	<select id="searchMovies" parameterType="string" resultType="movie">
-	    SELECT * FROM movie
-	    <if test="value != null and value != ''">
-            WHERE m_title LIKE CONCAT('%', #{value}, '%')
-        </if>
-    	ORDER BY m_release DESC
+    SELECT * FROM movie
+    <if test="_parameter != null and _parameter != ''">
+        WHERE m_title LIKE CONCAT('%', #{value}, '%')
+    </if>
+    ORDER BY m_release DESC
 	</select>
 
 	<select id="getRecommendedMovies" resultType="movie">
@@ -84,7 +84,7 @@
 	</select>
 
 	<select id="getUpcomingMovies" resultType="movie">
-		SELECT * FROM movie WHERE m_release > CURDATE() ORDER BY m_release ASC
+		SELECT * FROM movie WHERE m_release > CURDATE() OR m_release IS NULL ORDER BY m_release ASC;
 	</select>
 
 	<!-- 영화 INSERT: 키 생성 → movie.mId 세팅 -->

@@ -50,7 +50,7 @@ public class MovieController {
 		
 	    return "index";
 	}
-	
+		
 	@GetMapping("/movie/search")
 	public String getSearchMovie(String query,Model model) {
 		
@@ -58,6 +58,7 @@ public class MovieController {
 			List<Movie> movies = movieService.searchMovies(query);
 			
 			model.addAttribute("movies",movies);
+			System.out.println("movies=>"+movies);
 			model.addAttribute("query", query);
 			return "SearchResult";
 		} catch(Exception e) {

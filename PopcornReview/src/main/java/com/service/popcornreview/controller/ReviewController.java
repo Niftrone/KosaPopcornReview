@@ -60,7 +60,6 @@ public class ReviewController {
             
             List<Comment> foundComments = commentService.getComments(comment);
             
-            System.out.println(foundComments);
             // 3. [수정] Model을 사용해 JSP로 데이터를 전달합니다. (HttpSession 대신)
             model.addAttribute("reviewDetail", review);
             model.addAttribute("movieDetail", movie);

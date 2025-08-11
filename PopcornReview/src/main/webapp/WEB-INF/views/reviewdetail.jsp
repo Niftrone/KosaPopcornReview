@@ -52,13 +52,14 @@
 			</section>
 
 			<section class="comment-form">
-				<form id="commentForm" action="/comment/add" method="post">
-					<input type="hidden" name="reviewId" value="${reviewDetail.rId}">
-					<input type="hidden" name="userId" id="userIdField" />
-					<textarea name="cPlot" class="comment-input"
-						placeholder="댓글을 남겨주세요" required></textarea>
-					<button type="submit" class="comment-submit-button">추가</button>
-				</form>
+			    <form id="commentForm" action="/comment/add" method="post">
+			        <input type="hidden" name="review.rId" value="${reviewDetail.rId}">
+			
+			        <input type="hidden" name="user.id" value="${loginUser.id}" />
+			
+			        <textarea name="cPlot" class="comment-input" placeholder="댓글을 남겨주세요" required></textarea>
+			        <button type="submit" class="comment-submit-button">등록</button>
+			    </form>
 			</section>
 
 			<section id="comment-list-section" class="comment-list">

@@ -31,9 +31,8 @@ public class CommentDao {
 		return sqlSession.update(NS + "updateComment", comment);
 	}
 
-	public List<Comment> getComments(Comment comment) {
+	public List	<Comment> getComments(Comment comment) {
 		System.out.println("CommentDao...getComments");
-		System.out.println(comment);
 		return sqlSession.selectList(NS + "getComments", comment);
 
 	}

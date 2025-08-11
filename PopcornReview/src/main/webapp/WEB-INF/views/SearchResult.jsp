@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>검색 결과</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         body { background-color: #18181B; color: #FFFFFF; font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 40px; }
         .container { max-width: 1200px; margin: 0 auto; }
@@ -97,7 +98,7 @@
 
     <div class="container">
         <div class="page-header">
-		    <h1>검색 <span>"su"</span></h1>
+		    <h1>검색 <span>"${query}"</span></h1>
 		    
 		    <select name="sort" class="sort-select">
 		        <option value="latest">최신순</option>
@@ -108,13 +109,16 @@
 
 
         <div class="results-grid">
-            <c:forEach var="item" items="${results}">
-                <div class="movie-card"> 
+            <%-- "results"를 "movies"로 수정 --%>
+            <c:forEach var="item" items="${movies}">
+               
+                 <div class="movie-card"> 
                     <img src="${pageContext.request.contextPath}${item.mUrlImage}" alt="${item.mTitle}">
                     <div class="info-section">
                         <h3 class="title">${item.mTitle}</h3>
                         <p class="metadata">${item.mRelease} · ${item.mDirector}</p>
-                    </div>
+  
+                   </div>
                 </div>
             </c:forEach>
         </div>

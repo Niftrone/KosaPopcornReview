@@ -9,7 +9,10 @@
     <!-- Bootstrap CSS -->
 <!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
  -->
-    <link rel="stylesheet" href="../CSS/common.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/common.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <%-- JQuery 경로 확인 --%>
+    
 </head>
 
 <body>
@@ -36,7 +39,15 @@
                 </div>
             </a>
             <div class="search">
-			    <input type="text" placeholder="영화를 검색해주세요" id="searchInput" />
+			    <input type="text" placeholder="영화를 검색해주세요" id="searchInput" autocomplete="off" />
+			    	<div class="recent-searches" id="recentSearchesContainer">
+			        	<div class="recent-header">
+			            	<span class="recent-title">최근 검색어</span>
+			            	<button type="button" class="clear-all">전체삭제</button>
+			        	</div>
+			        	<ul class="recent-list">
+			            </ul>
+			    	</div>
 			</div>
             
             <div class="header-buttons">
@@ -110,7 +121,7 @@
                     <input type="password" name="pwd" placeholder="비밀번호를 입력하세요." required>
                     <input type="password" placeholder="비밀번호를 다시 입력하세요." required>
                     <input type="email" name="email" placeholder="이메일" required>
-                    <input type="text" name="name" placeholder="이름을 입력해주세요." required>
+                    <input type="text" name="name" placeholder="닉네임을 입력해주세요." required>
                     <input type="tel" name="birthdate" placeholder="생년월일 (예: 2000-01-01)" required>
                     <input type="tel" name="phone" placeholder="핸드폰 번호를 입력하세요" required>
                     <div class="gender-selection">
@@ -141,7 +152,7 @@
                 <div id="find-id" class="tab-pane active">
                     <p class="description">회원 정보에 등록된 정보로 아이디를 찾을 수 있습니다.</p>
                     <form action="/user/find" class="modal-form" method="post">
-                        <input type="text" name="name" placeholder="이름을 입력해주세요." required>
+                        <input type="text" name="name" placeholder="닉네임을 입력해주세요." required>
                         <input type="tel" name="phone" placeholder="핸드폰 번호를 입력하세요" required>
                         <input name="test" value="true" hidden=""/>
                         <button type="submit" class="btn-submit">아이디 찾기</button>
@@ -160,8 +171,7 @@
             </div>
         </div>
     </div>
-
-    <script src="../JS/common.js"></script>
+    <script src="${pageContext.request.contextPath}/JS/common.js"></script>
 </body>
 
 </html>
