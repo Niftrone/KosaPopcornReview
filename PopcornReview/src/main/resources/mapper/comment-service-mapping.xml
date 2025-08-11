@@ -68,4 +68,8 @@
 	    </where>
 	    ORDER BY c.c_date DESC
     </select>
+    <!-- user가 삭제될때 comment도 같이 삭제 -->
+    <delete id="deleteCommentsByUserId" parameterType="string">
+    DELETE FROM comment WHERE user_id = #{userId}
+</delete>
 </mapper>

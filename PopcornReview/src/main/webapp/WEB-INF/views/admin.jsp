@@ -187,7 +187,7 @@ body {
 	background-color: #3B82F6;
 }
 
-/* 모달 (기존과 동일) */
+/* 모달 */
 .modal {
 	display: none;
 	position: fixed;
@@ -222,7 +222,7 @@ body {
 .modal-box input, .modal-box textarea {
 	width: 100%;
 	padding: 10px;
-	border: none;
+	border: none !important;
 	border-radius: 6px;
 	background: #4B5563;
 	color: #fff;
@@ -253,79 +253,10 @@ body {
 	color: #fff;
 	cursor: pointer;
 }
-
-/* 인물 자동완성 (기존과 동일) */
-.autocomplete-list {
-	display: block !important;
-	position: absolute;
-	top: 100%;
-	left: 0;
-	width: 100%;
-	background: #374151;
-	border: 1px solid #ccc;
-	z-index: 10;
-	list-style: none;
-	padding: 0;
-	margin: 2px 0 0 0;
-	max-height: 120px;
-	overflow-y: auto;
-}
-
-.autocomplete-list li {
-	padding: 8px;
-	cursor: pointer;
-}
-
-.autocomplete-list li:hover {
-	background-color: #eee;
-}
-
-.info-text {
-	font-size: 13px;
-	color: #f87171;
-	margin-top: 5px;
-}
-
-.modal-box input, .modal-box textarea {
-	border: none !important;
-}
-
-.actor-tag {
-	display: inline-block;
-	background: #4b5563;
-	color: #fff;
-	padding: 5px 10px;
-	margin: 3px;
-	border-radius: 4px;
-	font-size: 14px;
-}
-
-.input-with-button {
-	display: flex;
-	align-items: center;
-}
-
-.input-with-button input[type="text"] {
-	flex: 1;
-	border: none !important;
-}
-
-.input-with-button button {
-	margin-left: 5px;
-	padding: 6px 10px;
-	font-size: 13px;
-}
 </style>
 
 <script>
-/* ---- 데이터 (데모용) ---- */
-const directors = ["봉준호", "박찬욱", "임권택", "김지운"];
-const actors    = ["송강호", "이병헌", "전도연", "김혜수", "최민식"];
-
-/* [수정 3] 서버에서 활성 섹션을 제어하므로 JS 함수는 제거합니다. */
-// function showSection(id){ ... }
-
-/* ---- 모달 열기/닫기 (기존과 동일) ---- */
+/* ---- 모달 열기/닫기 ---- */
 function openModal(id){
   const modal = document.getElementById(id);
   if(!modal) return;
@@ -335,7 +266,7 @@ function openModal(id){
     if(id==='modal-notice') form.action = '/admin/notice/add';
     if(id==='modal-movie')  form.action = '/admin/movie/add';
     if(id==='modal-actor')  form.action = '/admin/actor/add';
-    form.querySelectorAll('input[type="text"], input[type="date"], textarea, input[type="number"]').forEach(el=>{ el.value=''; });
+    form.querySelectorAll('input:not([type=hidden]), textarea').forEach(el => { el.value=''; });
     const hid = form.querySelector('input[type="hidden"]'); if(hid) hid.value='';
   }
   modal.classList.add('active');
@@ -350,7 +281,7 @@ function confirmDelete(form){
   if(confirm('정말 삭제하시겠습니까?')) form.submit();
 }
 
-/* ---- 수정 모달 오픈 (기존과 동일) ---- */
+/* ---- 수정 모달 오픈 ---- */
 function openNoticeEditModal(noticeId, noticeTitle, noticePlot){
   const modal = document.getElementById('modal-notice');
   const form  = modal.querySelector('form');
@@ -365,66 +296,42 @@ function openNoticeEditModal(noticeId, noticeTitle, noticePlot){
   modal.classList.add('active');
 }
 
-function openMovieEditModal(mId, mTitle, mSubtitle){
+// ==========================================================
+// [FINAL UPDATE] 영화 수정 모달을 열 때 모든 데이터를 채우도록 수정
+// ==========================================================
+function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, mCategories, mDirector, actors, mScreeningType, mMovieTheater, mUrlImage, mUrlMovie){
   const modal = document.getElementById('modal-movie');
   const form  = modal.querySelector('form');
   form.action = '/admin/movie/update';
   form.setAttribute('data-guard','update');
+
+  // 전달받은 모든 데이터로 폼 필드를 채웁니다.
   form.querySelector('input[name="mId"]').value = mId;
   form.querySelector('input[name="mTitle"]').value = mTitle;
   form.querySelector('input[name="mSubtitle"]').value = mSubtitle;
+  form.querySelector('textarea[name="mPlot"]').value = mPlot;
+  form.querySelector('input[name="mRelease"]').value = mRelease;
+  form.querySelector('input[name="mShowtime"]').value = mShowtime;
+  form.querySelector('input[name="mCategories"]').value = mCategories;
+  form.querySelector('input[name="mDirector"]').value = mDirector;
+  form.querySelector('input[name="actors"]').value = actors;
+  form.querySelector('input[name="mScreeningType"]').value = mScreeningType;
+  form.querySelector('input[name="mMovieTheater"]').value = mMovieTheater;
+  form.querySelector('input[name="mUrlImage"]').value = mUrlImage;
+  form.querySelector('input[name="mUrlMovie"]').value = mUrlMovie;
+
+  // 변경사항 감지를 위해 초기값을 설정합니다.
   form.querySelectorAll('[name]').forEach(el=>{
     if(el.type!=='file') el.dataset.initial = (el.value||'').trim();
   });
   modal.classList.add('active');
 }
-
-/* ---- 자동완성 (기존과 동일) ---- */
-function setupAutocomplete(inputId, listId, data, infoId){
-  const input = document.getElementById(inputId);
-  const list  = document.getElementById(listId);
-  const info  = document.getElementById(infoId);
-  if(!input) return;
-
-  input.addEventListener("input", ()=>{
-    const values = input.value.split(',').map(s=>s.trim());
-    const last   = values[values.length-1].toLowerCase();
-    list.innerHTML=""; info.textContent="";
-    if(last.length===0) return;
-
-    const filtered = data.filter(n=>n.toLowerCase().includes(last));
-    if(filtered.length===0) info.textContent="⚠ 존재하지 않는 인물: " + last;
-
-    filtered.forEach(name=>{
-      const li=document.createElement("li");
-      li.textContent=name;
-      li.onclick=()=>{
-        values[values.length-1]=name;
-        input.value = values.join(', ') + ', ';
-        list.innerHTML=""; info.textContent="";
-      };
-      list.appendChild(li);
-    });
-  });
-  input.addEventListener("blur", ()=> setTimeout(()=> list.innerHTML="",150));
-}
-
-/* ---- 페이지 로드시 (기존과 동일) ---- */
-window.onload = ()=>{
-  setupAutocomplete("directorInput","directorSuggestions",directors,"directorInput-info");
-  setupAutocomplete("actorInput","actorSuggestions",actors,"actorInput-info");
-};
 </script>
 </head>
 <body>
 	<div class="container">
 		<div class="sidebar">
 			<h2>Admin</h2>
-			<%-- ========================================================== --%>
-			<%-- [수정 4] button 태그를 a 태그로 변경하고,                  --%>
-			<%--          onclick 대신 href 속성을 사용하여 서버에 요청합니다.    --%>
-			<%--          JSTL을 이용해 현재 활성화된 메뉴에 active 클래스를 부여합니다. --%>
-			<%-- ========================================================== --%>
 			<a href="/admin/list?section=notice" id="btn-notice"
 				class="${activeSection == 'notice' ? 'active' : ''}">공지사항 관리</a> <a
 				href="/admin/list?section=movie" id="btn-movie"
@@ -434,15 +341,10 @@ window.onload = ()=>{
 		</div>
 
 		<div class="main">
-			<%-- ========================================================== --%>
-			<%-- [수정 5] 각 섹션 div에 JSTL을 사용하여 active 클래스를 동적으로 부여합니다.--%>
-			<%-- ========================================================== --%>
-			<!-- 공지사항 관리 -->
 			<div id="notice"
 				class="section ${activeSection == 'notice' ? 'active' : ''}">
 				<div class="title">공지사항 관리</div>
-				<button class="btn-top" onclick="openModal('modal-notice')">공지
-					등록</button>
+				<button class="btn-top" onclick="openModal('modal-notice')">공지 등록</button>
 				<div class="search-box">
 					<form method="get" action="/admin/notice/search">
 						<input type="text" name="keyword" placeholder="제목 검색" />
@@ -462,8 +364,7 @@ window.onload = ()=>{
 						<tbody>
 							<c:if test="${empty noticeList}">
 								<tr>
-									<td colspan="4" style="text-align: center;">등록된 공지사항이
-										없습니다.</td>
+									<td colspan="4" style="text-align: center;">등록된 공지사항이 없습니다.</td>
 								</tr>
 							</c:if>
 							<c:forEach var="notice" items="${noticeList}" varStatus="status">
@@ -489,12 +390,10 @@ window.onload = ()=>{
 				</div>
 			</div>
 
-			<!-- 영화 관리 -->
 			<div id="movie"
 				class="section ${activeSection == 'movie' ? 'active' : ''}">
 				<div class="title">영화 관리</div>
-				<button class="btn-top" onclick="openModal('modal-movie')">영화
-					등록</button>
+				<button class="btn-top" onclick="openModal('modal-movie')">영화 등록</button>
 				<div class="search-box">
 					<form method="get" action="/admin/movie/search">
 						<input type="text" name="keyword" placeholder="제목 검색" />
@@ -525,8 +424,25 @@ window.onload = ()=>{
 									<td>${movie.mSubtitle}</td>
 									<td>${movie.mRelease}</td>
 									<td>
+                                        <%-- ========================================================== --%>
+                                        <%-- [FINAL UPDATE] 수정 버튼 클릭 시 모든 영화 정보를 전달하도록 수정 --%>
+                                        <%-- ========================================================== --%>
 										<button
-											onclick="openMovieEditModal('${movie.mId}', '${movie.mTitle}', '${movie.mSubtitle}')">수정</button>
+											onclick="openMovieEditModal(
+												'${movie.mId}',
+												`${movie.mTitle}`,
+												`${movie.mSubtitle}`,
+												`${movie.mPlot}`,
+												'${movie.mRelease}',
+												'${movie.mShowtime}',
+												`${movie.mCategory}`,
+												`${movie.mDirector}`,
+												`${movie.actors}`,
+												`${movie.mScreeningType}`,
+												`${movie.mMovieTheater}`,
+												`${movie.mUrlImage}`,
+												`${movie.mUrlMovie}`
+											)">수정</button>
 										<form method="post" action="/admin/movie/delete"
 											onsubmit="event.preventDefault(); confirmDelete(this);"
 											style="display: inline;">
@@ -541,7 +457,6 @@ window.onload = ()=>{
 				</div>
 			</div>
 
-			<!-- 신고 리뷰 관리 -->
 			<div id="report"
 				class="section ${activeSection == 'report' ? 'active' : ''}">
 				<div class="title">신고 리뷰 관리</div>
@@ -572,20 +487,11 @@ window.onload = ()=>{
 							</c:if>
 							<c:forEach var="reportedReview" items="${reportList}"
 								varStatus="status">
-								
 								<tr>
 									<td>${reportedReview.review.rPlot}</td>
-
-									<!-- 리뷰 작성자 이름 -->
 									<td>${reportedReview.review.user.name}</td>
-
-									<!-- 신고자 이름 -->
 									<td>${reportedReview.user.name}</td>
-
-									<!-- 신고일 -->
 									<td>${reportedReview.rrDate}</td>
-
-									<!-- 신고 사유 -->
 									<td>${reportedReview.rrPlot}</td>
 									<td>
 										<form method="post" action="/admin/review/delete"
@@ -601,104 +507,53 @@ window.onload = ()=>{
 				</div>
 			</div>
 
-
-
-
-
-
-	<div class="modal" id="modal-notice">
-    <div class="modal-box">
-        <c:choose>
-            <c:when test="${empty noticeId}">
-                <c:set var="noticeAction" value="/admin/notice/add" />
-                <c:set var="noticeLabel" value="등록" />
-                <c:set var="noticeGuard" value="create" />
-            </c:when>
-            <c:otherwise>
-                <c:set var="noticeAction" value="/admin/notice/update" />
-                <c:set var="noticeLabel" value="수정" />
-                <c:set var="noticeGuard" value="update" />
-            </c:otherwise>
-        </c:choose>
-        <form method="post" action="${noticeAction}" data-guard="${noticeGuard}">
-            <h3>공지사항</h3>
-            <input type="hidden" name="noticeId" value=""> 
-            <input type="text" name="notice" placeholder="제목" required data-label="제목">
-            <textarea name="noticePlot" rows="6" placeholder="내용" required data-label="내용"></textarea>
-            <div class="button-group">
-                <button type="submit">${noticeLabel}</button>
-                <button type="button" onclick="closeModal('modal-notice')">취소</button>
-            </div>
-        </form>
-    </div> </div>
-
-		<!-- ▣ 영화 모달 ▣ -->
-
+		<div class="modal" id="modal-notice">
+			<div class="modal-box">
+				<h3>공지사항</h3>
+				<form method="post" action="/admin/notice/add" data-guard="create">
+					<input type="hidden" name="noticeId" value="">
+					<input type="text" name="notice" placeholder="제목" required data-label="제목">
+					<textarea name="noticePlot" rows="6" placeholder="내용" required data-label="내용"></textarea>
+					<div class="button-group">
+						<button type="submit">등록</button>
+						<button type="button" onclick="closeModal('modal-notice')">취소</button>
+					</div>
+				</form>
+			</div>
+		</div>
 
 		<div class="modal" id="modal-movie">
 			<div class="modal-box">
-				<c:choose>
-					<c:when test="${empty mId}">
-						<c:set var="movieAction" value="/admin/movie/add" />
-						<c:set var="movieLabel" value="등록" />
-						<c:set var="movieGuard" value="create" />
-					</c:when>
-					<c:otherwise>
-						<c:set var="movieAction" value="/admin/movie/update" />
-						<c:set var="movieLabel" value="수정" />
-						<c:set var="movieGuard" value="update" />
-					</c:otherwise>
-				</c:choose>
 				<h3>영화</h3>
 				<form method="post" action="/admin/movie/add" data-guard="create">
-					<input type="hidden" name="mId" value=""> <input
-						type="text" name="mTitle" placeholder="제목" required
-						data-label="제목"> <input type="text" name="mSubtitle"
-						placeholder="소제목" data-label="소제목">
+					<input type="hidden" name="mId" value="">
+                    <input type="text" name="mTitle" placeholder="제목" required data-label="제목">
+                    <input type="text" name="mSubtitle" placeholder="소제목" data-label="소제목">
 					<textarea name="mPlot" rows="4" placeholder="내용" data-label="내용"></textarea>
 					<input type="date" name="mRelease" required data-label="개봉일">
-					<input type="text" name="mShowtime" placeholder="상영시간(분)"
-						data-label="상영시간"> <input type="text" name="mCategories"
-						placeholder="장르" required data-label="장르">
-					<div style="position: relative;">
-						<input type="text" name="mDirector" id="directorInput"
-							placeholder="감독" autocomplete="off" required data-label="감독">
-						<ul id="directorSuggestions" class="autocomplete-list"></ul>
-						<div id="directorInput-info" class="info-text"></div>
-					</div>
-					<div style="position: relative;">
-						<div class="input-with-button">
-							<input type="text" name="actors" id="actorInput"
-								placeholder="배우 이름 입력 (쉼표로 구분)" autocomplete="off"
-								data-label="배우">
-							<button type="button" onclick="openModal('modal-actor')">추가</button>
-						</div>
-						<ul id="actorSuggestions" class="autocomplete-list"></ul>
-						<div id="actorInput-info" class="info-text"></div>
-					</div>
-					<input type="text" name="mScreeningType" placeholder="상영 타입"
-						data-label="상영 타입"> <input type="text"
-						name="mMovieTheater" placeholder="영화관" data-label="영화관"> <input
-						type="text" name="mUrlImage" placeholder="사진 URL"
-						data-label="사진 URL"> <input type="text" name="mUrlMovie"
-						placeholder="영상 URL" data-label="영상 URL">
+					<input type="text" name="mShowtime" placeholder="상영시간(분)" data-label="상영시간">
+                    <input type="text" name="mCategories" placeholder="장르" required data-label="장르">
+					<input type="text" name="mDirector" placeholder="감독" required data-label="감독">
+					<input type="text" name="actors" placeholder="배우 (쉼표로 구분)" data-label="배우">
+					<input type="text" name="mScreeningType" placeholder="상영 타입" data-label="상영 타입">
+                    <input type="text" name="mMovieTheater" placeholder="영화관" data-label="영화관">
+                    <input type="text" name="mUrlImage" placeholder="사진 URL" data-label="사진 URL">
+                    <input type="text" name="mUrlMovie" placeholder="영상 URL" data-label="영상 URL">
 					<div class="button-group">
-						<button type="submit">${movieLabel}</button>
+						<button type="submit">등록</button>
 						<button type="button" onclick="closeModal('modal-movie')">취소</button>
 					</div>
 				</form>
 			</div>
 		</div>
+
 		<div class="modal" id="modal-actor">
 			<div class="modal-box">
 				<h3>배우 등록</h3>
 				<form method="post" action="/admin/actor/add" data-guard="create">
-					<input type="text" name="aName" placeholder="이름" required
-						data-label="이름">
-					<textarea name="aPlot" rows="4" placeholder="소개" required
-						data-label="소개"></textarea>
-					<input type="text" name="aUrlImage" placeholder="사진 URL" required
-						data-label="사진 URL">
+					<input type="text" name="aName" placeholder="이름" required data-label="이름">
+					<textarea name="aPlot" rows="4" placeholder="소개" required data-label="소개"></textarea>
+					<input type="text" name="aUrlImage" placeholder="사진 URL" required data-label="사진 URL">
 					<div class="button-group">
 						<button type="submit">등록</button>
 						<button type="button" onclick="closeModal('modal-actor')">취소</button>
@@ -706,50 +561,50 @@ window.onload = ()=>{
 				</form>
 			</div>
 		</div>
-		<!--  -->
+
 		<script>
-  (function(){
-    document.querySelectorAll('form[data-guard]').forEach(function(form){
-      var mode = (form.getAttribute('data-guard') || 'create').toLowerCase();
-      form.querySelectorAll('[name]').forEach(function(el){
-        if(el.type !== 'file') el.dataset.initial = (el.value || '').trim();
-      });
-      function labelOf(el){ return el.getAttribute('data-label') || el.name; }
-      form.addEventListener('submit', function(e){
-        var empties = [];
-        var req = form.querySelectorAll('[name][required]');
-        req.forEach(function(el){
-          var empty = (el.type === 'file') ? !(el.files && el.files.length > 0) : !((el.value || '').trim());
-          if(empty) empties.push(labelOf(el));
-        });
-        if(empties.length){
-          e.preventDefault();
-          alert(empties.join(', ') + ' 칸이 비어있어서 ' + (mode==='create' ? '등록' : '수정') + '이(가) 안됩니다.');
-          var firstEmpty = Array.from(req).find(function(el){ return (el.type === 'file') ? !(el.files && el.files.length > 0) : !((el.value || '').trim()); });
-          if(firstEmpty) firstEmpty.focus();
-          return;
-        }
-        if(!form.checkValidity()) return;
-        var msg;
-        if(mode === 'create'){
-          msg = '정말 등록하시겠습니까?';
-        }else{
-          var changed = [];
-          form.querySelectorAll('[name]').forEach(function(el){
-            if(el.type === 'file'){
-              if(el.files && el.files.length > 0) changed.push(labelOf(el));
-            }else{
-              var now = (el.value || '').trim();
-              var ini = el.dataset.initial || '';
-              if(now !== ini) changed.push(labelOf(el));
-            }
-          });
-          msg = changed.length ? ('다음 항목이 변경됩니다:\n  - ' + changed.join('\n  - ') + '\n\n정말 수정하시겠습니까?') : '변경된 내용이 없습니다.\n그래도 수정하시겠습니까?';
-        }
-        if(!confirm(msg)) e.preventDefault();
-      });
-    });
-  })();
-  </script>
+        (function(){
+            document.querySelectorAll('form[data-guard]').forEach(function(form){
+            var mode = (form.getAttribute('data-guard') || 'create').toLowerCase();
+            form.querySelectorAll('[name]').forEach(function(el){
+                if(el.type !== 'file') el.dataset.initial = (el.value || '').trim();
+            });
+            function labelOf(el){ return el.getAttribute('data-label') || el.name; }
+            form.addEventListener('submit', function(e){
+                var empties = [];
+                var req = form.querySelectorAll('[name][required]');
+                req.forEach(function(el){
+                var empty = (el.type === 'file') ? !(el.files && el.files.length > 0) : !((el.value || '').trim());
+                if(empty) empties.push(labelOf(el));
+                });
+                if(empties.length){
+                e.preventDefault();
+                alert(empties.join(', ') + ' 칸이 비어있어서 ' + (mode==='create' ? '등록' : '수정') + '이(가) 안됩니다.');
+                var firstEmpty = Array.from(req).find(function(el){ return (el.type === 'file') ? !(el.files && el.files.length > 0) : !((el.value || '').trim()); });
+                if(firstEmpty) firstEmpty.focus();
+                return;
+                }
+                if(!form.checkValidity()) return;
+                var msg;
+                if(mode === 'create'){
+                msg = '정말 등록하시겠습니까?';
+                }else{
+                var changed = [];
+                form.querySelectorAll('[name]').forEach(function(el){
+                    if(el.type === 'file'){
+                    if(el.files && el.files.length > 0) changed.push(labelOf(el));
+                    }else{
+                    var now = (el.value || '').trim();
+                    var ini = el.dataset.initial || '';
+                    if(now !== ini) changed.push(labelOf(el));
+                    }
+                });
+                msg = changed.length ? ('다음 항목이 변경됩니다:\n  - ' + changed.join('\n  - ') + '\n\n정말 수정하시겠습니까?') : '변경된 내용이 없습니다.\n그래도 수정하시겠습니까?';
+                }
+                if(!confirm(msg)) e.preventDefault();
+            });
+            });
+        })();
+		</script>
 </body>
 </html>

@@ -144,10 +144,10 @@ public class AdminController {
 	
 	// ADMIN-03: 영화 정보 삭제 (POST)
 	@PostMapping("/admin/movie/delete")
-	public String doDeleteMovie( String movieId, Model model, RedirectAttributes ra) {
+	public String doDeleteMovie( String mId, Model model, RedirectAttributes ra) {
 		try {
 			System.out.println("삭제 진입");
-			movieService.deleteMovie(movieId);
+			movieService.deleteMovie(mId);
 			ra.addFlashAttribute("message","영화가 삭제되었습니다.");
 			
 	        return "redirect:/admin/list?section=movie";
@@ -194,7 +194,7 @@ public class AdminController {
 			ra.addFlashAttribute("message","공지사항 수정 완료 되었습니다.");
 			return "redirect:/admin/list?section=notice"; // [수정] 일관성을 위해 /admin/list 로 경로 변경
 		} catch (Exception e) {
-			model.addAttribute("errormessage","공지사항 수정을 실패 했습니다.");
+			model.addAttribute("errorMessage","공지사항 수정을 실패 했습니다.");
 			return "error";
 		}
 	}

@@ -37,4 +37,10 @@ public class CommentDao {
 		return sqlSession.selectList(NS + "getComments", comment);
 
 	}
+	
+	public int deleteCommentsByUserId(String userId) {
+	    System.out.println("CommentDao...deleteCommentsByUserId");
+	    return sqlSession.delete(NS + "deleteCommentsByUserId", userId);
+	}
+	
 }

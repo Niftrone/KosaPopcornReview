@@ -5,14 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.service.popcornreview.service.CommentService;
-import com.service.popcornreview.service.NoticeService;
-import com.service.popcornreview.service.ReportService;
-import com.service.popcornreview.service.UserService;
+import com.service.popcornreview.service.*;
+import com.service.popcornreview.vo.Comment;
 import com.service.popcornreview.vo.Movie;
 import com.service.popcornreview.vo.Review;
 import com.service.popcornreview.vo.Notice;
@@ -27,9 +26,22 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
+    private final ActorService actorService;
+
+    private final CommentService commentService;
+
+    private final ReviewService reviewService;
 	
 	@Autowired
 	private UserService userService;
+
+
+    UserController(ReviewService reviewService, CommentService commentService, ActorService actorService) {
+        this.reviewService = reviewService;
+        this.commentService = commentService;
+        this.actorService = actorService;
+    }
 
 
 	/**
@@ -104,10 +116,84 @@ public class UserController {
 	 * 마이페이지
 	 */
 	@GetMapping("/mypage")
-	public String mypage() {
-		// 세션 인터셉터 등을 통해 로그인 여부를 확인하는 로직이 추가되면 좋습니다.
-		return "mypage"; // mypage.jsp로 이동
+	public String mypage(HttpSession session, Model model) {
+		// 세션에 로그인 확인
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+
+			model.addAttribute("errorTitle", "로그인 필요");
+			model.addAttribute("errorMessage", "마이페이지를 이용하려면 로그인이 필요합니다.");
+			return "error";
+		}
+		try {
+			// 사용자가 작성한 리뷰/댓글 목록 조회
+			Review reviewCondition = new Review();
+			reviewCondition.setUser(loginUser);
+			List<Review> reviewList = reviewService.getAllReviews(reviewCondition);
+
+			// 댓글
+			Comment commentCondition = new Comment();
+			commentCondition.setUser(loginUser);
+			List<Comment> commentList = commentService.getComments(commentCondition);
+
+			model.addAttribute("reviewList", reviewList);
+			model.addAttribute("commentList", commentList);
+			model.addAttribute("user", loginUser); // 프로필에 채워야 해서 넘겨야함
+
+			return "mypage";
+
+		} catch (Exception e) {
+			model.addAttribute("errorTitle", "페이지 로딩 실패");
+			model.addAttribute("errorMessage", "마이페이지 이용이 제한됩니다.");
+			return "error";
+
+		}
+
 	}
+	
+	@PostMapping("update")
+	public String updateUser(User user, HttpSession session) {
+		System.out.println("유저정보 업데이트 진입?");
+		try {
+			userService.updateUser(user);
+			
+			//업데이트user정보 session에 저장
+			User updateUser = userService.getUser(user);
+			session.setAttribute("loginUser", updateUser);
+			
+			return "redirect:/user/mypage";
+			
+		} catch (Exception e) {
+			session.setAttribute("errorTitle", "정보 수정 실패");
+	        session.setAttribute("errorMessage", "사용자 정보를 수정하는 중 오류가 발생했습니다.");
+	        return "error";
+		}
+	}
+	/**
+	 * 회원 탈퇴 처리
+	 */
+	@PostMapping("/delete")
+	public String deleteUser(String id, HttpSession session) {
+	    try {
+	      
+	        userService.deleteUser(id);
+	        
+	        session.invalidate();
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        session.setAttribute("errorTitle", "회원 탈퇴 실패");
+	        session.setAttribute("errorMessage", "회원 탈퇴 처리 중 오류가 발생했습니다.");
+	        return "error";
+	    }
+	    
+	    // 3. 탈퇴 후 메인 페이지로 이동
+	    return "redirect:/";
+	}
+	
+	
+	
 	
 	@GetMapping("/logout")
 	public String doLogout(HttpSession session) {
@@ -117,3 +203,4 @@ public class UserController {
 	}
 
 }
+

@@ -24,14 +24,14 @@ public class NoticeUnitTest {
         // 1. INSERT 테스트
         Notice n = new Notice();
         n.setNoticeId(100);
-        n.setnotice("공지사항 제목입니다.");
+        n.setNotice("공지사항 제목입니다.");
         n.setNoticePlot("이것은 공지사항의 내용입니다.");
 
         int insertResult = session.insert(NS + "addNotice", n);
         System.out.println(" INSERT 결과: " + insertResult);
 
         // 2. UPDATE 테스트
-        n.setnotice("수정된 제목");
+        n.setNotice("수정된 제목");
         n.setNoticePlot("수정된 내용입니다.");
 
         int updateResult = session.update(NS + "updateNotice", n);
