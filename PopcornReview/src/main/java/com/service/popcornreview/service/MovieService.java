@@ -30,7 +30,16 @@ public class MovieService {
 
 	public Movie getMovie(String mId) {
 		System.out.println("MovieService...getMovie");
-		return movieDao.getMovie(mId);
+		Movie movie = movieDao.getMovie(mId);
+		for(Actor a : movie.getActors()) {	
+			String code = a.getaId(); 
+		    if (code.endsWith("2")) {
+		    	
+		    	movie.setmDirector(a.getaName());
+		    	break;
+		    }
+		}
+		return movie;
 	}
 	
 	public List<Movie> getBannerList(Movie movie){

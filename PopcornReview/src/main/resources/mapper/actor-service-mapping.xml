@@ -18,11 +18,12 @@
     </select>
     
     <select id="searchActorsByName" parameterType="string" resultType="com.service.popcornreview.vo.Actor">
-    SELECT a_id, a_name 
-    FROM actor 
-    WHERE a_name LIKE CONCAT('%', #{value}, '%')
-    LIMIT 10
-</select>
+      SELECT a_id, a_name 
+      FROM actor 
+      WHERE a_name LIKE CONCAT('%', #{value}, '%')
+      LIMIT 10
+    </select>
+
 </mapper>
  
 

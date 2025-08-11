@@ -9,7 +9,10 @@
     <!-- Bootstrap CSS -->
 <!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
  -->
-    <link rel="stylesheet" href="../CSS/common.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/common.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <%-- JQuery 경로 확인 --%>
+    
 </head>
 
 <body>
@@ -36,7 +39,15 @@
                 </div>
             </a>
             <div class="search">
-			    <input type="text" placeholder="영화를 검색해주세요" id="searchInput" />
+			    <input type="text" placeholder="영화를 검색해주세요" id="searchInput" autocomplete="off" />
+			    	<div class="recent-searches" id="recentSearchesContainer">
+			        	<div class="recent-header">
+			            	<span class="recent-title">최근 검색어</span>
+			            	<button type="button" class="clear-all">전체삭제</button>
+			        	</div>
+			        	<ul class="recent-list">
+			            </ul>
+			    	</div>
 			</div>
             
             <div class="header-buttons">
@@ -160,8 +171,7 @@
             </div>
         </div>
     </div>
-
-    <script src="../JS/common.js"></script>
+    <script src="${pageContext.request.contextPath}/JS/common.js"></script>
 </body>
 
 </html>
