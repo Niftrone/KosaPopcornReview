@@ -394,74 +394,100 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
       </div>
 
       <script>
-      (function(){
-        document.querySelectorAll('form[data-guard]').forEach(function(form){
-          var mode = (form.getAttribute('data-guard') || 'create').toLowerCase();
-          form.querySelectorAll('[name]').forEach(function(el){
-            if(el.type !== 'file') el.dataset.initial = (el.value || '').trim();
-          });
-          function labelOf(el){ return el.getAttribute('data-label') || el.name; }
-          form.addEventListener('submit', function(e){
-            var empties = [];
-            var req = form.querySelectorAll('[name][required]');
-            req.forEach(function(el){
-              var empty = (el.type === 'file') ? !(el.files && el.files.length > 0) : !((el.value || '').trim());
-              if(empty) empties.push(labelOf(el));
-            });
-            if(empties.length){
-              e.preventDefault();
-              alert(empties.join(', ') + ' 칸이 비어있어서 ' + (mode==='create' ? '등록' : '수정') + '이(가) 안됩니다.');
-              var firstEmpty = Array.from(req).find(function(el){ return (el.type === 'file') ? !(el.files && el.files.length > 0) : !((el.value || '').trim()); });
-              if(firstEmpty) firstEmpty.focus();
-              return;
-            }
-            if(!form.checkValidity()) return;
-            var msg;
-            if(mode === 'create'){
-              msg = '정말 등록하시겠습니까?';
-            }else{
-              var changed = [];
-              form.querySelectorAll('[name]').forEach(function(el){
-                if(el.type === 'file'){
-                  if(el.files && el.files.length > 0) changed.push(labelOf(el));
-                }else{
-                  var now = (el.value || '').trim();
-                  var ini = el.dataset.initial || '';
-                  if(now !== ini) changed.push(labelOf(el));
-                }
-              });
-              msg = changed.length ? ('다음 항목이 변경됩니다:\n  - ' + changed.join('\n  - ') + '\n\n정말 수정하시겠습니까?') : '변경된 내용이 없습니다.\n그래도 수정하시겠습니까?';
-            }
-            if(!confirm(msg)) e.preventDefault();
-          });
-        });
-      })();
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    /* ==============================
+       1) data-guard 폼 유효성 & 확인창
+       ============================== */
+    document.querySelectorAll('form[data-guard]').forEach(function (form) {
+      var mode = (form.getAttribute('data-guard') || 'create').toLowerCase();
 
-      // 수정 버튼 이벤트 위임
-      document.addEventListener('DOMContentLoaded', () => {
-        const movieTable = document.querySelector('#movie .table-box');
-        if (movieTable) {
-          movieTable.addEventListener('click', function(e) {
-            if (e.target && e.target.classList.contains('edit-movie-btn')) {
-              const btn = e.target;
-              const d = btn.dataset;
-              openMovieEditModal(
-                d.mid, d.mtitle, d.msubtitle, d.mplot,
-                d.mrelease, d.mshowtime, d.mcategories,
-                d.mdirector, d.actors, d.mscreeningtype,
-                d.mmovietheater, d.murlimage, d.murlmovie
-              );
-            }
-          });
-        }
+      // 초기값 스냅샷
+      form.querySelectorAll('[name]').forEach(function (el) {
+        if (el.type !== 'file') el.dataset.initial = (el.value || '').trim();
       });
 
-      // 배우 자동완성
-      const actorSearchInput = document.getElementById('actor-search-input');
-      const suggestionsBox   = document.getElementById('actor-suggestions');
-      let debounceTimer;
+      function labelOf(el) { return el.getAttribute('data-label') || el.name; }
 
-      actorSearchInput.addEventListener('input', () => {
+      form.addEventListener('submit', function (e) {
+        // required 빈값 검사
+        var empties = [];
+        var req = form.querySelectorAll('[name][required]');
+        req.forEach(function (el) {
+          var empty = (el.type === 'file')
+            ? !(el.files && el.files.length > 0)
+            : !((el.value || '').trim());
+          if (empty) empties.push(labelOf(el));
+        });
+        if (empties.length) {
+          e.preventDefault();
+          alert(empties.join(', ') + ' 칸이 비어있어서 ' + (mode === 'create' ? '등록' : '수정') + '이(가) 안됩니다.');
+          var firstEmpty = Array.from(req).find(function (el) {
+            return (el.type === 'file') ? !(el.files && el.files.length > 0) : !((el.value || '').trim());
+          });
+          if (firstEmpty) firstEmpty.focus();
+          return;
+        }
+
+        if (!form.checkValidity()) return;
+
+        // 변경 내용 안내
+        var msg;
+        if (mode === 'create') {
+          msg = '정말 등록하시겠습니까?';
+        } else {
+          var changed = [];
+          form.querySelectorAll('[name]').forEach(function (el) {
+            if (el.type === 'file') {
+              if (el.files && el.files.length > 0) changed.push(labelOf(el));
+            } else {
+              var now = (el.value || '').trim();
+              var ini = el.dataset.initial || '';
+              if (now !== ini) changed.push(labelOf(el));
+            }
+          });
+          msg = changed.length
+            ? ('다음 항목이 변경됩니다:\n  - ' + changed.join('\n  - ') + '\n\n정말 수정하시겠습니까?')
+            : '변경된 내용이 없습니다.\n그래도 수정하시겠습니까?';
+        }
+
+        if (!confirm(msg)) { e.preventDefault(); return; }
+
+        // ✅ 배우 CSV → 배열 파라미터로 변환 (mov-act 매핑용)
+        replaceActorsCsvWithArrayInputs(form);
+      });
+    });
+
+    /* ==============================
+       2) 영화 편집 버튼(테이블 이벤트 위임)
+       ============================== */
+    const movieTable = document.querySelector('#movie .table-box');
+    if (movieTable) {
+      movieTable.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('edit-movie-btn')) {
+          const btn = e.target;
+          const d = btn.dataset;
+          if (typeof openMovieEditModal === 'function') {
+            openMovieEditModal(
+              d.mid, d.mtitle, d.msubtitle, d.mplot,
+              d.mrelease, d.mshowtime, d.mcategories,
+              d.mdirector, d.actors, d.mscreeningtype,
+              d.mmovietheater, d.murlimage, d.murlmovie
+            );
+          }
+        }
+      });
+    }
+
+    /* ==============================
+       3) 배우 자동완성
+       ============================== */
+    const actorSearchInput = document.getElementById('actor-search-input');
+    const suggestionsBox   = document.getElementById('actor-suggestions');
+    let debounceTimer;
+
+    if (actorSearchInput && suggestionsBox) {
+      actorSearchInput.addEventListener('input', function () {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
           const query = actorSearchInput.value.trim();
@@ -474,66 +500,131 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
             .then(response => response.json())
             .then(actors => {
               suggestionsBox.innerHTML = '';
-              if (actors.length > 0) {
+              if (Array.isArray(actors) && actors.length > 0) {
                 actors.forEach(actor => {
                   const item = document.createElement('div');
                   item.textContent = actor.aName;
                   item.classList.add('suggestion-item');
-                  item.addEventListener('click', () => addActor(actor));
+                  item.addEventListener('click', function () { addActor(actor); });
                   suggestionsBox.appendChild(item);
                 });
                 suggestionsBox.style.display = 'block';
               } else {
                 suggestionsBox.style.display = 'none';
               }
+            })
+            .catch(() => {
+              suggestionsBox.innerHTML = '';
+              suggestionsBox.style.display = 'none';
             });
         }, 300);
       });
+    }
 
-      function addActor(actor) {
-        const box  = document.getElementById('selected-actors');
-        const hid  = document.getElementById('actors-hidden-input');
-        const ids  = (hid.value || '').split(',').filter(Boolean);
-        if (ids.includes(actor.aId)) {
-          alert('이미 추가된 배우입니다.');
-          actorSearchInput.value = '';
-          suggestionsBox.style.display = 'none';
-          return;
-        }
-        const tag = document.createElement('span');
-        tag.classList.add('actor-tag');
-        tag.textContent = actor.aName;
-        tag.dataset.actorId = actor.aId;
+    // 선택된 배우 태그 추가
+    window.addActor = function (actor) {
+      const box = document.getElementById('selected-actors');
+      const hid = document.getElementById('actors-hidden-input');
+      if (!box || !hid || !actor) return;
 
-        const x = document.createElement('span');
-        x.textContent = 'x';
-        x.classList.add('remove-tag');
-        x.onclick = () => removeActor(actor.aId);
-        tag.appendChild(x);
+      // CSV → 배열(문자열)로
+      const ids = (hid.value || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
 
-        box.appendChild(tag);
-        ids.push(actor.aId);
-        hid.value = ids.join(',');
+      // 중복(문자열 기준) 체크
+      const aIdStr = String(actor.aId);
+      if (ids.includes(aIdStr)) {
+        alert('이미 추가된 배우입니다.');
+        if (actorSearchInput) actorSearchInput.value = '';
+        if (suggestionsBox) suggestionsBox.style.display = 'none';
+        return;
+      }
 
-        actorSearchInput.value = '';
+      // 태그 생성
+      const tag = document.createElement('span');
+      tag.classList.add('actor-tag');
+      tag.textContent = actor.aName;
+      tag.dataset.actorId = aIdStr;
+
+      const x = document.createElement('span');
+      x.textContent = 'x';
+      x.classList.add('remove-tag');
+      x.onclick = () => removeActor(aIdStr);
+      tag.appendChild(x);
+
+      box.appendChild(tag);
+
+      // CSV 업데이트
+      ids.push(aIdStr);
+      hid.value = ids.join(',');
+
+      if (actorSearchInput) actorSearchInput.value = '';
+      if (suggestionsBox) suggestionsBox.style.display = 'none';
+    };
+
+    // 선택 해제
+    window.removeActor = function (actorId) {
+      const box = document.getElementById('selected-actors');
+      const hid = document.getElementById('actors-hidden-input');
+      if (!box || !hid) return;
+
+      const actorIdStr = String(actorId);
+
+      const tag = box.querySelector('[data-actor-id="' + actorIdStr + '"]');
+      if (tag) tag.remove();
+
+      const ids = (hid.value || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .filter(id => id !== actorIdStr);
+
+      hid.value = ids.join(',');
+    };
+
+    // 자동완성 박스 바깥 클릭 시 닫기
+    document.addEventListener('click', function (e) {
+      if (suggestionsBox && !e.target.closest('.actor-input-container')) {
         suggestionsBox.style.display = 'none';
       }
+    });
+  });
 
-      function removeActor(actorId) {
-        const box  = document.getElementById('selected-actors');
-        const hid  = document.getElementById('actors-hidden-input');
-        const tag  = box.querySelector('[data-actor-id="'+actorId+'"]');
-        if(tag) tag.remove();
-        const ids = (hid.value || '').split(',').filter(Boolean).filter(id => id !== actorId);
-        hid.value = ids.join(',');
-      }
+  /* ==============================
+     유틸: CSV → name="actors" 배열 인풋으로 변환
+     ============================== */
+  function replaceActorsCsvWithArrayInputs(form) {
+    const hid = form.querySelector('#actors-hidden-input');
+    if (!hid) return;
 
-      document.addEventListener('click', function(e) {
-        if (!e.target.closest('.actor-input-container')) {
-          suggestionsBox.style.display = 'none';
-        }
-      });
-      </script>
+    const ids = (hid.value || '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    // 기존 name="actors" 인풋(CSV hidden 제외) 제거
+    form.querySelectorAll('input[name="actors"]').forEach(function (el) {
+      if (el !== hid) el.remove();
+    });
+
+    // CSV hidden의 name이 'actors'면 충돌 방지 위해 제거
+    if ((hid.getAttribute('name') || '') === 'actors') {
+      hid.remove();
+    }
+
+    // id마다 독립 hidden 추가: actors=1&actors=2&actors=3
+    ids.forEach(function (id) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'actors';
+      input.value = id;
+      form.appendChild(input);
+    });
+  }
+})();
+</script>
     </div>
   </div>
 </body>

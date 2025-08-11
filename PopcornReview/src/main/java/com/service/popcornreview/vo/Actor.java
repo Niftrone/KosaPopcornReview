@@ -1,17 +1,14 @@
 package com.service.popcornreview.vo;
 
 public class Actor {
-	private String aId; // 배우 아이디 a_id
-	private String aName; // 배우 이름 a_name
-	private String aPlot; // 배우 설명 a_plot
+	private String aId;       // 배우 아이디 a_id
+	private String aName;     // 배우 이름 a_name
+	private String aPlot;     // 배우 설명 a_plot
 	private String aUrlImage; // 대표 이미지 URL a_url_image
 
-	public Actor() {
-
-	}
+	public Actor() { }
 
 	public Actor(String aId, String aName, String aPlot, String aUrlImage) {
-		super();
 		this.aId = aId;
 		this.aName = aName;
 		this.aPlot = aPlot;
@@ -54,5 +51,4 @@ public class Actor {
 	public String toString() {
 		return "Actor [aId=" + aId + ", aName=" + aName + ", aPlot=" + aPlot + ", aUrlImage=" + aUrlImage + "]";
 	}
-
 }

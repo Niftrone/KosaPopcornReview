@@ -17,7 +17,7 @@ public class MovieDao {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public Movie getMovie(String mId) {
+	public Movie getMovie(int mId) {
 		System.out.println("MovieDao...getMovie");
 		return sqlSession.selectOne(NS + "getMovie", mId);
 	}
@@ -57,22 +57,22 @@ public class MovieDao {
 		return sqlSession.update(NS + "updateMovie", movie);
 	}
 
-	public int deleteMovie(String mId) {
+	public int deleteMovie(int mId) {
 		System.out.println("MovieDao...deleteMovie");
 		return sqlSession.delete(NS + "deleteMovie", mId);
 	}
   
 	// [추가] 영화-배우 관계 삭제 메서드
-	public int deleteMovieActorRelations(String mId) {
+	public int deleteMovieActorRelations(int mId) {
 	    System.out.println("MovieDao...deleteMovieActorRelations");
 	    return sqlSession.delete(NS + "deleteMovieActorRelations", mId);
-	
+	}
 	public List<Movie> searchMovies(String query) {
 		return sqlSession.selectList(NS+"searchMovies",query);
 
 	}
 	// [추가] 영화-배우 관계를 mov_act 테이블에 추가하는 메서드
-	public int addMovieActorRelation(Map<String, String> params) {
+	public int addMovieActorRelation(Map<String, Object> params) {
 	    System.out.println("MovieDao...addMovieActorRelation");
 	    return sqlSession.insert(NS + "addMovieActorRelation", params);
 	}

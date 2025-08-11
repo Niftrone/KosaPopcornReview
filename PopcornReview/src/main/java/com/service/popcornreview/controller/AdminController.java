@@ -36,17 +36,18 @@ public class AdminController {
     public void bindActors(WebDataBinder binder) {
         binder.registerCustomEditor(List.class, "actors",
             new CustomCollectionEditor(List.class) {
+                @Override
                 protected Object convertElement(Object element) {
                     if (element == null) return null;
-                    String name = element.toString().trim();
-                    if (name.isBlank()) return null;
-                    
-                    Actor a = actorService.getActor(name);
-                    return a;
+
+                    String actorId = element.toString().trim();
+                    if (actorId.isEmpty()) return null;
+
+                    // 문자열 ID로 배우 조회
+                    return actorService.getActorById(actorId);
                 }
             });
     }
-
 	// [수정] /admin과 /admin/list 요청을 하나의 메서드에서 처리하도록 통합
     @GetMapping({"/admin", "/admin/list"})
     public String adminHome(Model model) {
@@ -144,7 +145,7 @@ public class AdminController {
 	
 	// ADMIN-03: 영화 정보 삭제 (POST)
 	@PostMapping("/admin/movie/delete")
-	public String doDeleteMovie( String mId, Model model, RedirectAttributes ra) {
+	public String doDeleteMovie( int mId, Model model, RedirectAttributes ra) {
 		try {
 			System.out.println("삭제 진입");
 			movieService.deleteMovie(mId);
