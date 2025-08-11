@@ -92,7 +92,9 @@ public class MovieController {
 	        List<Review> list = reviewService.getAllReviews(review);
 	       
 	        
-
+	        for(Review r :list) {
+	        	System.out.println("user=>"+r.getUser());
+	        }
 	        // ★ [수정됨] movieId 대신, 위에서 가져온 'list'를 그대로 전달합니다.
 	        AudienceStatsDto audienceStats = movieService.getAudienceStats(list);
 	        

@@ -36,7 +36,7 @@ public class ReviewService {
 	            
 	            // ✅ 새로 조회한 정보가 null이 아닐 때만 덮어쓰기
 	            if (fullUser != null) {
-	                r.getUser().setName(fullUser.getName());
+	            	r.setUser(fullUser);
 	            }
 	        }
 

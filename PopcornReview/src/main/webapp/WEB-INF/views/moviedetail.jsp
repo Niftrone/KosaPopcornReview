@@ -4,8 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<%-- 현재 날짜를 Date 객체로 준비 --%>
 <c:set var="now" value="<%=new java.util.Date()%>" />
-<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="todayStr" />
 
 <!DOCTYPE html>
 <html>
@@ -467,8 +467,10 @@
                 </div>
             </div>
         </div>
-<%-- ▼▼▼ 여기에 c:if 시작 태그를 추가합니다 ▼▼▼ --%>
-        <c:if test="${movie.mRelease <= todayStr}">
+        
+        
+<%-- ▼▼▼ [수정] .time 속성을 사용하여 숫자(밀리초)로 비교합니다 ▼▼▼ --%>
+<c:if test="${movie.mRelease.time <= now.time}">
         <%-- ========================================================= --%>
     <%-- ▼▼▼ [수정 시작] 관람객 통계 ▼▼▼                         --%>
     <%-- ========================================================= --%>
@@ -598,8 +600,8 @@
     <%-- ▼▼▼ 기존 코드는 그대로 둡니다 ▼▼▼ --%>
     <c:choose>
         <c:when test="${not empty reviews}">
-        <a href="/review/${review.rId}" class="review-link-wrapper">
             <c:forEach items="${reviews}" var="review">
+            	<a href="/review/${review.rId}" class="review-link-wrapper">
                 <c:choose>
                     <%-- 내 리뷰 (오른쪽) --%>
                     <c:when test="${review.user.id == sessionScope.loginUser.id}">
@@ -611,9 +613,9 @@
                             <div class="content-line">
                                 <%-- [수정 후] --%>
 					<%-- 이전에 수정했던 두 곳의 날짜 부분을 모두 아래와 같이 원래 코드로 복원합니다. --%>
-<span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
-    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
-</span>
+								<span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
+								    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
+								</span>
                                 <div class="chat-bubble">
                                     <div class="bubble-rating">
 									    <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
@@ -622,12 +624,11 @@
                                 </div>
                             </div>
                         </div>
-                        </a>
+                        
                     </c:when>
 
                     <%-- 다른 사람 리뷰 (왼쪽) --%>
                     <c:otherwise>
-                    	<a href="/review/${review.rId}" class="review-link-wrapper">
 	                        <div class="chat-message message-left">
 	                            <%-- ★★★ 구조 변경: 작성자를 위로 빼냅니다 ★★★ --%>
 	                            <span class="chat-author">${review.user.name}</span>
@@ -645,9 +646,9 @@
 									</span>
 	                            </div>
 	                        </div>
-	                    </a>
                     </c:otherwise>
                 </c:choose>
+                </a>
             </c:forEach>
         </c:when>
         <c:otherwise>
