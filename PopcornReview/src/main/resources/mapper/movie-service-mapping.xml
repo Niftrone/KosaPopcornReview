@@ -103,7 +103,7 @@
 	</update>
 
 	<delete id="deleteMovie" parameterType="string">
-		DELETE FROM movie WHERE m_id = #{mId}
+		DELETE FROM movie WHERE m_id = #{value}
 	</delete>
 	
 </mapper>

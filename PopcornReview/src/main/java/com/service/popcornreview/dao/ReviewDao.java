@@ -40,4 +40,9 @@ public class ReviewDao {
 		System.out.println("ReviewDao...deleteReview");
 		return sqlSession.delete(NS + "deleteReview", rId);
 	}
+	//user 삭제될떄 추가하기 위해서 
+	public int deleteReviewsByUserId(String userId) {
+	    System.out.println("ReviewDao...deleteReviewsByUserId");
+	    return sqlSession.delete(NS + "deleteReviewsByUserId", userId);
+	}
 }

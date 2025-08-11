@@ -11,7 +11,7 @@
 	
 	<update id="updateUser" parameterType="user">
 		UPDATE user 
-		SET pwd = #{pwd}, email = #{email}, name = #{name}, phone = #{phone}
+		SET email = #{email}, name = #{name}, phone = #{phone}
 		WHERE id = #{id}    
 	</update>
 	
