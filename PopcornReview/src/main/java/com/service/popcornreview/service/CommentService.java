@@ -25,10 +25,19 @@ public class CommentService {
 	private ReviewDao reviewDao;
 
 	public int addComment(Comment comment) {
-		System.out.println("CommentService...addComment");
-		return commentDao.addComment(comment);
-	}
+	    System.out.println("CommentService...addComment");
 
+	    if (comment.getUser() == null || comment.getUser().getId() == null) {
+	        throw new IllegalArgumentException("User ID는 null일 수 없습니다.");
+	    }
+
+	    if (comment.getReview() == null || comment.getReview().getrId() == 0) {
+	        throw new IllegalArgumentException("Review ID는 null일 수 없습니다.");
+	    }
+
+	    return commentDao.addComment(comment);
+	}
+	
 	public int deleteComment(int cId) {
 		System.out.println("CommentService...deleteComment");
 		return commentDao.deleteComment(cId);

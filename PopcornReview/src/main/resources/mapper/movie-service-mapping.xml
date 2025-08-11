@@ -82,7 +82,7 @@
 	</select>
 
 	<select id="getUpcomingMovies" resultType="movie">
-		SELECT * FROM movie WHERE m_release > CURDATE() ORDER BY m_release ASC
+		SELECT * FROM movie WHERE m_release > CURDATE() OR m_release IS NULL ORDER BY m_release ASC;
 	</select>
 
 	<insert id="addMovie" parameterType="movie">

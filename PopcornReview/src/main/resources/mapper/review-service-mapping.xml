@@ -12,13 +12,12 @@
         
          <association property="user" javaType="user">
             <id column="user_id" property="id"/>
-            </association>
+         </association>
 
          <association property="movie" javaType="com.service.popcornreview.vo.Movie">
             <id column="m_id" property="mId"/>
-            </association>
+         </association>
 	</resultMap>
-	
 	
 	<select id="getAllReviews" parameterType="review" resultMap="reviewRM">
 	    SELECT 

@@ -99,9 +99,12 @@ section {
 	/* 카드 좌우 여백과 상쇄 */
 }
 
+
 /* ======================= 영화 카드 ======================= */
 .movie-card {
 	margin: 0 10px;
+	position: relative; /* 오버레이의 기준점 */
+    overflow: hidden;   /* 내부 요소가 튀어나가지 않도록 */
 	background-color: var(--color-background-card);
 	border-radius: var(--border-radius-sm);
 	overflow: hidden;
@@ -109,7 +112,7 @@ section {
 }
 
 .movie-card:hover {
-	transform: translateY(-5px);
+    transform: scale(1.03); /* 약간 확대되는 효과 */
 }
 
 .movie-card a {
@@ -145,76 +148,133 @@ section {
 	font-size: var(--font-size-lg);
 }
 
+.movie-plot-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* 카드 전체를 덮도록 */
+    padding: 1.5rem;
+    box-sizing: border-box;
+    border-radius:30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 0, 0, 0.85); /* 반투명 검정 배경 */
+    color: #FFFFFF;
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.5;
+
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+
+.movie-card:hover .movie-plot-overlay {
+    opacity: 0.9;
+}
+
 a.movie-card {
 	text-decoration: none !important;
 	color: inherit !important;
 }
 
-/* ======================= 리뷰 카드 ======================= */
-.review-card-list .slick-slide {
-	height: 200px !important;
-	/* Slick의 inline style을 덮어쓰기 위해 !important 사용 */
+/* =================================  리뷰 스타일  ================================= */
+.review-card-list {
+    padding-top: 10px !important;
+    padding-bottom: 30px !important;
+
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
-.review-card {
-	width: 100%;
-	height: 100%;
-	margin: 0 10px;
-	padding: 1.5rem;
-	background-color: var(--sub-bg-overlay);
-	border-radius: 30px;
-	box-sizing: border-box;
+a.review-card { /* 링크(a) 태그에 직접 스타일링 */
 	display: flex;
 	flex-direction: column;
+	    position: relative; /* 자식 요소의 position:absolute 기준 */
+    overflow: hidden;   /* 내부 요소가 튀어나가지 않도록 설정 */
+	width: 100%;
+	height: 180px;
+	box-sizing: border-box;
+	padding: 1.8rem;
+	margin: 0 10px;
+	background-color: var(--sub-bg-overlay); 
+	border-radius: 20px;
+	text-decoration: none !important;
+	color: inherit !important;
+	gap: 1.2rem; 
+	transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
+a.review-card:hover {
+	transform: translateY(-3px); /* 살짝 위로 이동 */
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* 입체적인 그림자 효과 */
+}
+
+/* === 카드 헤더 (평점, 이름) === */
 .review-card .review-header {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
-	margin-top: -4rem;
+	align-items: flex-start;
 }
 
-.review-card p {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: -webkit-box;
-	margin-top: -2rem;
-	-webkit-line-clamp: 3;
-	/* 최대 3줄까지 표시 */
-	-webkit-box-orient: vertical;
-}
-
-.review-card .reviewer-id {
-	font-size: var(--font-size-sm);
-	color: var(--color-text-secondary);
-}
-
-.review-card .review-text {
-	flex-grow: 1;
-	/* 이 속성이 남은 공간을 모두 차지하게 만듭니다. */
-	overflow: hidden;
-	/* 내용이 넘칠 경우 숨김 처리 */
-	/* 여러 줄 줄임표(...) 처리를 위한 코드 (웹킷 브라우저용) */
-	display: -webkit-box;
-	-webkit-line-clamp: 5;
-	/* 200px 높이에 맞춰 표시할 최대 라인 수를 조절하세요. */
-	-webkit-box-orient: vertical;
-	text-overflow: ellipsis;
-}
-
-.review-card .more-link {
-	font-size: var(--font-size-xs);
-	color: var(--color-text-secondary);
+/* === 평점 그룹 (팝콘 + 점수 + 제목) === */
+.review-card .rating-title-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem; 
 }
 
 .review-card .rating {
-	margin-left: -1.5rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem; 
 }
 
-a.review-card {
-	text-decoration: none !important;
-	color: inherit !important;
+.review-card .rating .icon-popcorn {
+	margin-top: -1rem;
+	margin-left: -2rem;
+	width: 90px; /* 아이콘 크기 명시 */
+	height: auto;
+}
+
+.review-card .rating-value {
+	margin-top: -1.3rem;
+	margin-left: -1rem;
+	font-size: 2rem; 
+	font-weight: 700;
+	color: var(--btn-color);
+	line-height: 1; 
+}
+
+/* === 텍스트 컨텐츠 === */
+.review-card .review-movie-title {
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: #ECF0F1; 
+}
+
+.review-card .review-text {
+	margin-top: -3rem;
+	font-size: 0.9rem;
+	color: #BDC3C7; 
+	line-height: 1.6;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.review-card .reviewer-name {
+	font-size: 0.8rem;
+	color: #95A5A6; 
+	background-color: rgba(0, 0, 0, 0.2); 
+	padding: 0.2rem 0.6rem;
+	border-radius: 10px;
 }
 
 /* =================================  공지 사항 섹션 스타일  ================================= */
@@ -448,7 +508,6 @@ a.review-card {
 	line-height: 1.6;
 }
 
-/* [추가] 푸터 연락처 정보 */
 .footer-contact {
 	font-size: var(--font-size-sm);
 	line-height: 1.7;

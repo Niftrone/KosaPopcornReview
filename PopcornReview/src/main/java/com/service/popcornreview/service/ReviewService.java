@@ -36,7 +36,7 @@ public class ReviewService {
 	            
 	            // ✅ 새로 조회한 정보가 null이 아닐 때만 덮어쓰기
 	            if (fullUser != null) {
-	                r.setUser(fullUser);
+	                r.getUser().setName(fullUser.getName());
 	            }
 	        }
 
@@ -44,7 +44,7 @@ public class ReviewService {
 			Movie movie = r.getMovie();
 			if (movie != null && movie.getmId() != null) {
 				movie = movieDao.getMovie(movie.getmId()); // MovieDao를 통해 전체 영화 정보 조회
-				r.setMovie(movie); // 조회된 정보로 교체
+				r.getMovie().setmTitle(movie.getmTitle()); // 조회된 정보로 교체
 			}
 		}
 		return list;

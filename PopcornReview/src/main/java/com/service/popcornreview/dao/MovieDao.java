@@ -65,6 +65,7 @@ public class MovieDao {
 	public int deleteMovieActorRelations(String mId) {
 	    System.out.println("MovieDao...deleteMovieActorRelations");
 	    return sqlSession.delete(NS + "deleteMovieActorRelations", mId);
+	}
 	
 	public List<Movie> searchMovies(String query) {
 		return sqlSession.selectList(NS+"searchMovies",query);

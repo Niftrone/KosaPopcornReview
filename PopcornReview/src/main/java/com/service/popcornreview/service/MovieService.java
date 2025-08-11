@@ -1,9 +1,10 @@
 package com.service.popcornreview.service;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,7 +39,18 @@ public class MovieService {
 
 	public List<Movie> getAllMovies(Movie movie) {
 		System.out.println("MovieService...getAllMovies");
-		return movieDao.getAllMovies(movie);
+		List<Movie> movies =  movieDao.getAllMovies(movie);
+		
+	    Date today = java.sql.Date.valueOf(
+	            java.time.LocalDate.now(java.time.ZoneId.of("Asia/Seoul"))
+	        );
+	    
+	    movies.removeIf(m -> {
+	        Date release = m.getmRelease();
+	        return release == null || release.after(today);
+	    });
+	    
+		return movies;
 	}
 
 	public List<Movie> getRecommendedMovies() {
@@ -59,7 +71,8 @@ public class MovieService {
 
 	public List<Movie> getUpcomingMovies() {
 		System.out.println("MovieService...getUpcomingMovies");
-		return movieDao.getUpcomingMovies();
+		List<Movie> list = movieDao.getUpcomingMovies();
+		return list.isEmpty() ? null : list;
 	}
 
 	public int addMovie(Movie movie) {
