@@ -1,9 +1,10 @@
 package com.service.popcornreview.service;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.service.popcornreview.dao.MovieDao;
 import com.service.popcornreview.dto.AudienceStatsDto;
@@ -47,7 +49,18 @@ public class MovieService {
 
 	public List<Movie> getAllMovies(Movie movie) {
 		System.out.println("MovieService...getAllMovies");
-		return movieDao.getAllMovies(movie);
+		List<Movie> movies =  movieDao.getAllMovies(movie);
+		
+	    Date today = java.sql.Date.valueOf(
+	            java.time.LocalDate.now(java.time.ZoneId.of("Asia/Seoul"))
+	        );
+	    
+	    movies.removeIf(m -> {
+	        Date release = m.getmRelease();
+	        return release == null || release.after(today);
+	    });
+	    
+		return movies;
 	}
 
 	public List<Movie> getRecommendedMovies() {
@@ -68,21 +81,40 @@ public class MovieService {
 
 	public List<Movie> getUpcomingMovies() {
 		System.out.println("MovieService...getUpcomingMovies");
-		return movieDao.getUpcomingMovies();
+		List<Movie> list = movieDao.getUpcomingMovies();
+		return list.isEmpty() ? null : list;
 	}
 
+
+
+	@Transactional // [추가] 여러 DB 작업을 하나로 묶기 위해 필요
 	public int addMovie(Movie movie) {
-	    // 1. 전달받은 movie 객체의 ID가 비어있는지 확인합니다. (새로 등록하는 경우)
+	    // 1. 영화 ID 생성 (이 부분은 그대로 둡니다)
 	    if (movie.getmId() == null || movie.getmId().isBlank()) {
-	        // 2. 비어있다면, 중복되지 않는 고유 ID (UUID)를 생성하여 설정합니다.
 	        String newId = UUID.randomUUID().toString();
 	        movie.setmId(newId);
-	        System.out.println("신규 영화 ID 생성: " + newId); // ID 생성 확인용 로그
+	        System.out.println("신규 영화 ID 생성: " + newId);
 	    }
-
-	    // 3. ID가 보장된 movie 객체를 DAO로 전달하여 DB에 저장합니다.
 	    System.out.println("MovieService...addMovie");
-	    return movieDao.addMovie(movie);
+
+	    // 2. 영화 정보(부모)를 먼저 DB에 저장합니다.
+	    int result = movieDao.addMovie(movie);
+
+	    // 3. [핵심 로직 추가] 출연 배우 정보를 mov_act 테이블에 저장합니다.
+	    List<Actor> actors = movie.getActors();
+	    if (actors != null && !actors.isEmpty()) {
+	        for (Actor actor : actors) {
+	            // 배우의 ID가 있는지 확인
+	            if (actor != null && actor.getaId() != null) {
+	                // Map을 사용해 영화 ID와 배우 ID를 함께 전달
+	                Map<String, String> params = new HashMap<>();
+	                params.put("mId", movie.getmId());
+	                params.put("aId", actor.getaId());
+	                movieDao.addMovieActorRelation(params);
+	            }
+	        }
+	    }
+	    return result;
 	}
 
 	public int updateMovie(Movie movie) {
@@ -90,10 +122,16 @@ public class MovieService {
 		return movieDao.updateMovie(movie);
 	}
 
-	public int deleteMovie(String mId) {
-		System.out.println("MovieService...deleteMovie");
-		return movieDao.deleteMovie(mId);
-	}
+	 @Transactional
+	    public int deleteMovie(String mId) {
+	        System.out.println("MovieService...deleteMovie (and relations)");
+	        
+	        // 1. 자식 테이블(mov_act) 데이터 먼저 삭제
+	        movieDao.deleteMovieActorRelations(mId);
+	        
+	        // 2. 부모 테이블(movie) 데이터 삭제
+	        return movieDao.deleteMovie(mId);
+	    }
 	
 	
 	// --- MovieService 클래스 내부에 아래 메서드를 추가 ---

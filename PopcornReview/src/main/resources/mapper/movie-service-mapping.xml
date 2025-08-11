@@ -91,6 +91,9 @@
 		VALUES 
 			(#{mId}, #{mTitle}, #{mSubtitle}, #{mRelease}, #{mShowtime}, #{mPlot}, #{mCategory}, #{mScreeningType}, #{mMovieTheater}, #{mUrlImage}, #{mUrlMovie}, #{id}, CURDATE())
 	</insert>
+	<insert id="addMovieActorRelation" parameterType="map">
+    INSERT INTO mov_act (m_id, a_id) VALUES (#{mId}, #{aId})
+	</insert>
 
 	<update id="updateMovie" parameterType="movie">
 		UPDATE movie
@@ -103,8 +106,10 @@
 	</update>
 
 	<delete id="deleteMovie" parameterType="string">
-		DELETE FROM movie WHERE m_id = #{mId}
+		DELETE FROM movie WHERE m_id = #{value}
 	</delete>
-	
+	<delete id="deleteMovieActorRelations" parameterType="string">
+    DELETE FROM mov_act WHERE m_id = #{value}
+</delete>
 </mapper>
 

@@ -50,7 +50,7 @@ public class MovieController {
 		
 	    return "index";
 	}
-	
+		
 	@GetMapping("/movie/search")
 	public String getSearchMovie(String query,Model model) {
 		

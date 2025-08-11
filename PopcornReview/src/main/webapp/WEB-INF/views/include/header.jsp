@@ -51,26 +51,37 @@
 			</div>
             
             <div class="header-buttons">
+    <c:choose>
+        <%-- 1. 로그인하지 않았을 때 --%>
+        <c:when test="${empty sessionScope.loginUser}">
+            <button class="btn-login">로그인</button>
+        </c:when>
+
+        <%-- 2. 로그인했을 때 --%>
+        <c:otherwise>
+            <%-- 사용자 이름이 표시되는 버튼 --%>
+            <button type="button" class="btn-user" id="userMenuButton">
+                ${sessionScope.loginUser.name} 님
+                <span>▼</span>
+            </button>
+            
+            <%-- 드롭다운 메뉴 --%>
+            <div class="dropdown-menu" id="userDropdownMenu">
+                <%-- 2-1. 드롭다운 메뉴 안에서 관리자인지 일반 사용자인지 다시 확인 --%>
                 <c:choose>
-                    <c:when test="${empty sessionScope.loginUser}">
-                        <button class="btn-login">로그인</button>
+                    <c:when test="${sessionScope.loginUser.id == 'admin'}">
+                        <a href="/admin">관리자 페이지</a>
                     </c:when>
-                    
                     <c:otherwise>
-                        <%-- 버튼은 이제 드롭다운을 여는 역할만 합니다. --%>
-                        <button type="button" class="btn-user" id="userMenuButton">
-                            ${sessionScope.loginUser.name} 님
-                            <span>▼</span> <%-- 아래 화살표 아이콘 --%>
-                        </button>
-                        
-                        <%-- 실제 링크가 담긴 드롭다운 메뉴 --%>
-                        <div class="dropdown-menu" id="userDropdownMenu">
-                            <a href="/user/mypage">마이페이지</a>
-                            <a href="/user/logout">로그아웃</a>
-                        </div>
+                        <a href="/user/mypage">마이페이지</a>
                     </c:otherwise>
                 </c:choose>
+                <%-- 로그아웃 링크는 공통으로 표시 --%>
+                <a href="/user/logout">로그아웃</a>
             </div>
+        </c:otherwise>
+    </c:choose>
+</div>
         </div>
     </header>
 
@@ -110,7 +121,7 @@
                     <input type="password" name="pwd" placeholder="비밀번호를 입력하세요." required>
                     <input type="password" placeholder="비밀번호를 다시 입력하세요." required>
                     <input type="email" name="email" placeholder="이메일" required>
-                    <input type="text" name="name" placeholder="이름을 입력해주세요." required>
+                    <input type="text" name="name" placeholder="닉네임을 입력해주세요." required>
                     <input type="tel" name="birthdate" placeholder="생년월일 (예: 2000-01-01)" required>
                     <input type="tel" name="phone" placeholder="핸드폰 번호를 입력하세요" required>
                     <div class="gender-selection">
@@ -141,7 +152,7 @@
                 <div id="find-id" class="tab-pane active">
                     <p class="description">회원 정보에 등록된 정보로 아이디를 찾을 수 있습니다.</p>
                     <form action="/user/find" class="modal-form" method="post">
-                        <input type="text" name="name" placeholder="이름을 입력해주세요." required>
+                        <input type="text" name="name" placeholder="닉네임을 입력해주세요." required>
                         <input type="tel" name="phone" placeholder="핸드폰 번호를 입력하세요" required>
                         <input name="test" value="true" hidden=""/>
                         <button type="submit" class="btn-submit">아이디 찾기</button>

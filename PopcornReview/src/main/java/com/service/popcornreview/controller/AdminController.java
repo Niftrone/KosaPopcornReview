@@ -2,7 +2,7 @@ package com.service.popcornreview.controller;
 
 
 import java.util.List;
-import java.util.UUID; 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
-
-
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.service.popcornreview.vo.Notice;
 import com.service.popcornreview.service.ActorService;
@@ -144,31 +144,34 @@ public class AdminController {
 	
 	// ADMIN-03: 영화 정보 삭제 (POST)
 	@PostMapping("/admin/movie/delete")
-	public String doDeleteMovie( String movieId, Model model, RedirectAttributes ra) {
+	public String doDeleteMovie( String mId, Model model, RedirectAttributes ra) {
 		try {
 			System.out.println("삭제 진입");
-			movieService.deleteMovie(movieId);
+			movieService.deleteMovie(mId);
 			ra.addFlashAttribute("message","영화가 삭제되었습니다.");
 			
 	        return "redirect:/admin/list?section=movie";
 		} catch (Exception e) {
-			model.addAttribute("errorMessage","영화 삭제 실패 했습니다");
+			model.addAttribute("errorMessage","영화 삭제 실패 했습니다"+e.getMessage());
 			return "error"; 
 		}
 	}
 
 	// ADMIN-05: 리뷰 삭제 (POST) (변경 없음)
 	@PostMapping("/admin/review/delete")
-	public String doDeleteReviewAdmin(Integer reviewID, Model model, RedirectAttributes ra) {
-		try {
-			System.out.println("신고리뷰 삭제 진입");
-			reportService.deleteReported(reviewID);
-			ra.addFlashAttribute("message","리뷰가 삭제되었습니다.");
-			return "redirect:/admin/list?section=report"; 
-		} catch (Exception e) {
-			model.addAttribute("errorMessage","리뷰 삭제도중 오류가 발생했습니다."+e.getMessage());
-			return "error";
-		}
+	public String doDeleteReviewAdmin(Integer rrId, Model model, RedirectAttributes ra) {
+	    try {
+	        System.out.println("신고리뷰 및 원본리뷰 삭제 진입");
+	        
+	        // [수정] 새로 만든 서비스 메서드를 호출합니다.
+	        reportService.deleteReviewAndAssociatedReports(rrId);
+	        
+	        ra.addFlashAttribute("message", "리뷰가 성공적으로 삭제되었습니다.");
+	        return "redirect:/admin/list?section=report";
+	    } catch (Exception e) {
+	        model.addAttribute("errorMessage", "리뷰 삭제 중 오류가 발생했습니다: " + e.getMessage());
+	        return "error";
+	    }
 	}
 
 	// ADMIN-07: 공지사항 등록 (POST) (변경 없음)
@@ -194,7 +197,7 @@ public class AdminController {
 			ra.addFlashAttribute("message","공지사항 수정 완료 되었습니다.");
 			return "redirect:/admin/list?section=notice"; // [수정] 일관성을 위해 /admin/list 로 경로 변경
 		} catch (Exception e) {
-			model.addAttribute("errormessage","공지사항 수정을 실패 했습니다.");
+			model.addAttribute("errorMessage","공지사항 수정을 실패 했습니다.");
 			return "error";
 		}
 	}
@@ -211,5 +214,12 @@ public class AdminController {
 				model.addAttribute("errormessage","공지사항 삭제 실패 했습니다.");
 				return "error";
 			}
+    }
+	
+	 // [추가] 배우 검색 API 메서드
+    @GetMapping("/api/actors/search")
+    @ResponseBody // 3. 이 메서드의 반환값은 뷰가 아닌 데이터(JSON)임을 명시
+    public List<Actor> searchActors(@RequestParam("name") String name) {
+        return actorService.searchActorsByName(name);
     }
 }

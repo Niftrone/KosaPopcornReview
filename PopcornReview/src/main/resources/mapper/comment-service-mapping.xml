@@ -6,7 +6,7 @@
 
 	<insert id="addComment" parameterType="comment">
 		INSERT INTO comment (c_id, c_plot, c_date, review_id, user_id)
-		VALUES (#{cId}, #{cPlot}, curdate(), #{review.rId}, #{user.id})
+		VALUES (#{cId}, #{cPlot}, NOW(), #{review.rId}, #{user.id})
 	</insert>
 	
 	<delete id="deleteComment" parameterType="int">
@@ -68,4 +68,8 @@
 	    </where>
 	    ORDER BY c.c_date DESC
     </select>
+    <!-- user가 삭제될때 comment도 같이 삭제 -->
+    <delete id="deleteCommentsByUserId" parameterType="string">
+    DELETE FROM comment WHERE user_id = #{userId}
+</delete>
 </mapper>
