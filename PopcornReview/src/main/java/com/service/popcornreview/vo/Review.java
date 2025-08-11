@@ -1,5 +1,7 @@
 package com.service.popcornreview.vo;
+
 import java.util.Date;
+
 public class Review {
 	private int rId; // 리뷰 아이디 r_id
 	private int rRating; // 평점 r_rating
