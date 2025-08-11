@@ -33,6 +33,9 @@
 				AND id = #{id}
 				AND email = #{email}
 			</when>
+			<when test="id != null and pwd == null">
+          	  	AND id = #{id}
+        	</when>
 			<otherwise>
 				AND id = #{id}
 				AND pwd = #{pwd}

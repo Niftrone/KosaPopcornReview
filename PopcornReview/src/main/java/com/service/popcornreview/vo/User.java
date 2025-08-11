@@ -1,12 +1,14 @@
 package com.service.popcornreview.vo;
 
+import java.time.LocalDate;
+
 public class User {
 	// DB 컬럼명 동일
 	private String id; // 사용자 아이디
 	private String pwd; // 비밀번호
 	private String email; // 이메일
 	private String name; // 이름
-	private String birthdate; // 생년월일
+	private LocalDate birthdate; // 생년월일
 	private String phone; // 전화번호
 	private boolean gender; // 성별
 
@@ -14,7 +16,7 @@ public class User {
 
 	}
 
-	public User(String id, String pwd, String email, String name, String birthdate, String phone, boolean gender) {
+	public User(String id, String pwd, String email, String name, LocalDate birthdate, String phone, boolean gender) {
 		super();
 		this.id = id;
 		this.pwd = pwd;
@@ -57,11 +59,11 @@ public class User {
 		this.name = name;
 	}
 
-	public String getBirthdate() {
+	public LocalDate getBirthdate() {
 		return birthdate;
 	}
 
-	public void setBirthdate(String birthdate) {
+	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
 	}
 

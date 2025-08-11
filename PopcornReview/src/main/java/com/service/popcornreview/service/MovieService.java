@@ -119,12 +119,15 @@ public class MovieService {
 	 * @param reviews 통계를 계산할 리뷰 데이터 목록
 	 * @return AudienceStatsDto 통계 결과가 담긴 DTO
 	 */
+	// MovieService.java의 getAudienceStats 메서드를 아래 코드로 교체하세요.
+
 	public AudienceStatsDto getAudienceStats(List<Review> reviews) {
-	    
 	    if (reviews == null || reviews.isEmpty()) {
 	        return new AudienceStatsDto(); 
 	    }
 
+	    // 리뷰를 남긴 유저가 중복될 수 있으므로, 고유한 유저 ID를 기준으로 통계를 내는 것이 더 정확합니다.
+	    // 여기서는 기존 로직을 최대한 유지하여 수정합니다.
 	    int totalCount = reviews.size();
 	    
 	    int maleCount = 0;
@@ -141,49 +144,56 @@ public class MovieService {
 	            continue;
 	        }
 
-	        // ★ 1. user.isGender()가 true이면 남성으로 간주하여 카운트합니다.
+	        // 1. 성별 카운트 (기존 로직 유지)
 	        if (user.isGender()) {
 	            maleCount++;
 	        }
 
-	        // ★ 2. String 타입의 생년월일을 LocalDate로 변환하여 나이를 계산합니다.
-	        String birthdateStr = user.getBirthdate();
-	        if (birthdateStr != null && !birthdateStr.isEmpty()) {
-	            try {
-	                LocalDate birthDate = LocalDate.parse(birthdateStr); // "YYYY-MM-DD" 형식 가정
-	                int age = Period.between(birthDate, LocalDate.now()).getYears();
-	                
-	                if (age >= 10 && age < 20) {
-	                    ageGroupCounts.merge("10대", 1, Integer::sum);
-	                } else if (age >= 20 && age < 30) {
-	                    ageGroupCounts.merge("20대", 1, Integer::sum);
-	                } else if (age >= 30 && age < 40) {
-	                    ageGroupCounts.merge("30대", 1, Integer::sum);
-	                } else if (age >= 40 && age < 50) {
-	                    ageGroupCounts.merge("40대", 1, Integer::sum);
-	                } else if (age >= 50) {
-	                    ageGroupCounts.merge("50대 이상", 1, Integer::sum);
-	                }
-	            } catch (DateTimeParseException e) {
-	                // 날짜 형식이 잘못된 경우, 로그를 남기거나 조용히 무시할 수 있습니다.
-	                System.err.println("잘못된 날짜 형식입니다: " + birthdateStr);
+	        // ✅ 2. 나이 계산 로직 수정
+	        LocalDate birthDate = user.getBirthdate(); // 이제 바로 LocalDate 객체를 가져옵니다.
+	        if (birthDate != null) { // null 체크만 하면 됩니다.
+	            int age = Period.between(birthDate, LocalDate.now()).getYears();
+	            
+	            if (age >= 10 && age < 20) {
+	                ageGroupCounts.merge("10대", 1, Integer::sum);
+	            } else if (age >= 20 && age < 30) {
+	                ageGroupCounts.merge("20대", 1, Integer::sum);
+	            } else if (age >= 30 && age < 40) {
+	                ageGroupCounts.merge("30대", 1, Integer::sum);
+	            } else if (age >= 40 && age < 50) {
+	                ageGroupCounts.merge("40대", 1, Integer::sum);
+	            } else if (age >= 50) {
+	                ageGroupCounts.merge("50대 이상", 1, Integer::sum);
 	            }
 	        }
 	    }
 
-	    // 비율 계산 및 DTO 반환 로직은 이전과 동일합니다.
+	    // 비율 계산 및 DTO 반환 로직은 기존과 동일
 	    Map<String, Double> genderStats = new LinkedHashMap<>();
-	    double malePercent = ((double) maleCount / totalCount) * 100;
-	    genderStats.put("남성", malePercent);
-	    genderStats.put("여성", 100.0 - malePercent);
+	    if (totalCount > 0) {
+	        double malePercent = ((double) maleCount / totalCount) * 100;
+	        genderStats.put("남성", malePercent);
+	        genderStats.put("여성", 100.0 - malePercent);
+	    } else {
+	        genderStats.put("남성", 0.0);
+	        genderStats.put("여성", 0.0);
+	    }
 
 	    Map<String, Double> ageStats = new LinkedHashMap<>();
-	    ageStats.put("10대", ((double) ageGroupCounts.get("10대") / totalCount) * 100);
-	    ageStats.put("20대", ((double) ageGroupCounts.get("20대") / totalCount) * 100);
-	    ageStats.put("30대", ((double) ageGroupCounts.get("30대") / totalCount) * 100);
-	    ageStats.put("40대", ((double) ageGroupCounts.get("40대") / totalCount) * 100);
-	    ageStats.put("50대 이상", ((double) ageGroupCounts.get("50대 이상") / totalCount) * 100);
-
+	    if (totalCount > 0) {
+	        ageStats.put("10대", ((double) ageGroupCounts.get("10대") / totalCount) * 100);
+	        ageStats.put("20대", ((double) ageGroupCounts.get("20대") / totalCount) * 100);
+	        ageStats.put("30대", ((double) ageGroupCounts.get("30대") / totalCount) * 100);
+	        ageStats.put("40대", ((double) ageGroupCounts.get("40대") / totalCount) * 100);
+	        ageStats.put("50대 이상", ((double) ageGroupCounts.get("50대 이상") / totalCount) * 100);
+	    } else {
+	        ageStats.put("10대", 0.0);
+	        ageStats.put("20대", 0.0);
+	        ageStats.put("30대", 0.0);
+	        ageStats.put("40대", 0.0);
+	        ageStats.put("50대 이상", 0.0);
+	    }
+	    
 	    AudienceStatsDto statsDto = new AudienceStatsDto();
 	    statsDto.setGenderDistribution(genderStats);
 	    statsDto.setAgeDistribution(ageStats);
@@ -217,7 +227,7 @@ public class MovieService {
 	    }
 
 	    // 평균 평점 계산 (10점 만점으로 변환)
-	    double averageScore = (totalScoreSum / totalCount) * 2;
+	    double averageScore = (totalScoreSum / totalCount);
 
 	    // 점수별 분포도(%) 계산
 	    Map<Integer, Double> scoreDistribution = new LinkedHashMap<>();
@@ -232,5 +242,9 @@ public class MovieService {
 	    statsDto.setScoreDistribution(scoreDistribution);
 
 	    return statsDto;
+	}
+	
+	public List<Movie> searchMovies(String query) {
+		return movieDao.searchMovies(query);
 	}
 }

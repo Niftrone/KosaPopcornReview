@@ -61,10 +61,15 @@ public class MovieDao {
 		System.out.println("MovieDao...deleteMovie");
 		return sqlSession.delete(NS + "deleteMovie", mId);
 	}
+  
 	// [추가] 영화-배우 관계 삭제 메서드
 	public int deleteMovieActorRelations(String mId) {
 	    System.out.println("MovieDao...deleteMovieActorRelations");
 	    return sqlSession.delete(NS + "deleteMovieActorRelations", mId);
+	
+	public List<Movie> searchMovies(String query) {
+		return sqlSession.selectList(NS+"searchMovies",query);
+
 	}
 	// [추가] 영화-배우 관계를 mov_act 테이블에 추가하는 메서드
 	public int addMovieActorRelation(Map<String, String> params) {

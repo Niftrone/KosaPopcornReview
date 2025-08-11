@@ -51,6 +51,14 @@
 		ORDER BY m_release DESC
 	</select>
 	
+	<select id="searchMovies" parameterType="string" resultType="movie">
+	SELECT * FROM movie
+	<if test="value != null and value != ''">
+        WHERE m_title LIKE CONCAT('%', #{value}, '%')
+    </if>
+    	ORDER BY m_release DESC
+	</select>
+	
 	<select id="getRecommendedMovies" resultType="movie">
 		SELECT m.*
 		FROM movie m JOIN review r ON m.m_id = r.m_id

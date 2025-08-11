@@ -51,6 +51,21 @@ public class MovieController {
 	    return "index";
 	}
 	
+	@GetMapping("/movie/search")
+	public String getSearchMovie(String query,Model model) {
+		
+		try {
+			List<Movie> movies = movieService.searchMovies(query);
+			
+			model.addAttribute("movies",movies);
+			model.addAttribute("query", query);
+			return "SearchResult";
+		} catch(Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
 	/**
 	 * 영화 상세 페이지 요청을 처리합니다. (예: /movie/123)
 	 */
@@ -64,6 +79,7 @@ public class MovieController {
 	@GetMapping("/movie/detail")
 	public String getMovieDetail(Movie movie, Model model) {
 		System.out.println("getMovieDetail.....Controller.....");
+		
 	    try {
 	        // 영화 기본 정보 조회
 	        movie = movieService.getMovie(movie.getmId());
