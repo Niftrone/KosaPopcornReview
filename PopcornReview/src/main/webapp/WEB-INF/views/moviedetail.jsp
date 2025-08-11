@@ -4,6 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<c:set var="now" value="<%=new java.util.Date()%>" />
+<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="todayStr" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -98,7 +101,8 @@
         margin-bottom: 10px;
         display: flex;
         align-items: center;
-        gap: 5px;
+         margin-left: -20px; /* 아이콘과 평점을 왼쪽으로 당깁니다. */
+        /*  gap: 5px; */
     }
     .bubble-plot {
         line-height: 1.6;
@@ -194,8 +198,8 @@
         margin-bottom: 10px;
         display: flex;
         align-items: center;
-        gap: 5px;
-    }
+        /* gap: 5px; */
+     }
     .bubble-plot {
         line-height: 1.6;
 	    color: #ced4da;
@@ -363,7 +367,18 @@
     color: #121212;
 }
 	
+.popcorn-icon {
+    height: 1.6rem; /* 팝콘 크기를 키웠습니다. */
+    width: auto;
+    vertical-align: middle; /* 텍스트와 세로 중앙 정렬 */
+    /* margin-right: -7px; */ /* 텍스트와의 간격을 줄였습니다. */
+}  
 
+.review-link-wrapper, .review-link-wrapper:hover {
+    color: inherit; /* 부모 요소의 글자색을 그대로 사용 */
+    text-decoration: none; /* 밑줄 제거 */
+    display: block; /* 링크가 div 전체를 감쌀 수 있도록 블록 요소로 만듦 */
+}
 </style>
 </head>
 <body>
@@ -375,7 +390,7 @@
     </div>
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-md-4">
             <c:choose>
                 <c:when test="${not empty movie.mUrlImage}">
                     <img src="${movie.mUrlImage}" alt="${movie.mTitle} Poster" class="poster-img">
@@ -385,7 +400,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-        <div class="col-6">
+        <div class="col-md-8">
 	        <%-- 1. "youtu.be/" 뒤의 영상 ID 추출 --%>
 				<%-- 예: https://youtu.be/nJmXYoKC5C0 -> nJmXYoKC5C0 추출 --%>
 				<c:set var="videoId" value="${fn:substringAfter(movie.mUrlMovie, 'youtu.be/')}" />
@@ -452,7 +467,8 @@
                 </div>
             </div>
         </div>
-
+<%-- ▼▼▼ 여기에 c:if 시작 태그를 추가합니다 ▼▼▼ --%>
+        <c:if test="${movie.mRelease <= todayStr}">
         <%-- ========================================================= --%>
     <%-- ▼▼▼ [수정 시작] 관람객 통계 ▼▼▼                         --%>
     <%-- ========================================================= --%>
@@ -497,9 +513,9 @@
     <div class="user-report-container">
         <div class="average-score-section">
             <div class="d-flex align-items-center">
-                <span style="font-size: 3.5rem;">🍿</span>
+                <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn Icon" style="height: 3.5rem; width: auto;">
                 <%-- 평균 평점 --%>
-                <span class="fs-1 fw-bold ps-3">평균: ${reviewStats.averageScore}점</span>
+                <span class="fs-1 fw-bold ms-n2">평균: ${reviewStats.averageScore}점</span>
             </div>
         </div>
 
@@ -559,13 +575,14 @@
             <div class="review-controls">
 			    <div class="dropdown">
 			        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">RATING</button>
-			        <ul class="dropdown-menu" id="review-rating-options">  <li><a class="dropdown-item" href="#" data-rating="0">All Ratings</a></li>
-			            <li><a class="dropdown-item" href="#" data-rating="5">🍿 5점</a></li>
-			            <li><a class="dropdown-item" href="#" data-rating="4">🍿 4점</a></li>
-			            <li><a class="dropdown-item" href="#" data-rating="3">🍿 3점</a></li>
-			            <li><a class="dropdown-item" href="#" data-rating="2">🍿 2점</a></li>
-			            <li><a class="dropdown-item" href="#" data-rating="1">🍿 1점</a></li>
-			        </ul>
+			        <ul class="dropdown-menu" id="review-rating-options">
+					    <li><a class="dropdown-item" href="#" data-rating="0">All Ratings</a></li>
+					    <li><a class="dropdown-item d-flex align-items-center" href="#" data-rating="5"><img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> 5점</a></li>
+					    <li><a class="dropdown-item d-flex align-items-center" href="#" data-rating="4"><img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> 4점</a></li>
+					    <li><a class="dropdown-item d-flex align-items-center" href="#" data-rating="3"><img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> 3점</a></li>
+					    <li><a class="dropdown-item d-flex align-items-center" href="#" data-rating="2"><img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> 2점</a></li>
+					    <li><a class="dropdown-item d-flex align-items-center" href="#" data-rating="1"><img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> 1점</a></li>
+					</ul>
 			    </div>
 			    <div class="dropdown">
 			        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">SORT</button>
@@ -587,13 +604,14 @@
     <%-- ▼▼▼ 기존 코드는 그대로 둡니다 ▼▼▼ --%>
     <c:choose>
         <c:when test="${not empty reviews}">
+        <a href="/review/${review.rId}" class="review-link-wrapper">
             <c:forEach items="${reviews}" var="review">
                 <c:choose>
                     <%-- 내 리뷰 (오른쪽) --%>
                     <c:when test="${review.user.id == sessionScope.loginUser.id}">
                         <div class="chat-message message-right">
                             <%-- ★★★ 구조 변경: 작성자를 위로 빼냅니다 ★★★ --%>
-                            <span class="chat-author">${review.user.id}</span>
+                            <span class="chat-author">나</span>
                             
                             <%-- ★★★ 구조 변경: 말풍선과 날짜를 content-line으로 묶습니다 ★★★ --%>
                             <div class="content-line">
@@ -603,30 +621,37 @@
     <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
 </span>
                                 <div class="chat-bubble">
-                                    <div class="bubble-rating"><span>🍿</span> ${review.rRating}점</div>
-                                    <p class="bubble-plot">${review.rPlot}</p>
+                                    <div class="bubble-rating">
+									    <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
+									</div>
+									<p class="bubble-plot">${review.rPlot}</p>
                                 </div>
                             </div>
                         </div>
+                        </a>
                     </c:when>
 
                     <%-- 다른 사람 리뷰 (왼쪽) --%>
                     <c:otherwise>
-                        <div class="chat-message message-left">
-                            <%-- ★★★ 구조 변경: 작성자를 위로 빼냅니다 ★★★ --%>
-                            <span class="chat-author">${review.user.id}</span>
-                            
-                            <%-- ★★★ 구조 변경: 말풍선과 날짜를 content-line으로 묶습니다 ★★★ --%>
-                            <div class="content-line">
-                                <div class="chat-bubble">
-                                    <div class="bubble-rating"><span>🍿</span> ${review.rRating}점</div>
-                                    <p class="bubble-plot">${review.rPlot}</p>
-                                </div>
-                                <span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
-								    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
-								</span>
-                            </div>
-                        </div>
+                    	<a href="/review/${review.rId}" class="review-link-wrapper">
+	                        <div class="chat-message message-left">
+	                            <%-- ★★★ 구조 변경: 작성자를 위로 빼냅니다 ★★★ --%>
+	                            <span class="chat-author">${review.user.name}</span>
+	                            
+	                            <%-- ★★★ 구조 변경: 말풍선과 날짜를 content-line으로 묶습니다 ★★★ --%>
+	                            <div class="content-line">
+	                                <div class="chat-bubble">
+	                                    <div class="bubble-rating">
+										    <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
+										</div>
+	                                    <p class="bubble-plot">${review.rPlot}</p>
+	                                </div>
+	                                <span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
+									    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
+									</span>
+	                            </div>
+	                        </div>
+	                    </a>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
@@ -638,7 +663,8 @@
         </c:otherwise>
     </c:choose>
 </div>
-
+</c:if>
+</div>
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content modal-review">

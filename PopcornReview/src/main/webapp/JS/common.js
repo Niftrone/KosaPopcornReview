@@ -83,31 +83,111 @@ $(document).ready(function() {
 	    });
 	}
 	
+		
+		
 	// ======================================================
-	    //               ⭐ 검색 기능 수정 부분 ⭐
-	    // ======================================================
-	    
-	    // 실제 검색을 실행하는 함수
-	    function executeSearch() {
-	        // 입력된 검색어의 양쪽 공백 제거
-	        const query = $('#searchInput').val().trim();
+	//               ⭐ 최근 검색어 기능 수정 (UI/UX 개선) ⭐
+	// ======================================================
 
-	        // 검색어가 비어있지 않으면 검색 실행
-	        if (query) {
-	            // query 파라미터를 포함하여 검색 결과 페이지로 이동
-	            window.location.href = `/movie/search?query=${query}`;
-	        } else {
-	            alert('검색할 영화 제목을 입력해주세요.');
-	            $('#searchInput').focus(); // 검색창에 다시 포커스
+	const searchInput = $('#searchInput');
+	const recentSearchesContainer = $('#recentSearchesContainer');
+	const recentList = $('.recent-list');
+	const clearAllButton = $('.clear-all');
+
+	function getFormattedDate(dateObject) {
+	    const year = dateObject.getFullYear();
+	    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+	    const day = String(dateObject.getDate()).padStart(2, '0');
+	    return `${year}-${month}-${day.padStart(2, '0')}`; // 일(day)도 padStart 적용
+	}
+
+	function executeSearch(query) {
+	    if (query) {
+	        let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+	        const today = getFormattedDate(new Date());
+	        recentSearches = recentSearches.filter(item => item.query !== query);
+	        recentSearches.unshift({ query: query, date: today });
+	        if (recentSearches.length > 10) {
+	            recentSearches.pop();
 	        }
+	        localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+	        window.location.href = `/movie/search?query=${query}`;
+	    } else {
+	        alert('검색할 영화 제목을 입력해주세요.');
+	        searchInput.focus();
 	    }
+	}
 
-	    // 1. 검색창에서 엔터 키를 눌렀을 때
-	    $('#searchInput').on('keydown', function(event) {
-	        if (event.key === 'Enter') {
-	            executeSearch(); // 검색 함수 호출
-	        }
-	    });
+	function displayRecentSearches() {
+	    recentList.empty();
+	    const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+
+	    if (recentSearches.length > 0) {
+	        recentSearches.forEach((item, index) => {
+	            const listItem = $('<li>').addClass('recent-item');
+	            const icon = $('<span>').addClass('material-icons').text('history');
+	            const querySpan = $('<span>').addClass('query-text').text(item.query);
+	            const dateSpan = $('<span>').addClass('query-date').text(formatDateShort(item.date)); // 날짜 형식 변경
+	            const deleteButton = $('<button>').addClass('delete-btn').html('&times;');
+
+	            deleteButton.on('click', function(event) {
+	                event.stopPropagation(); // 클릭 이벤트가 li로 전파되는 것을 막음
+	                removeRecentSearch(index);
+	            });
+
+	            listItem.append(icon).append(querySpan).append(dateSpan).append(deleteButton);
+	            listItem.on('click', function() {
+	                searchInput.val(item.query);
+	                executeSearch(item.query);
+	            });
+	            recentList.append(listItem);
+	        });
+	        recentSearchesContainer.show();
+	    } else {
+	        recentSearchesContainer.hide();
+	    }
+	}
+
+	function formatDateShort(dateString) {
+	    const dateParts = dateString.split('-');
+	    if (dateParts.length === 3) {
+	        return `${dateParts [1]}.${dateParts [2]}.`;
+	    }
+	    return dateString;
+	}
+
+	function removeRecentSearch(indexToRemove) {
+	    let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+	    recentSearches = recentSearches.filter((_, index) => index !== indexToRemove);
+	    localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+	    displayRecentSearches();
+	}
+
+	function clearAllRecentSearches() {
+	    localStorage.removeItem('recentSearches');
+	    displayRecentSearches();
+	}
+
+	searchInput.on('keydown', function(event) {
+	    if (event.key === 'Enter') {
+	        executeSearch($(this).val().trim());
+	    }
+	});
+
+	searchInput.on('focus', function() {
+	    displayRecentSearches();
+	});
+
+	$(document).on('click', function(event) {
+	    if (!$(event.target).closest('.search').length) {
+	        recentSearchesContainer.hide();
+	    }
+	});
+
+	clearAllButton.on('click', clearAllRecentSearches);
+
+	displayRecentSearches(); // 페이지 로드 시에도 표시 (localStorage에 있으면)
+
 	
 	
 });

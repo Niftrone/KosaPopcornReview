@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.service.popcornreview.dao.MovieDao;
 import com.service.popcornreview.dto.AudienceStatsDto;
 import com.service.popcornreview.dto.ReviewStatsDto;
+import com.service.popcornreview.vo.Actor;
 import com.service.popcornreview.vo.Movie;
 import com.service.popcornreview.vo.Review;
 import com.service.popcornreview.vo.User;
@@ -27,7 +28,16 @@ public class MovieService {
 
 	public Movie getMovie(String mId) {
 		System.out.println("MovieService...getMovie");
-		return movieDao.getMovie(mId);
+		Movie movie = movieDao.getMovie(mId);
+		for(Actor a : movie.getActors()) {	
+			String code = a.getaId(); 
+		    if (code.endsWith("2")) {
+		    	
+		    	movie.setmDirector(a.getaName());
+		    	break;
+		    }
+		}
+		return movie;
 	}
 	
 	public List<Movie> getBannerList(Movie movie){

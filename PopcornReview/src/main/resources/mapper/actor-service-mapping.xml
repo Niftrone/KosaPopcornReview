@@ -16,6 +16,11 @@
         JOIN mov_act ma ON a.a_id = ma.a_id
         WHERE ma.m_id = #{movieId}
     </select>
+    
+    
+
+
+
 </mapper>
  
 
