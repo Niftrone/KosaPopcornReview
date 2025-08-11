@@ -20,7 +20,7 @@ import com.service.popcornreview.service.UserService;
 import com.service.popcornreview.vo.Actor;
 import com.service.popcornreview.vo.Movie;
 import com.service.popcornreview.vo.Review;
-
+import java.util.stream.Collectors;
 
 @Controller
 public class MovieController {
@@ -36,6 +36,7 @@ public class MovieController {
 
 	@Autowired
 	private ActorService actorService;
+
 
 	@GetMapping("/")
 	public String getIndexData(Model model) {
@@ -89,7 +90,8 @@ public class MovieController {
 	        Review review = new Review();
 	        review.setMovie(movie);
 	        List<Review> list = reviewService.getAllReviews(review);
-	        System.out.println("list=>"+list);
+	       
+	        
 
 	        // ★ [수정됨] movieId 대신, 위에서 가져온 'list'를 그대로 전달합니다.
 	        AudienceStatsDto audienceStats = movieService.getAudienceStats(list);
