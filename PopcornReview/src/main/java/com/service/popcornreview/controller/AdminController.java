@@ -2,7 +2,7 @@ package com.service.popcornreview.controller;
 
 
 import java.util.List;
-import java.util.UUID; 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
-
-
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.service.popcornreview.vo.Notice;
 import com.service.popcornreview.service.ActorService;
@@ -214,5 +214,12 @@ public class AdminController {
 				model.addAttribute("errormessage","공지사항 삭제 실패 했습니다.");
 				return "error";
 			}
+    }
+	
+	 // [추가] 배우 검색 API 메서드
+    @GetMapping("/api/actors/search")
+    @ResponseBody // 3. 이 메서드의 반환값은 뷰가 아닌 데이터(JSON)임을 명시
+    public List<Actor> searchActors(@RequestParam("name") String name) {
+        return actorService.searchActorsByName(name);
     }
 }
