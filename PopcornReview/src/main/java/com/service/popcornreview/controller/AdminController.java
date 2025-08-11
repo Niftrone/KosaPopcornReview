@@ -152,23 +152,26 @@ public class AdminController {
 			
 	        return "redirect:/admin/list?section=movie";
 		} catch (Exception e) {
-			model.addAttribute("errorMessage","영화 삭제 실패 했습니다");
+			model.addAttribute("errorMessage","영화 삭제 실패 했습니다"+e.getMessage());
 			return "error"; 
 		}
 	}
 
 	// ADMIN-05: 리뷰 삭제 (POST) (변경 없음)
 	@PostMapping("/admin/review/delete")
-	public String doDeleteReviewAdmin(Integer reviewID, Model model, RedirectAttributes ra) {
-		try {
-			System.out.println("신고리뷰 삭제 진입");
-			reportService.deleteReported(reviewID);
-			ra.addFlashAttribute("message","리뷰가 삭제되었습니다.");
-			return "redirect:/admin/list?section=report"; 
-		} catch (Exception e) {
-			model.addAttribute("errorMessage","리뷰 삭제도중 오류가 발생했습니다."+e.getMessage());
-			return "error";
-		}
+	public String doDeleteReviewAdmin(Integer rrId, Model model, RedirectAttributes ra) {
+	    try {
+	        System.out.println("신고리뷰 및 원본리뷰 삭제 진입");
+	        
+	        // [수정] 새로 만든 서비스 메서드를 호출합니다.
+	        reportService.deleteReviewAndAssociatedReports(rrId);
+	        
+	        ra.addFlashAttribute("message", "리뷰가 성공적으로 삭제되었습니다.");
+	        return "redirect:/admin/list?section=report";
+	    } catch (Exception e) {
+	        model.addAttribute("errorMessage", "리뷰 삭제 중 오류가 발생했습니다: " + e.getMessage());
+	        return "error";
+	    }
 	}
 
 	// ADMIN-07: 공지사항 등록 (POST) (변경 없음)

@@ -97,6 +97,8 @@
 	<delete id="deleteMovie" parameterType="string">
 		DELETE FROM movie WHERE m_id = #{value}
 	</delete>
-	
+	<delete id="deleteMovieActorRelations" parameterType="string">
+    DELETE FROM mov_act WHERE m_id = #{value}
+</delete>
 </mapper>
 

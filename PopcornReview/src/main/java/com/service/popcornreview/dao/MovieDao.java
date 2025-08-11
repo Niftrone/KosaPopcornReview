@@ -60,4 +60,9 @@ public class MovieDao {
 		System.out.println("MovieDao...deleteMovie");
 		return sqlSession.delete(NS + "deleteMovie", mId);
 	}
+	// [추가] 영화-배우 관계 삭제 메서드
+	public int deleteMovieActorRelations(String mId) {
+	    System.out.println("MovieDao...deleteMovieActorRelations");
+	    return sqlSession.delete(NS + "deleteMovieActorRelations", mId);
+	}
 }

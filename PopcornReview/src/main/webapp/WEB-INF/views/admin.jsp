@@ -52,6 +52,25 @@ body {
 	font-weight: bold;
 }
 
+.sidebar h2 a {
+	/* 기본 링크 스타일 초기화 */
+	color: inherit; /* 글자색은 부모(h2)의 흰색을 그대로 사용 */
+	text-decoration: none; /* 밑줄 제거 */
+	font-size: inherit; /* [추가] 부모(h2)의 글자 크기(24px)를 상속받음 */
+	/* 버튼 스타일에 덮어쓰기 (가장 중요) */
+	background-color: transparent; /* 배경색 없애기 */
+	padding: 0; /* 내부 여백 없애기 */
+	margin: 0; /* 외부 여백 없애기 */
+	display: inline; /* 너비를 글자에 맞게 자동 조절 */
+	width: auto; /* 너비 자동 설정 */
+	border-radius: 0; /* 둥근 모서리 없애기 */
+}
+
+/* Admin 제목에 마우스를 올려도 배경색이 변하지 않도록 설정 */
+.sidebar h2 a:hover {
+	background-color: transparent;
+}
+
 /* [수정 2] a 태그도 버튼처럼 보이도록 CSS 선택자를 추가합니다. */
 .sidebar button, .sidebar a {
 	background-color: #1F2937;
@@ -331,7 +350,9 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
 <body>
 	<div class="container">
 		<div class="sidebar">
-			<h2>Admin</h2>
+			<h2>
+				<a href="/">Admin</a>
+			</h2>
 			<a href="/admin/list?section=notice" id="btn-notice"
 				class="${activeSection == 'notice' ? 'active' : ''}">공지사항 관리</a> <a
 				href="/admin/list?section=movie" id="btn-movie"
@@ -344,7 +365,8 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
 			<div id="notice"
 				class="section ${activeSection == 'notice' ? 'active' : ''}">
 				<div class="title">공지사항 관리</div>
-				<button class="btn-top" onclick="openModal('modal-notice')">공지 등록</button>
+				<button class="btn-top" onclick="openModal('modal-notice')">공지
+					등록</button>
 				<div class="search-box">
 					<form method="get" action="/admin/notice/search">
 						<input type="text" name="keyword" placeholder="제목 검색" />
@@ -364,7 +386,8 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
 						<tbody>
 							<c:if test="${empty noticeList}">
 								<tr>
-									<td colspan="4" style="text-align: center;">등록된 공지사항이 없습니다.</td>
+									<td colspan="4" style="text-align: center;">등록된 공지사항이
+										없습니다.</td>
 								</tr>
 							</c:if>
 							<c:forEach var="notice" items="${noticeList}" varStatus="status">
@@ -393,7 +416,8 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
 			<div id="movie"
 				class="section ${activeSection == 'movie' ? 'active' : ''}">
 				<div class="title">영화 관리</div>
-				<button class="btn-top" onclick="openModal('modal-movie')">영화 등록</button>
+				<button class="btn-top" onclick="openModal('modal-movie')">영화
+					등록</button>
 				<div class="search-box">
 					<form method="get" action="/admin/movie/search">
 						<input type="text" name="keyword" placeholder="제목 검색" />
@@ -424,9 +448,8 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
 									<td>${movie.mSubtitle}</td>
 									<td>${movie.mRelease}</td>
 									<td>
-                                        <%-- ========================================================== --%>
-                                        <%-- [FINAL UPDATE] 수정 버튼 클릭 시 모든 영화 정보를 전달하도록 수정 --%>
-                                        <%-- ========================================================== --%>
+										<%-- ========================================================== --%>
+										<%-- [FINAL UPDATE] 수정 버튼 클릭 시 모든 영화 정보를 전달하도록 수정 --%> <%-- ========================================================== --%>
 										<button
 											onclick="openMovieEditModal(
 												'${movie.mId}',
@@ -496,7 +519,8 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
 									<td>
 										<form method="post" action="/admin/review/delete"
 											onsubmit="event.preventDefault(); confirmDelete(this);">
-											<input type="hidden" name="reviewID" value="${reportedReview.review.rId}">
+											<input type="hidden" name="rrId"
+												value="${reportedReview.review.rId}">
 											<button type="submit">삭제</button>
 										</form>
 									</td>
@@ -507,62 +531,72 @@ function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, 
 				</div>
 			</div>
 
-		<div class="modal" id="modal-notice">
-			<div class="modal-box">
-				<h3>공지사항</h3>
-				<form method="post" action="/admin/notice/add" data-guard="create">
-					<input type="hidden" name="noticeId" value="">
-					<input type="text" name="notice" placeholder="제목" required data-label="제목">
-					<textarea name="noticePlot" rows="6" placeholder="내용" required data-label="내용"></textarea>
-					<div class="button-group">
-						<button type="submit">등록</button>
-						<button type="button" onclick="closeModal('modal-notice')">취소</button>
-					</div>
-				</form>
+			<div class="modal" id="modal-notice">
+				<div class="modal-box">
+					<h3>공지사항</h3>
+					<form method="post" action="/admin/notice/add" data-guard="create">
+						<input type="hidden" name="noticeId" value=""> <input
+							type="text" name="notice" placeholder="제목" required
+							data-label="제목">
+						<textarea name="noticePlot" rows="6" placeholder="내용" required
+							data-label="내용"></textarea>
+						<div class="button-group">
+							<button type="submit">등록</button>
+							<button type="button" onclick="closeModal('modal-notice')">취소</button>
+						</div>
+					</form>
+				</div>
 			</div>
-		</div>
 
-		<div class="modal" id="modal-movie">
-			<div class="modal-box">
-				<h3>영화</h3>
-				<form method="post" action="/admin/movie/add" data-guard="create">
-					<input type="hidden" name="mId" value="">
-                    <input type="text" name="mTitle" placeholder="제목" required data-label="제목">
-                    <input type="text" name="mSubtitle" placeholder="소제목" data-label="소제목">
-					<textarea name="mPlot" rows="4" placeholder="내용" data-label="내용"></textarea>
-					<input type="date" name="mRelease" required data-label="개봉일">
-					<input type="text" name="mShowtime" placeholder="상영시간(분)" data-label="상영시간">
-                    <input type="text" name="mCategories" placeholder="장르" required data-label="장르">
-					<input type="text" name="mDirector" placeholder="감독" required data-label="감독">
-					<input type="text" name="actors" placeholder="배우 (쉼표로 구분)" data-label="배우">
-					<input type="text" name="mScreeningType" placeholder="상영 타입" data-label="상영 타입">
-                    <input type="text" name="mMovieTheater" placeholder="영화관" data-label="영화관">
-                    <input type="text" name="mUrlImage" placeholder="사진 URL" data-label="사진 URL">
-                    <input type="text" name="mUrlMovie" placeholder="영상 URL" data-label="영상 URL">
-					<div class="button-group">
-						<button type="submit">등록</button>
-						<button type="button" onclick="closeModal('modal-movie')">취소</button>
-					</div>
-				</form>
+			<div class="modal" id="modal-movie">
+				<div class="modal-box">
+					<h3>영화</h3>
+					<form method="post" action="/admin/movie/add" data-guard="create">
+						<input type="hidden" name="mId" value=""> <input
+							type="text" name="mTitle" placeholder="제목" required
+							data-label="제목"> <input type="text" name="mSubtitle"
+							placeholder="소제목" data-label="소제목">
+						<textarea name="mPlot" rows="4" placeholder="내용" data-label="내용"></textarea>
+						<input type="date" name="mRelease" required data-label="개봉일">
+						<input type="text" name="mShowtime" placeholder="상영시간(분)"
+							data-label="상영시간"> <input type="text" name="mCategories"
+							placeholder="장르" required data-label="장르"> <input
+							type="text" name="mDirector" placeholder="감독" required
+							data-label="감독"> <input type="text" name="actors"
+							placeholder="배우 (쉼표로 구분)" data-label="배우"> <input
+							type="text" name="mScreeningType" placeholder="상영 타입"
+							data-label="상영 타입"> <input type="text"
+							name="mMovieTheater" placeholder="영화관" data-label="영화관">
+						<input type="text" name="mUrlImage" placeholder="사진 URL"
+							data-label="사진 URL"> <input type="text" name="mUrlMovie"
+							placeholder="영상 URL" data-label="영상 URL">
+						<div class="button-group">
+							<button type="submit">등록</button>
+							<button type="button" onclick="closeModal('modal-movie')">취소</button>
+						</div>
+					</form>
+				</div>
 			</div>
-		</div>
 
-		<div class="modal" id="modal-actor">
-			<div class="modal-box">
-				<h3>배우 등록</h3>
-				<form method="post" action="/admin/actor/add" data-guard="create">
-					<input type="text" name="aName" placeholder="이름" required data-label="이름">
-					<textarea name="aPlot" rows="4" placeholder="소개" required data-label="소개"></textarea>
-					<input type="text" name="aUrlImage" placeholder="사진 URL" required data-label="사진 URL">
-					<div class="button-group">
-						<button type="submit">등록</button>
-						<button type="button" onclick="closeModal('modal-actor')">취소</button>
-					</div>
-				</form>
+			<div class="modal" id="modal-actor">
+				<div class="modal-box">
+					<h3>배우 등록</h3>
+					<form method="post" action="/admin/actor/add" data-guard="create">
+						<input type="text" name="aName" placeholder="이름" required
+							data-label="이름">
+						<textarea name="aPlot" rows="4" placeholder="소개" required
+							data-label="소개"></textarea>
+						<input type="text" name="aUrlImage" placeholder="사진 URL" required
+							data-label="사진 URL">
+						<div class="button-group">
+							<button type="submit">등록</button>
+							<button type="button" onclick="closeModal('modal-actor')">취소</button>
+						</div>
+					</form>
+				</div>
 			</div>
-		</div>
 
-		<script>
+			<script>
         (function(){
             document.querySelectorAll('form[data-guard]').forEach(function(form){
             var mode = (form.getAttribute('data-guard') || 'create').toLowerCase();
