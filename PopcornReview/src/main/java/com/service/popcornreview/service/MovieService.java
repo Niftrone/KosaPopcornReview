@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.service.popcornreview.dao.MovieDao;
 import com.service.popcornreview.dto.AudienceStatsDto;
@@ -80,10 +81,16 @@ public class MovieService {
 		return movieDao.updateMovie(movie);
 	}
 
-	public int deleteMovie(String mId) {
-		System.out.println("MovieService...deleteMovie");
-		return movieDao.deleteMovie(mId);
-	}
+	 @Transactional
+	    public int deleteMovie(String mId) {
+	        System.out.println("MovieService...deleteMovie (and relations)");
+	        
+	        // 1. 자식 테이블(mov_act) 데이터 먼저 삭제
+	        movieDao.deleteMovieActorRelations(mId);
+	        
+	        // 2. 부모 테이블(movie) 데이터 삭제
+	        return movieDao.deleteMovie(mId);
+	    }
 	
 	
 	// --- MovieService 클래스 내부에 아래 메서드를 추가 ---
