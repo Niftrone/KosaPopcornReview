@@ -26,4 +26,13 @@ public class ActorService {
 	    return actorDao.searchActorsByName(name);
 	}
 	
+	// [추가] 이름으로 배우 정보를 조회하는 메서드
+	public Actor getActorByName(String name) {
+	    return actorDao.getActorByName(name);
+	}
+	
+	public Actor getActorById(String aId) {
+	    return actorDao.getActor(aId);
+	}
+	
 }

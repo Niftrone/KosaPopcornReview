@@ -21,9 +21,15 @@ public class ActorDao {
 		return sqlSession.selectOne(NS + "getActor", aId);
 	}
 	
-	// [추가] 이름으로 배우 검색
+	// [추가] 이름으로 배우 검색 영화추가 할때 검색 리스트
 	public List<Actor> searchActorsByName(String name) {
 	    return sqlSession.selectList(NS + "searchActorsByName", name);
+	}
+	
+	// [추가] 이름으로 배우 정보를 조회하는 메서드
+	public Actor getActorByName(String name) {
+	    System.out.println("ActorDao...getActorByName");
+	    return sqlSession.selectOne(NS + "getActorByName", name);
 	}
 
 }

@@ -18,17 +18,19 @@
 		<result property="mUrlMovie" column="m_url_movie"/>
 		<result property="mAddedDate" column="m_added_date"/>
 		<result property="id" column="id"/>
-		
+
+		<!-- 평균 점수: 계산 컬럼 + 스키마 컬럼 둘 다 매핑 -->
 		<result property="mAverageScore" column="average_score"/>
 		<result property="mAverageScore" column="m_averagescore"/>
-		
+
+		<!-- 배우 컬렉션: column="m_id"를 ActorMapper로 전달 -->
 		<collection property="actors"
             ofType="actor"
             select="ns.sql.ActorMapper.getActorsByMovie"
             column="m_id"/>
 	</resultMap>
 
-	<select id="getMovie" parameterType="string" resultMap="movieResultMap">
+	<select id="getMovie" parameterType="int" resultMap="movieResultMap">
 		SELECT
 			m.*,
 			IFNULL(AVG(r.r_rating), 0) AS average_score
@@ -50,29 +52,29 @@
 		</if>
 		ORDER BY m_release DESC
 	</select>
-	
+
 	<select id="searchMovies" parameterType="string" resultType="movie">
-	SELECT * FROM movie
-		<if test="_parameter != null and _parameter != ''">
-	        WHERE m_title LIKE CONCAT('%', #{value}, '%')
-	    </if>
-	    ORDER BY m_release DESC
+    SELECT * FROM movie
+    <if test="_parameter != null and _parameter != ''">
+        WHERE m_title LIKE CONCAT('%', #{value}, '%')
+    </if>
+    ORDER BY m_release DESC
 	</select>
-	
+
 	<select id="getRecommendedMovies" resultType="movie">
 		SELECT m.*
 		FROM movie m JOIN review r ON m.m_id = r.m_id
 		GROUP BY m.m_id 
 		ORDER BY COUNT(r.r_id) DESC, AVG(r.r_rating) DESC 	
 	</select>
-	
+
 	<select id="getMoviesByCategory" parameterType="string" resultType="movie">
 		SELECT *
 		FROM movie
 		WHERE m_category = #{category}
 		ORDER BY m_release DESC
 	</select>
-	
+
 	<select id="getMoviesByActor" parameterType="string" resultType="movie">
 		SELECT m.* FROM movie m 
 		JOIN mov_act ma ON m.m_id = ma.m_id 
@@ -85,14 +87,17 @@
 		SELECT * FROM movie WHERE m_release > CURDATE() OR m_release IS NULL ORDER BY m_release ASC;
 	</select>
 
-	<insert id="addMovie" parameterType="movie">
-		INSERT INTO movie 
-			(m_id, m_title, m_subtitle, m_release, m_showtime, m_plot, m_category, m_screening_type, m_movie_theater, m_url_image, m_url_movie, id, m_added_date)
-		VALUES 
-			(#{mId}, #{mTitle}, #{mSubtitle}, #{mRelease}, #{mShowtime}, #{mPlot}, #{mCategory}, #{mScreeningType}, #{mMovieTheater}, #{mUrlImage}, #{mUrlMovie}, #{id}, CURDATE())
+	<!-- 영화 INSERT: 키 생성 → movie.mId 세팅 -->
+	<insert id="addMovie" parameterType="movie" useGeneratedKeys="true" keyProperty="mId">
+        INSERT INTO movie 
+            (m_title, m_subtitle, m_release, m_showtime, m_plot, m_category, m_screening_type, m_movie_theater, m_url_image, m_url_movie, id, m_added_date)
+        VALUES 
+            ( #{mTitle}, #{mSubtitle}, #{mRelease}, #{mShowtime}, #{mPlot}, #{mCategory}, #{mScreeningType}, #{mMovieTheater}, #{mUrlImage}, #{mUrlMovie}, #{id}, CURDATE())
 	</insert>
+
+	<!-- 영화-배우 연결 INSERT: 문자열 aId 사용 -->
 	<insert id="addMovieActorRelation" parameterType="map">
-    INSERT INTO mov_act (m_id, a_id) VALUES (#{mId}, #{aId})
+        INSERT INTO mov_act (m_id, a_id) VALUES (#{mId}, #{aId})
 	</insert>
 
 	<update id="updateMovie" parameterType="movie">
@@ -105,11 +110,11 @@
 		WHERE m_id = #{mId}
 	</update>
 
-	<delete id="deleteMovie" parameterType="string">
-		DELETE FROM movie WHERE m_id = #{value}
+	<delete id="deleteMovie" parameterType="int">
+		DELETE FROM movie WHERE m_id = #{mId}
 	</delete>
-	<delete id="deleteMovieActorRelations" parameterType="string">
-    DELETE FROM mov_act WHERE m_id = #{value}
-</delete>
-</mapper>
 
+	<delete id="deleteMovieActorRelations" parameterType="int">
+        DELETE FROM mov_act WHERE m_id = #{mId}
+	</delete>
+</mapper>

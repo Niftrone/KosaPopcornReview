@@ -71,7 +71,7 @@ public class MovieController {
 	 * 영화 상세 페이지 요청을 처리합니다. (예: /movie/123)
 	 */
 	@GetMapping("/movie/{movieId}")
-	public String getMovieDetail(@PathVariable String movieId, Model model) {
+	public String getMovieDetail(@PathVariable int movieId, Model model) {
 	    Movie movie = movieService.getMovie(movieId); // 영화 한 개 정보 조회
 	    model.addAttribute("movie", movie);
 	    return "moviedetail"; // moviedetail.jsp로 이동

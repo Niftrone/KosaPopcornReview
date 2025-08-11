@@ -28,7 +28,7 @@ public class MovieService {
 	@Autowired
 	private MovieDao movieDao;
 
-	public Movie getMovie(String mId) {
+	public Movie getMovie(int mId) {
 		System.out.println("MovieService...getMovie");
 		Movie movie = movieDao.getMovie(mId);
 		for(Actor a : movie.getActors()) {	
@@ -87,35 +87,28 @@ public class MovieService {
 
 
 
-	@Transactional // [추가] 여러 DB 작업을 하나로 묶기 위해 필요
-	public int addMovie(Movie movie) {
-	    // 1. 영화 ID 생성 (이 부분은 그대로 둡니다)
-	    if (movie.getmId() == null || movie.getmId().isBlank()) {
-	        String newId = UUID.randomUUID().toString();
-	        movie.setmId(newId);
-	        System.out.println("신규 영화 ID 생성: " + newId);
-	    }
-	    System.out.println("MovieService...addMovie");
+	  @Transactional
+	    public int addMovie(Movie movie) {
+	        System.out.println("MovieService...addMovie");
 
-	    // 2. 영화 정보(부모)를 먼저 DB에 저장합니다.
-	    int result = movieDao.addMovie(movie);
+	        // 1) 영화 저장
+	        int result = movieDao.addMovie(movie);
 
-	    // 3. [핵심 로직 추가] 출연 배우 정보를 mov_act 테이블에 저장합니다.
-	    List<Actor> actors = movie.getActors();
-	    if (actors != null && !actors.isEmpty()) {
-	        for (Actor actor : actors) {
-	            // 배우의 ID가 있는지 확인
-	            if (actor != null && actor.getaId() != null) {
-	                // Map을 사용해 영화 ID와 배우 ID를 함께 전달
-	                Map<String, String> params = new HashMap<>();
-	                params.put("mId", movie.getmId());
-	                params.put("aId", actor.getaId());
-	                movieDao.addMovieActorRelation(params);
+	        // 2) 출연 배우 관계 저장 (mId:int + aId:String → Map<String,Object>로 전달)
+	        List<Actor> actors = movie.getActors();
+	        if (actors != null && !actors.isEmpty()) {
+	            for (Actor actor : actors) {
+	                if (actor != null && actor.getaId() != null && !actor.getaId().isBlank()) {
+	                    Map<String, Object> params = new HashMap<>();
+	                    params.put("mId", movie.getmId());   // int
+	                    params.put("aId", actor.getaId());   // String
+	                    movieDao.addMovieActorRelation(params); // mapper는 parameterType="map" 권장
+	                }
 	            }
 	        }
+	        return result;
 	    }
-	    return result;
-	}
+
 
 	public int updateMovie(Movie movie) {
 		System.out.println("MovieService...updateMovie");
@@ -123,7 +116,7 @@ public class MovieService {
 	}
 
 	 @Transactional
-	    public int deleteMovie(String mId) {
+	    public int deleteMovie(int mId) {
 	        System.out.println("MovieService...deleteMovie (and relations)");
 	        
 	        // 1. 자식 테이블(mov_act) 데이터 먼저 삭제

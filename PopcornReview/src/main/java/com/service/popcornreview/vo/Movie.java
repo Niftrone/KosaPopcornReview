@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class Movie {
 	// 영화 기본 정보
-	private String mId; // 영화 아이디 m_id
+	private Integer mId; // 영화 아이디 m_id (Integer로 수정)
 	private String mTitle; // 영화 제목 m_title
 	private String mSubtitle; // 영화 부제 m_subtitle
 	private Date mRelease; // 개봉일 m_release
@@ -33,8 +33,8 @@ public class Movie {
 
 	} 
 
-	// [수정] 새로 추가된 필드(mDirector, mAddedDate)를 생성자에 반영합니다.
-	public Movie(String mId, String mTitle, String mSubtitle, Date mRelease, String mShowtime, String mDirector,
+
+	public Movie(Integer mId, String mTitle, String mSubtitle, String mRelease, String mShowtime, String mDirector,
 			String mPlot, String mScreeningType, String mMovieTheater, String mCategory, String mUrlImage,
 			String mUrlMovie, Double mAverageScore, String id, String mAddedDate, List<Actor> actors) {
 		super();
@@ -56,11 +56,13 @@ public class Movie {
 		this.actors = actors;
 	}
 
-	public String getmId() {
+    // [수정] Getter의 반환 타입을 Integer로 변경합니다.
+	public Integer getmId() {
 		return mId;
 	}
 
-	public void setmId(String mId) {
+    // [수정] Setter의 파라미터 타입을 Integer로 변경합니다.
+	public void setmId(Integer mId) {
 		this.mId = mId;
 	}
 
@@ -96,7 +98,6 @@ public class Movie {
 		this.mShowtime = mShowtime;
 	}
 	
-	// [추가] mDirector 필드의 Getter/Setter
 	public String getmDirector() {
 		return mDirector;
 	}
@@ -169,7 +170,6 @@ public class Movie {
 		this.id = id;
 	}
 	
-	// [추가] mAddedDate 필드의 Getter/Setter
 	public String getmAddedDate() {
 		return mAddedDate;
 	}
@@ -186,17 +186,15 @@ public class Movie {
 		this.actors = actors;
 	}
 	
-	 // [추가]배우 이름들을 ", "로 구분된 하나의 문자열로 반환하는 헬퍼 메소드
     public String getActorNames() {
         if (this.actors == null || this.actors.isEmpty()) {
-            return ""; // 배우 목록이 없으면 빈 문자열 반환
+            return ""; 
         }
         return this.actors.stream()
-                         .map(Actor::getaName) // 각 Actor 객체에서 이름만 추출
-                         .collect(Collectors.joining(", ")); // 이름들을 ", "로 연결
+                         .map(Actor::getaName)
+                         .collect(Collectors.joining(", "));
     }
 
-	// [수정] 새로 추가된 필드를 toString()에 반영하여 디버깅 시 모든 정보를 볼 수 있도록 합니다.
 	@Override
 	public String toString() {
 		return "Movie [mId=" + mId + ", mTitle=" + mTitle + ", mSubtitle=" + mSubtitle + ", mRelease=" + mRelease
