@@ -18,6 +18,8 @@ import com.service.popcornreview.vo.Comment;
 import com.service.popcornreview.vo.Movie;
 import com.service.popcornreview.vo.Review;
 import com.service.popcornreview.vo.User;
+import jakarta.servlet.http.HttpSession;
+
 
 
 @Controller
@@ -71,21 +73,31 @@ public class ReviewController {
     
 
 	// REVIEW-04: 리뷰 등록 (POST /review/add)
-	@PostMapping("/review/add")
-	public String getaddReview(Review review) {
+	@PostMapping("/add")
+	public String getaddReview(Review review,HttpSession session) {
 		
-		try {
-            reviewService.addReview(review);
-            
-            // ★★★ [핵심] ★★★
-            // 리뷰 등록 후, 현재 영화 상세 페이지로 '다시 접속(redirect)'하게 만듭니다.
-            // 이렇게 해야 새로고침해도 리뷰가 중복 등록되지 않습니다.
-            return "redirect:/movie/detail?mId=" + review.getMovie().getmId();
+		 try {
+		        // 1. 세션에서 로그인한 사용자 정보를 가져옵니다.
+		        User loginUser = (User) session.getAttribute("loginUser");
 
-        } catch(Exception e) {
-            e.printStackTrace(); // 에러 로그를 콘솔에 출력
-            return "error"; // 에러 발생 시 error.jsp 페이지로 이동
-        }
+		        // 2. 만약 로그인 정보가 없다면, 에러 페이지로 보냅니다.
+		        if (loginUser == null) {
+		            // Or redirect to the login page
+		            return "error"; 
+		        }
+
+		        // 3. 리뷰 객체에 사용자 정보를 설정합니다.
+		        review.setUser(loginUser);
+
+		        // 4. 사용자 정보가 포함된 리뷰를 서비스로 전달하여 저장합니다.
+		        reviewService.addReview(review);
+		        
+		        return "redirect:/movie/detail?mId=" + review.getMovie().getmId();
+
+		    } catch(Exception e) {
+		        e.printStackTrace();
+		        return "error";
+		    }
     }
 
 	// REVIEW-05: 리뷰 삭제 (POST /review/delete)

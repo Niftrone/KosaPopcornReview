@@ -60,4 +60,8 @@ public class MovieDao {
 		System.out.println("MovieDao...deleteMovie");
 		return sqlSession.delete(NS + "deleteMovie", mId);
 	}
+	
+	public List<Movie> searchMovies(String query) {
+		return sqlSession.selectList(NS+"searchMovies",query);
+	}
 }
