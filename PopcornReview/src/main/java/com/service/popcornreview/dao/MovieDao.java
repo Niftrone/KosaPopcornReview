@@ -1,6 +1,7 @@
 package com.service.popcornreview.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,10 @@ public class MovieDao {
 	public List<Movie> searchMovies(String query) {
 		return sqlSession.selectList(NS+"searchMovies",query);
 
+	}
+	// [추가] 영화-배우 관계를 mov_act 테이블에 추가하는 메서드
+	public int addMovieActorRelation(Map<String, String> params) {
+	    System.out.println("MovieDao...addMovieActorRelation");
+	    return sqlSession.insert(NS + "addMovieActorRelation", params);
 	}
 }
