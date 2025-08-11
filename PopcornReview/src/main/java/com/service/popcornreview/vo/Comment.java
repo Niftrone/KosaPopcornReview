@@ -1,5 +1,7 @@
 package com.service.popcornreview.vo;
+
 import java.util.Date;
+
 public class Comment {
 	private int cId; // 댓글 아이디 c_id
 	private String cPlot; // 댓글 내용 c_plot
