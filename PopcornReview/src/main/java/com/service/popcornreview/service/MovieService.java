@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,10 +111,38 @@ public class MovieService {
 	    }
 
 
-	public int updateMovie(Movie movie) {
-		System.out.println("MovieService...updateMovie");
-		return movieDao.updateMovie(movie);
-	}
+	  @Transactional // 모든 작업이 성공하거나 실패하도록 보장하는 안전장치
+	    public int updateMovie(Movie movie) {
+	        System.out.println("MovieService...updateMovie");
+	        
+	        // 1. 영화 기본 정보 업데이트
+	        int result = movieDao.updateMovie(movie);
+	        
+	        // 2. 기존 영화-배우 관계를 모두 삭제
+	        //    (mId는 업데이트할 movie 객체에서 가져옵니다)
+	        movieDao.deleteMovieActorRelations(movie.getmId());
+	        
+	     // 3. 새로운 배우 목록이 있다면
+	        if (movie.getActors() != null && !movie.getActors().isEmpty()) {
+	            
+	            // --- 이 부분이 추가된 방어 코드입니다 ---
+	            // 루프를 실행하기 전에, stream을 사용하여 리스트에서 null인 항목들을 모두 걸러냅니다.
+	            List<Actor> validActors = movie.getActors().stream()
+	                                         .filter(Objects::nonNull) // actor가 null이 아닌 것만 통과시킴
+	                                         .collect(Collectors.toList());
+	            
+	            // 이제 null이 없는 '깨끗한' validActors 리스트를 가지고 루프를 실행합니다.
+	            for (Actor actor : validActors) {
+	                Map<String, Object> params = new HashMap<>();
+	                params.put("mId", movie.getmId());
+	                // 이제 actor는 절대 null일 수 없으므로 에러가 발생하지 않습니다.
+	                params.put("aId", actor.getaId());
+	                movieDao.addMovieActorRelation(params);
+	            }
+	        }
+	        
+	        return result;
+	    }
 
 	 @Transactional
 	    public int deleteMovie(int mId) {

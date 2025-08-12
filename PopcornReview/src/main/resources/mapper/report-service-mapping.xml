@@ -23,20 +23,19 @@
 			</association>
 		</association>
 	</resultMap>
-  
-	<insert id="insertReported" parameterType="com.service.popcornreview.vo.ReportedReview">
-		INSERT INTO REPORTED_REVIEWS (rr_plot,rr_date,r_id,user_id) 
-		VALUES (#{rrPlot},CURDATE(),#{review.rId},#{user.id})
-	</insert>
-	
-	<delete id="deleteReported" parameterType="int">
-		DELETE FROM REPORTED_REVIEWS WHERE rr_id = #{value}
-	</delete>
-	
-	<delete id="deleteReportByReviewId" parameterType="int">
-    DELETE FROM REPORTED_REVIEWS WHERE r_id = #{value}
-	</delete>
-	
+
+	<resultMap id="ReportedReviewWithReviewMap" type="com.service.popcornreview.vo.ReportedReview">
+		<id property="rrId" column="rr_id"/>
+		<result property="rrPlot" column="rr_plot"/>
+		<result property="rrDate" column="rr_date"/>
+
+		<association property="review" javaType="com.service.popcornreview.vo.Review">
+			<id property="rId" column="r_id"/>
+			<result property="rPlot" column="r_plot"/>
+		</association>
+	</resultMap>
+
+
 	<select id="getReported" resultMap="ReportedReviewMap">
 		SELECT
 			rr.rr_id,
@@ -59,5 +58,35 @@
 		ORDER BY
 			rr.rr_date DESC
 	</select>
-	
+
+	<select id="getReportedReviewById" parameterType="int" resultMap="ReportedReviewWithReviewMap">
+		SELECT
+			rr.rr_id,
+			rr.rr_plot,
+			rr.rr_date,
+			r.r_id,
+			r.r_plot
+		FROM
+			REPORTED_REVIEWS rr
+		JOIN
+			review r ON rr.r_id = r.r_id
+		WHERE
+			rr.rr_id = #{rrId}
+	</select>
+
+
+	<insert id="insertReported" parameterType="com.service.popcornreview.vo.ReportedReview">
+		INSERT INTO REPORTED_REVIEWS (rr_plot, rr_date, r_id, user_id)
+		VALUES (#{rrPlot}, CURDATE(), #{review.rId}, #{user.id})
+	</insert>
+
+
+	<delete id="deleteReported" parameterType="int">
+		DELETE FROM REPORTED_REVIEWS WHERE rr_id = #{rrId}
+	</delete>
+
+	<delete id="deleteAllReportsByReviewId" parameterType="int">
+		DELETE FROM REPORTED_REVIEWS WHERE r_id = #{rId}
+	</delete>
+
 </mapper>

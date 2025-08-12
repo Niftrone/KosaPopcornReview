@@ -1,25 +1,24 @@
 package com.service.popcornreview.controller;
 
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.service.popcornreview.service.*;
-import com.service.popcornreview.vo.Comment;
-import com.service.popcornreview.vo.Movie;
-import com.service.popcornreview.vo.Review;
-import com.service.popcornreview.vo.Notice;
-import com.service.popcornreview.vo.User;
-import ch.qos.logback.core.net.SyslogOutputStream;
+
+import com.service.popcornreview.service.ActorService;
+import com.service.popcornreview.service.CommentService;
 import com.service.popcornreview.service.ReviewService;
-
-
+import com.service.popcornreview.service.UserService;
+import com.service.popcornreview.vo.Comment;
+import com.service.popcornreview.vo.Review;
+import com.service.popcornreview.vo.User;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -111,6 +110,22 @@ public class UserController {
 		
 		return "find";
 	}
+	
+    @PostMapping("/checkId")
+    public ResponseEntity<Map<String, Boolean>> checkId(String id) {
+        Map<String, Boolean> response = new HashMap<>();
+        User user = new User();
+        user.setId(id);
+        
+        // userService.getUser()를 통해 아이디 존재 여부 확인
+        User foundUser = userService.getUser(user);
+        
+        // foundUser가 null이면 아이디 사용 가능(true), 아니면 사용 불가능(false)
+        response.put("available", foundUser == null);
+        
+        // ResponseEntity.ok()는 HTTP 200 OK 상태와 함께 응답 본문에 데이터를 담아 반환합니다.
+        return ResponseEntity.ok(response);
+    }
 	
 	/**
 	 * 마이페이지

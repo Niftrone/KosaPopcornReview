@@ -4,11 +4,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Movie {
 	// 영화 기본 정보
 	private Integer mId; // 영화 아이디 m_id (Integer로 수정)
 	private String mTitle; // 영화 제목 m_title
 	private String mSubtitle; // 영화 부제 m_subtitle
+	@DateTimeFormat(pattern = "yyyy-MM-dd") 
 	private Date mRelease; // 개봉일 m_release
 	private String mShowtime; // 상영 시간 m_showtime
 	

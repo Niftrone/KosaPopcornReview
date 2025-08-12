@@ -9,9 +9,13 @@
     <!-- Bootstrap CSS -->
 <!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
  -->
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/common.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <%-- JQuery 경로 확인 --%>
+
+ 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link rel="stylesheet" href="../CSS/common.css" />
     
 </head>
 
@@ -115,11 +119,16 @@
                 <a class="link login-link">로그인</a>
             </header>
             <div class="modal-body">
-                 <%-- [수정] action, method를 지정하고 모든 input에 name 속성을 추가합니다. --%>
-                <form action="/user/register" method="post" class="modal-form signup-form">
-                    <input type="text" name="id" placeholder="아이디를 입력하세요." required>
-                    <input type="password" name="pwd" placeholder="비밀번호를 입력하세요." required>
-                    <input type="password" placeholder="비밀번호를 다시 입력하세요." required>
+                <form action="/user/register" method="post" class="modal-form signup-form" id="signupForm">
+                    <input type="text" id="signupId" name="id" placeholder="아이디를 입력하세요." required>
+                    <div class="message" id="id-message"></div>
+
+                    <input type="password" id="signupPwd" name="pwd" placeholder="비밀번호를 입력하세요." required>
+                    <div class="message" id="pwd-message"></div>
+
+                    <input type="password" id="signupPwdConfirm" name="pwd_confirm" placeholder="비밀번호를 다시 입력하세요." required>
+                    <div class="message" id="pwd-confirm-message"></div>
+
                     <input type="email" name="email" placeholder="이메일" required>
                     <input type="text" name="name" placeholder="닉네임을 입력해주세요." required>
                     <input type="tel" name="birthdate" placeholder="생년월일 (예: 2000-01-01)" required>

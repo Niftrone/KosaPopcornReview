@@ -1,631 +1,468 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%
-/* 페이징 샘플 (기존 로직 유지) */
-int pageNum = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
-int itemsPerPage = 10;
-int start = (pageNum - 1) * itemsPerPage + 1;
-int end = pageNum * itemsPerPage;
-request.setAttribute("start", start);
-request.setAttribute("end", end);
-request.setAttribute("pageNum", pageNum);
-%>
-<%-- ========================================================== --%>
-<%-- [수정 1] section 파라미터를 읽어 현재 활성화할 메뉴를 결정합니다. --%>
-<%-- 파라미터가 없으면 'notice'를 기본값으로 사용합니다.          --%>
-<%-- ========================================================== --%>
+
+<%-- JSTL 변수 설정: URL 파라미터가 없으면 'notice'를 기본 섹션으로 사용 --%>
 <c:set var="activeSection" value="${empty param.section ? 'notice' : param.section}" />
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>Admin</title>
-<link rel="stylesheet" href="./css/common.css" />
+<title>Admin Dashboard</title>
+<link rel="stylesheet" href="<c:url value='/css/common.css'/>">
 <style>
-/* ====== 기존 스타일 유지 ====== */
-body {
-  background-color: #121619;
-  font-family: 'Noto Sans KR', sans-serif;
-  margin: 0;
-}
-.container { display: flex; height: 100vh; }
-.sidebar {
-  width: 200px; background-color: #1F2937;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 30px 10px; flex-shrink: 0;
-}
-.sidebar h2 { color: #fff; font-size: 24px; margin-bottom: 40px; font-weight: bold; }
-.sidebar h2 a {
-  color: inherit; text-decoration: none; font-size: inherit;
-  background-color: transparent; padding: 0; margin: 0; display: inline; width: auto; border-radius: 0;
-}
-.sidebar h2 a:hover { background-color: transparent; }
+    /* General Styles */
+    body { background-color: #121619; font-family: 'Noto Sans KR', sans-serif; margin: 0; color: #E5E7EB; }
+    .container { display: flex; height: 100vh; }
 
-/* a도 버튼처럼 보이도록 */
-.sidebar button, .sidebar a {
-  background-color: #1F2937; color: #fff; font-size: 15px;
-  margin-bottom: 15px; border: none; text-align: left; padding: 12px 20px;
-  width: 100%; border-radius: 8px; cursor: pointer; text-decoration: none;
-  box-sizing: border-box; display: block;
-}
-.sidebar button.active, .sidebar button:hover, .sidebar a.active, .sidebar a:hover { background-color: #3B82F6; }
+    /* Sidebar */
+    .sidebar { width: 220px; background-color: #1F2937; display: flex; flex-direction: column; align-items: center; padding: 30px 10px; flex-shrink: 0; }
+    .sidebar h2 { margin-bottom: 40px; }
+    .sidebar h2 a { color: #FFF; font-size: 24px; font-weight: bold; text-decoration: none; }
+    .sidebar .nav-btn { background-color: transparent; color: #D1D5DB; font-size: 16px; margin-bottom: 10px; border: none; text-align: left; padding: 12px 20px; width: 100%; border-radius: 8px; cursor: pointer; text-decoration: none; box-sizing: border-box; display: block; transition: background-color 0.2s, color 0.2s; }
+    .sidebar .nav-btn.active, .sidebar .nav-btn:hover { background-color: #3B82F6; color: #FFF; }
 
-.main { flex: 1; padding: 40px; color: #fff; overflow-y: auto; }
-.section { display: none; }
-.section.active { display: block; }
-.title { font-size: 22px; margin-bottom: 25px; font-weight: bold; }
+    /* Main Content */
+    .main { flex: 1; padding: 40px; overflow-y: auto; }
+    .section { display: none; }
+    .section.active { display: block; animation: fadeIn 0.5s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.btn-top {
-  background-color: #3B82F6; color: #fff; padding: 10px 24px; margin-bottom: 20px;
-  border-radius: 8px; border: none; font-weight: bold; cursor: pointer;
-}
+    .title { font-size: 28px; margin-bottom: 25px; font-weight: bold; color: #FFF; }
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    
+    /* Buttons */
+    .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; }
+    .btn-primary { background-color: #3B82F6; color: #fff; }
+    .btn-danger { background-color: #EF4444; color: #fff; }
+    .btn-secondary { background-color: #6B7280; color: #fff; }
 
-.search-box { display: flex; justify-content: center; margin-bottom: 20px; }
-.search-box form { display: flex; align-items: center; width: 60%; max-width: 600px; }
-.search-box input[type="text"] {
-  flex: 1; padding: 10px 14px; border-radius: 6px; border: none;
-  background-color: #4B5563; color: #fff; font-size: 14px;
-}
-.search-box button {
-  padding: 10px 16px; border: none; border-radius: 6px; background-color: #3B82F6; color: #fff; margin-left: 8px; cursor: pointer;
-}
+    /* Search Box */
+    .search-box { display: flex; width: 100%; max-width: 500px; }
+    .search-box input[type="text"] { flex: 1; padding: 10px 14px; border-radius: 6px 0 0 6px; border: 1px solid #4B5563; background-color: #374151; color: #fff; font-size: 14px; }
+    .search-box input[type="text"]:focus { outline: none; border-color: #3B82F6; }
+    .search-box button { padding: 10px 16px; border: none; border-radius: 0 6px 6px 0; background-color: #3B82F6; color: #fff; cursor: pointer; }
+    
+    /* Table */
+    .table-box { background-color: #1F2937; border-radius: 10px; padding: 10px; overflow-x: auto; }
+    .table-box table { width: 100%; border-collapse: collapse; }
+    .table-box th, .table-box td { padding: 12px 15px; text-align: center; font-size: 14px; border-bottom: 1px solid #374151; }
+    .table-box th { color: #9CA3AF; }
+    .table-box td { color: #E5E7EB; }
+    .table-box tr:last-child td { border-bottom: none; }
+    .table-box .btn { padding: 6px 12px; font-size: 13px; margin: 0 4px; }
 
-.table-box { background-color: #1F2937; border-radius: 10px; padding: 10px; }
-.table-box table { width: 100%; border-collapse: collapse; }
-.table-box th, .table-box td { padding: 8px; text-align: center; font-size: 14px; }
-.table-box tr:nth-child(even) { background-color: #1F2937; }
-.table-box button { padding: 6px 10px; background-color: #374151; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-
-.pagination { margin-top: 20px; text-align: center; }
-.pagination a { color: #fff; background-color: #374151; padding: 6px 12px; margin: 0 4px; text-decoration: none; border-radius: 4px; }
-.pagination a.active { background-color: #3B82F6; }
-
-/* 모달 */
-.modal {
-  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,.6); justify-content: center; align-items: center; z-index: 1000;
-}
-.modal.active { display: flex; }
-.modal-box {
-  background: #374151; padding: 30px; border-radius: 10px; width: 600px; box-sizing: border-box;
-}
-.modal-box form { display: flex; flex-direction: column; gap: 15px; }
-.modal-box input, .modal-box textarea {
-  width: 100%; padding: 10px; border: none !important; border-radius: 6px; background: #4B5563; color: #fff; box-sizing: border-box;
-}
-.modal-box textarea { resize: vertical; }
-.modal-box h3 { font-size: 18px; margin-bottom: 10px; text-align: left; }
-.button-group { display: flex; justify-content: flex-end; gap: 10px; }
-.button-group button { padding: 10px 20px; border: none; border-radius: 6px; background: #1F2937; color: #fff; cursor: pointer; }
-
-/* 배우 자동완성 UI */
-.actor-input-container { position: relative; }
-.suggestions-list {
-  display: none; position: absolute; background-color: #4B5563; border: 1px solid #6B7280; border-radius: 6px;
-  width: 100%; max-height: 150px; overflow-y: auto; z-index: 1001;
-}
-.suggestion-item { padding: 10px; cursor: pointer; }
-.suggestion-item:hover { background-color: #3B82F6; }
-.selected-actors-box {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; padding: 5px;
-  border: 1px solid #4B5563; border-radius: 6px; min-height: 28px;
-}
-.actor-tag { background-color: #3B82F6; color: #fff; padding: 5px 10px; border-radius: 15px; display: flex; align-items: center; font-size: 14px; }
-.remove-tag { margin-left: 8px; cursor: pointer; font-weight: bold; }
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center; z-index: 1000; }
+    .modal.active { display: flex; }
+    .modal-box { background: #374151; padding: 30px; border-radius: 10px; width: 90%; max-width: 650px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .modal-box h3 { font-size: 20px; margin-top: 0; margin-bottom: 20px; text-align: left; color: #FFF; }
+    .modal-form { display: flex; flex-direction: column; gap: 16px; }
+    .modal-form label { font-size: 14px; font-weight: 500; margin-bottom: -10px; text-align: left; }
+    .modal-form input, .modal-form textarea { width: 100%; padding: 12px; border: 1px solid #6B7280; border-radius: 6px; background: #4B5563; color: #fff; box-sizing: border-box; }
+    .modal-form input:focus, .modal-form textarea:focus { outline: none; border-color: #3B82F6; }
+    .modal-form .button-group { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+    
+    /* Actor/Director Autocomplete Styles */
+    .autocomplete-container { position: relative; }
+    .suggestions-list { display: none; position: absolute; background-color: #4B5563; border: 1px solid #6B7280; border-radius: 6px; width: 100%; max-height: 180px; overflow-y: auto; z-index: 1001; }
+    .suggestion-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #6B7280; }
+    .suggestion-item:last-child { border-bottom: none; }
+    .suggestion-item:hover { background-color: #3B82F6; }
+    
+    .selected-actors-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; padding: 8px; border: 1px solid #4B5563; border-radius: 6px; min-height: 40px; }
+    .actor-tag { background-color: #3B82F6; color: #fff; padding: 5px 12px; border-radius: 15px; display: flex; align-items: center; font-size: 14px; }
+    .remove-tag { margin-left: 8px; cursor: pointer; font-weight: bold; }
 </style>
-
-<script>
-/* ---- 모달 열기/닫기 ---- */
-function openModal(id){
-  const modal = document.getElementById(id);
-  if(!modal) return;
-  const form = modal.querySelector('form');
-  if(form){
-    form.setAttribute('data-guard','create');
-    if(id==='modal-notice') form.action = '/admin/notice/add';
-    if(id==='modal-movie')  form.action = '/admin/movie/add';
-    if(id==='modal-actor')  form.action = '/admin/actor/add';
-    form.querySelectorAll('input:not([type=hidden]), textarea').forEach(el => { el.value=''; });
-    const hid = form.querySelector('input[type="hidden"]'); if(hid) hid.value='';
-  }
-  modal.classList.add('active');
-}
-function closeModal(id){ const m = document.getElementById(id); if(m) m.classList.remove('active'); }
-function confirmDelete(form){ if(confirm('정말 삭제하시겠습니까?')) form.submit(); }
-
-/* ---- 공지 수정 모달 ---- */
-function openNoticeEditModal(noticeId, noticeTitle, noticePlot){
-  const modal = document.getElementById('modal-notice');
-  const form  = modal.querySelector('form');
-  form.action = '/admin/notice/update';
-  form.setAttribute('data-guard','update');
-  form.querySelector('input[name="noticeId"]').value = noticeId;
-  form.querySelector('input[name="notice"]').value   = noticeTitle;
-  form.querySelector('textarea[name="noticePlot"]').value = noticePlot;
-  form.querySelectorAll('[name]').forEach(el=>{ if(el.type!=='file') el.dataset.initial = (el.value||'').trim(); });
-  modal.classList.add('active');
-}
-
-/* ---- 영화 수정 모달 ---- */
-function openMovieEditModal(mId, mTitle, mSubtitle, mPlot, mRelease, mShowtime, mCategories, mDirector, actors, mScreeningType, mMovieTheater, mUrlImage, mUrlMovie){
-  const modal = document.getElementById('modal-movie');
-  const form  = modal.querySelector('form');
-  form.action = '/admin/movie/update';
-  form.setAttribute('data-guard','update');
-
-  form.querySelector('input[name="mId"]').value = mId;
-  form.querySelector('input[name="mTitle"]').value = mTitle;
-  form.querySelector('input[name="mSubtitle"]').value = mSubtitle;
-  form.querySelector('textarea[name="mPlot"]').value = mPlot;
-  form.querySelector('input[name="mRelease"]').value = mRelease;
-  form.querySelector('input[name="mShowtime"]').value = mShowtime;
-  form.querySelector('input[name="mCategories"]').value = mCategories;
-  form.querySelector('input[name="mDirector"]').value = mDirector;
-  form.querySelector('input[name="actors"]').value = actors;
-  form.querySelector('input[name="mScreeningType"]').value = mScreeningType;
-  form.querySelector('input[name="mMovieTheater"]').value = mMovieTheater;
-  form.querySelector('input[name="mUrlImage"]').value = mUrlImage;
-  form.querySelector('input[name="mUrlMovie"]').value = mUrlMovie;
-
-  form.querySelectorAll('[name]').forEach(el=>{ if(el.type!=='file') el.dataset.initial = (el.value||'').trim(); });
-  modal.classList.add('active');
-}
-</script>
 </head>
 <body>
   <div class="container">
+    <%-- Sidebar --%>
     <div class="sidebar">
-      <h2><a href="/">Admin</a></h2>
-      <a href="/admin/list?section=notice" id="btn-notice" class="${activeSection == 'notice' ? 'active' : ''}">공지사항 관리</a>
-      <a href="/admin/list?section=movie"  id="btn-movie"  class="${activeSection == 'movie'  ? 'active' : ''}">영화 관리</a>
-      <a href="/admin/list?section=report" id="btn-report" class="${activeSection == 'report' ? 'active' : ''}">신고 리뷰 관리</a>
+      <h2><a href="<c:url value='/'/>">Admin</a></h2>
+      <a href="?section=notice" class="nav-btn ${activeSection == 'notice' ? 'active' : ''}">공지사항 관리</a>
+      <a href="?section=movie" class="nav-btn ${activeSection == 'movie' ? 'active' : ''}">영화 관리</a>
+      <a href="?section=report" class="nav-btn ${activeSection == 'report' ? 'active' : ''}">신고 리뷰 관리</a>
     </div>
 
     <div class="main">
-      <!-- 공지 -->
-      <div id="notice" class="section ${activeSection == 'notice' ? 'active' : ''}">
-        <div class="title">공지사항 관리</div>
-        <button class="btn-top" onclick="openModal('modal-notice')">공지 등록</button>
+      <%-- Notice Section --%>
+      <div id="notice-section" class="section ${activeSection == 'notice' ? 'active' : ''}">
+        <div class="controls">
+          <div class="title">공지사항 관리</div>
+          <button class="btn btn-primary" onclick="App.openModal('notice-modal', true)">공지 등록</button>
+        </div>
         <div class="search-box">
-          <form method="get" action="/admin/notice/search">
-            <input type="text" name="keyword" placeholder="제목 검색" />
+          <form method="get" action="<c:url value='/admin/notice/search'/>">
+            <input type="hidden" name="section" value="notice" />
+            <input type="text" name="keyword" placeholder="제목으로 검색..." value="${param.keyword}"/>
             <button type="submit">🔍</button>
           </form>
         </div>
-        <div class="table-box">
+        <div class="table-box" style="margin-top:20px;">
           <table>
-            <thead>
-              <tr><th>번호</th><th>제목</th><th>등록일</th><th>관리</th></tr>
-            </thead>
+            <thead><tr><th>번호</th><th>제목</th><th>등록일</th><th style="width: 150px;">관리</th></tr></thead>
             <tbody>
-              <c:if test="${empty noticeList}">
-                <tr><td colspan="4" style="text-align:center;">등록된 공지사항이 없습니다.</td></tr>
-              </c:if>
               <c:forEach var="notice" items="${noticeList}" varStatus="status">
                 <tr>
-                  <td>${status.index + 1}</td>
-                  <td><c:out value="${notice.notice}" /></td>
+                  <td>${status.count}</td>
+                  <td style="text-align: left;"><c:out value="${notice.notice}" /></td>
                   <td><c:out value="${notice.noticeDate}" /></td>
                   <td>
-                    <button
-                      onclick="openNoticeEditModal('<c:out value="${notice.noticeId}"/>','<c:out value="${notice.notice}"/>','<c:out value="${notice.noticePlot}"/>')">수정</button>
-                    <form method="post" action="/admin/notice/delete"
-                          onsubmit="event.preventDefault(); confirmDelete(this);" style="display:inline;">
-                      <input type="hidden" name="noticeId" value="<c:out value='${notice.noticeId}'/>">
-                      <button type="submit">삭제</button>
+                    <button class="btn btn-secondary" onclick="App.openNoticeEditModal(this)"
+                            data-id="${notice.noticeId}" 
+                            data-title="${notice.notice}" 
+                            data-plot="${notice.noticePlot}">수정</button>
+                    <form method="post" action="<c:url value='/admin/notice/delete'/>" onsubmit="return App.confirmDelete(event)" style="display: inline;">
+                      <input type="hidden" name="noticeId" value="${notice.noticeId}" />
+                      <button type="submit" class="btn btn-danger">삭제</button>
                     </form>
                   </td>
                 </tr>
               </c:forEach>
+              <c:if test="${empty noticeList}"><tr><td colspan="4">등록된 공지사항이 없습니다.</td></tr></c:if>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- 영화 -->
-      <div id="movie" class="section ${activeSection == 'movie' ? 'active' : ''}">
-        <div class="title">영화 관리</div>
-        <button class="btn-top" onclick="openModal('modal-movie')">영화 등록</button>
+      <%-- Movie Section --%>
+      <div id="movie-section" class="section ${activeSection == 'movie' ? 'active' : ''}">
+        <div class="controls">
+          <div class="title">영화 관리</div>
+          <button class="btn btn-primary" onclick="App.openModal('movie-modal', true)">영화 등록</button>
+        </div>
         <div class="search-box">
-          <form method="get" action="/admin/movie/search">
-            <input type="text" name="keyword" placeholder="제목 검색" />
+          <form method="get" action="<c:url value='/admin/movie/search'/>">
+            <input type="hidden" name="section" value="movie" />
+            <input type="text" name="keyword" placeholder="제목으로 검색..." value="${param.keyword}"/>
             <button type="submit">🔍</button>
           </form>
         </div>
-        <div class="table-box">
+        <div class="table-box" style="margin-top:20px;">
           <table>
-            <thead>
-              <tr><th>번호</th><th>제목</th><th>부제목</th><th>개봉일</th><th>관리</th></tr>
-            </thead>
+            <thead><tr><th>번호</th><th>제목</th><th>부제목</th><th>개봉일</th><th style="width: 150px;">관리</th></tr></thead>
             <tbody>
-              <c:if test="${empty movieList}">
-                <tr><td colspan="5" style="text-align:center;">등록된 영화가 없습니다.</td></tr>
-              </c:if>
+              <%-- JSON 데이터 블록으로 배우 정보를 저장 (JS에서 사용) --%>
               <c:forEach var="movie" items="${movieList}" varStatus="status">
+                <script type="application/json" id="actors-json-${movie.mId}">
+                  [<c:forEach items="${movie.actors}" var="actor" varStatus="loop">{"aId":"${actor.aId}","aName":"${actor.aName}"}<c:if test="${!loop.last}">,</c:if></c:forEach>]
+                </script>
                 <tr>
-                  <td>${status.index + 1}</td>
-                  <td><c:out value="${movie.mTitle}" /></td>
-                  <td><c:out value="${movie.mSubtitle}" /></td>
+                  <td>${status.count}</td>
+                  <td style="text-align: left;"><c:out value="${movie.mTitle}" /></td>
+                  <td style="text-align: left;"><c:out value="${movie.mSubtitle}" /></td>
                   <td><c:out value="${movie.mRelease}" /></td>
                   <td>
-                    <%-- 배우 JSON 문자열 안전 생성 --%>
-                    <c:set var="actorJsonString">
-                      <c:forEach items="${movie.actors}" var="actor" varStatus="loop">
-                        {"aId":"<c:out value='${actor.aId}'/>","aName":"<c:out value='${actor.aName}'/>"}<c:if test="${!loop.last}">,</c:if>
-                      </c:forEach>
-                    </c:set>
-                    <c:set var="actorJson" value="[${actorJsonString}]" />
-
-                    <%-- 데이터 속성에 안전하게 바인딩 --%>
-                    <button class="edit-movie-btn"
-                      data-mid="<c:out value='${movie.mId}'/>"
-                      data-mtitle="<c:out value='${movie.mTitle}'/>"
-                      data-msubtitle="<c:out value='${movie.mSubtitle}'/>"
-                      data-mplot="<c:out value='${movie.mPlot}'/>"
-                      data-mrelease="<c:out value='${movie.mRelease}'/>"
-                      data-mshowtime="<c:out value='${movie.mShowtime}'/>"
-                      data-mcategories="<c:out value='${movie.mCategory}'/>"
-                      data-mdirector="<c:out value='${movie.mDirector}'/>"
-                      data-mscreeningtype="<c:out value='${movie.mScreeningType}'/>"
-                      data-mmovietheater="<c:out value='${movie.mMovieTheater}'/>"
-                      data-murlimage="<c:out value='${movie.mUrlImage}'/>"
-                      data-murlmovie="<c:out value='${movie.mUrlMovie}'/>"
-                      data-actors='<c:out value="${actorJson}" />'>
-                      수정
-                    </button>
-
-                    <form method="post" action="/admin/movie/delete"
-                          onsubmit="event.preventDefault(); confirmDelete(this);" style="display:inline;">
-                      <input type="hidden" name="mId" value="<c:out value='${movie.mId}'/>">
-                      <button type="submit">삭제</button>
+                    <button class="btn btn-secondary edit-movie-btn"
+                            data-mid="${movie.mId}"
+                            data-mtitle="${movie.mTitle}"
+                            data-msubtitle="${movie.mSubtitle}"
+                            data-mplot="${movie.mPlot}"
+                            data-mrelease="${movie.mRelease}"
+                            data-mshowtime="${movie.mShowtime}"
+                            data-mcategory="${movie.mCategory}"
+                            data-mscreeningtype="${movie.mScreeningType}"
+                            data-mmovietheater="${movie.mMovieTheater}"
+                            data-murlimage="${movie.mUrlImage}"
+                            data-murlmovie="${movie.mUrlMovie}"
+                            data-actors-id="actors-json-${movie.mId}">수정</button>
+                    <form method="post" action="<c:url value='/admin/movie/delete'/>" onsubmit="return App.confirmDelete(event)" style="display: inline;">
+                      <input type="hidden" name="mId" value="${movie.mId}" />
+                      <button type="submit" class="btn btn-danger">삭제</button>
                     </form>
                   </td>
                 </tr>
               </c:forEach>
+              <c:if test="${empty movieList}"><tr><td colspan="5">등록된 영화가 없습니다.</td></tr></c:if>
             </tbody>
           </table>
         </div>
       </div>
-
-      <!-- 신고 리뷰 -->
-      <div id="report" class="section ${activeSection == 'report' ? 'active' : ''}">
+      
+      <%-- Report Section --%>
+      <div id="report-section" class="section ${activeSection == 'report' ? 'active' : ''}">
         <div class="title">신고 리뷰 관리</div>
-        <div style="height: 42px;"></div>
-        <div class="search-box">
-          <form method="get" action="/admin/review/search">
-            <input type="text" name="keyword" placeholder="내용 검색" />
-            <button type="submit">🔍</button>
-          </form>
-        </div>
         <div class="table-box">
           <table>
-            <thead>
-              <tr><th>내용</th><th>작성자</th><th>신고자</th><th>신고일</th><th>사유</th><th>관리</th></tr>
-            </thead>
+            <thead><tr><th>내용</th><th>작성자</th><th>신고자</th><th>신고일</th><th>사유</th><th>관리</th></tr></thead>
             <tbody>
-              <c:if test="${empty reportList}">
-                <tr><td colspan="6" style="text-align:center;">신고된 리뷰가 없습니다.</td></tr>
-              </c:if>
-              <c:forEach var="reportedReview" items="${reportList}" varStatus="status">
+              <c:forEach var="report" items="${reportList}">
                 <tr>
-                  <td><c:out value="${reportedReview.review.rPlot}" /></td>
-                  <td><c:out value="${reportedReview.review.user.name}" /></td>
-                  <td><c:out value="${reportedReview.user.name}" /></td>
-                  <td><c:out value="${reportedReview.rrDate}" /></td>
-                  <td><c:out value="${reportedReview.rrPlot}" /></td>
+                  <td style="text-align: left;"><c:out value="${report.review.rPlot}" /></td>
+                  <td><c:out value="${report.review.user.name}" /></td>
+                  <td><c:out value="${report.user.name}" /></td>
+                  <td><c:out value="${report.rrDate}" /></td>
+                  <td><c:out value="${report.rrPlot}" /></td>
                   <td>
-                    <form method="post" action="/admin/review/delete"
-                          onsubmit="event.preventDefault(); confirmDelete(this);">
-                      <input type="hidden" name="rrId" value="<c:out value='${reportedReview.review.rId}'/>">
-                      <button type="submit">삭제</button>
+                    <form method="post" action="<c:url value='/admin/review/delete'/>" onsubmit="return App.confirmDelete(event)" style="display: inline;">
+                      <input type="hidden" name="rrId" value="${report.rrId}" />
+                      <button type="submit" class="btn btn-danger">삭제</button>
                     </form>
                   </td>
                 </tr>
               </c:forEach>
+              <c:if test="${empty reportList}"><tr><td colspan="6">신고된 리뷰가 없습니다.</td></tr></c:if>
             </tbody>
           </table>
         </div>
       </div>
-
-      <!-- 공지 모달 -->
-      <div class="modal" id="modal-notice">
-        <div class="modal-box">
-          <h3>공지사항</h3>
-          <form method="post" action="/admin/notice/add" data-guard="create">
-            <input type="hidden" name="noticeId" value="">
-            <input type="text" name="notice" placeholder="제목" required data-label="제목">
-            <textarea name="noticePlot" rows="6" placeholder="내용" required data-label="내용"></textarea>
-            <div class="button-group">
-              <button type="submit">등록</button>
-              <button type="button" onclick="closeModal('modal-notice')">취소</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- 영화 모달 -->
-      <div class="modal" id="modal-movie">
-        <div class="modal-box">
-          <h3>영화</h3>
-          <form method="post" action="/admin/movie/add" data-guard="create">
-            <input type="hidden" name="mId" value="">
-            <input type="text" name="mTitle" placeholder="제목" required data-label="제목">
-            <input type="text" name="mSubtitle" placeholder="소제목" data-label="소제목">
-            <textarea name="mPlot" rows="4" placeholder="내용" data-label="내용"></textarea>
-            <input type="date" name="mRelease" required data-label="개봉일">
-            <input type="text" name="mShowtime" placeholder="상영시간(분)" data-label="상영시간">
-            <input type="text" name="mCategories" placeholder="장르" required data-label="장르">
-            <input type="text" name="mDirector" placeholder="감독" required data-label="감독">
-
-            <div class="actor-input-container">
-              <label style="text-align:left; font-size:14px; margin-bottom:5px; display:block;">배우</label>
-              <div id="selected-actors" class="selected-actors-box"></div>
-              <input type="text" id="actor-search-input" placeholder="배우 검색 후 추가">
-              <input type="hidden" name="actors" id="actors-hidden-input">
-              <div id="actor-suggestions" class="suggestions-list"></div>
-            </div>
-
-            <input type="text" name="mScreeningType" placeholder="상영 타입" data-label="상영 타입">
-            <input type="text" name="mMovieTheater"  placeholder="영화관" data-label="영화관">
-            <input type="text" name="mUrlImage" placeholder="사진 URL" data-label="사진 URL">
-            <input type="text" name="mUrlMovie" placeholder="영상 URL" data-label="영상 URL">
-            <div class="button-group">
-              <button type="submit">등록</button>
-              <button type="button" onclick="closeModal('modal-movie')">취소</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- 배우 모달 -->
-      <div class="modal" id="modal-actor">
-        <div class="modal-box">
-          <h3>배우 등록</h3>
-          <form method="post" action="/admin/actor/add" data-guard="create">
-            <input type="text" name="aName" placeholder="이름" required data-label="이름">
-            <textarea name="aPlot" rows="4" placeholder="소개" required data-label="소개"></textarea>
-            <input type="text" name="aUrlImage" placeholder="사진 URL" required data-label="사진 URL">
-            <div class="button-group">
-              <button type="submit">등록</button>
-              <button type="button" onclick="closeModal('modal-actor')">취소</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <script>
-(function () {
-  document.addEventListener('DOMContentLoaded', function () {
-    /* ==============================
-       1) data-guard 폼 유효성 & 확인창
-       ============================== */
-    document.querySelectorAll('form[data-guard]').forEach(function (form) {
-      var mode = (form.getAttribute('data-guard') || 'create').toLowerCase();
-
-      // 초기값 스냅샷
-      form.querySelectorAll('[name]').forEach(function (el) {
-        if (el.type !== 'file') el.dataset.initial = (el.value || '').trim();
-      });
-
-      function labelOf(el) { return el.getAttribute('data-label') || el.name; }
-
-      form.addEventListener('submit', function (e) {
-        // required 빈값 검사
-        var empties = [];
-        var req = form.querySelectorAll('[name][required]');
-        req.forEach(function (el) {
-          var empty = (el.type === 'file')
-            ? !(el.files && el.files.length > 0)
-            : !((el.value || '').trim());
-          if (empty) empties.push(labelOf(el));
-        });
-        if (empties.length) {
-          e.preventDefault();
-          alert(empties.join(', ') + ' 칸이 비어있어서 ' + (mode === 'create' ? '등록' : '수정') + '이(가) 안됩니다.');
-          var firstEmpty = Array.from(req).find(function (el) {
-            return (el.type === 'file') ? !(el.files && el.files.length > 0) : !((el.value || '').trim());
-          });
-          if (firstEmpty) firstEmpty.focus();
-          return;
-        }
-
-        if (!form.checkValidity()) return;
-
-        // 변경 내용 안내
-        var msg;
-        if (mode === 'create') {
-          msg = '정말 등록하시겠습니까?';
-        } else {
-          var changed = [];
-          form.querySelectorAll('[name]').forEach(function (el) {
-            if (el.type === 'file') {
-              if (el.files && el.files.length > 0) changed.push(labelOf(el));
-            } else {
-              var now = (el.value || '').trim();
-              var ini = el.dataset.initial || '';
-              if (now !== ini) changed.push(labelOf(el));
-            }
-          });
-          msg = changed.length
-            ? ('다음 항목이 변경됩니다:\n  - ' + changed.join('\n  - ') + '\n\n정말 수정하시겠습니까?')
-            : '변경된 내용이 없습니다.\n그래도 수정하시겠습니까?';
-        }
-
-        if (!confirm(msg)) { e.preventDefault(); return; }
-
-        // ✅ 배우 CSV → 배열 파라미터로 변환 (mov-act 매핑용)
-        replaceActorsCsvWithArrayInputs(form);
-      });
-    });
-
-    /* ==============================
-       2) 영화 편집 버튼(테이블 이벤트 위임)
-       ============================== */
-    const movieTable = document.querySelector('#movie .table-box');
-    if (movieTable) {
-      movieTable.addEventListener('click', function (e) {
-        if (e.target && e.target.classList.contains('edit-movie-btn')) {
-          const btn = e.target;
-          const d = btn.dataset;
-          if (typeof openMovieEditModal === 'function') {
-            openMovieEditModal(
-              d.mid, d.mtitle, d.msubtitle, d.mplot,
-              d.mrelease, d.mshowtime, d.mcategories,
-              d.mdirector, d.actors, d.mscreeningtype,
-              d.mmovietheater, d.murlimage, d.murlmovie
-            );
-          }
-        }
-      });
-    }
-
-    /* ==============================
-       3) 배우 자동완성
-       ============================== */
-    const actorSearchInput = document.getElementById('actor-search-input');
-    const suggestionsBox   = document.getElementById('actor-suggestions');
-    let debounceTimer;
-
-    if (actorSearchInput && suggestionsBox) {
-      actorSearchInput.addEventListener('input', function () {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-          const query = actorSearchInput.value.trim();
-          if (query.length < 1) {
-            suggestionsBox.innerHTML = '';
-            suggestionsBox.style.display = 'none';
-            return;
-          }
-          fetch('/api/actors/search?name=' + encodeURIComponent(query))
-            .then(response => response.json())
-            .then(actors => {
-              suggestionsBox.innerHTML = '';
-              if (Array.isArray(actors) && actors.length > 0) {
-                actors.forEach(actor => {
-                  const item = document.createElement('div');
-                  item.textContent = actor.aName;
-                  item.classList.add('suggestion-item');
-                  item.addEventListener('click', function () { addActor(actor); });
-                  suggestionsBox.appendChild(item);
-                });
-                suggestionsBox.style.display = 'block';
-              } else {
-                suggestionsBox.style.display = 'none';
-              }
-            })
-            .catch(() => {
-              suggestionsBox.innerHTML = '';
-              suggestionsBox.style.display = 'none';
-            });
-        }, 300);
-      });
-    }
-
-    // 선택된 배우 태그 추가
-    window.addActor = function (actor) {
-      const box = document.getElementById('selected-actors');
-      const hid = document.getElementById('actors-hidden-input');
-      if (!box || !hid || !actor) return;
-
-      // CSV → 배열(문자열)로
-      const ids = (hid.value || '')
-        .split(',')
-        .map(s => s.trim())
-        .filter(Boolean);
-
-      // 중복(문자열 기준) 체크
-      const aIdStr = String(actor.aId);
-      if (ids.includes(aIdStr)) {
-        alert('이미 추가된 배우입니다.');
-        if (actorSearchInput) actorSearchInput.value = '';
-        if (suggestionsBox) suggestionsBox.style.display = 'none';
-        return;
-      }
-
-      // 태그 생성
-      const tag = document.createElement('span');
-      tag.classList.add('actor-tag');
-      tag.textContent = actor.aName;
-      tag.dataset.actorId = aIdStr;
-
-      const x = document.createElement('span');
-      x.textContent = 'x';
-      x.classList.add('remove-tag');
-      x.onclick = () => removeActor(aIdStr);
-      tag.appendChild(x);
-
-      box.appendChild(tag);
-
-      // CSV 업데이트
-      ids.push(aIdStr);
-      hid.value = ids.join(',');
-
-      if (actorSearchInput) actorSearchInput.value = '';
-      if (suggestionsBox) suggestionsBox.style.display = 'none';
-    };
-
-    // 선택 해제
-    window.removeActor = function (actorId) {
-      const box = document.getElementById('selected-actors');
-      const hid = document.getElementById('actors-hidden-input');
-      if (!box || !hid) return;
-
-      const actorIdStr = String(actorId);
-
-      const tag = box.querySelector('[data-actor-id="' + actorIdStr + '"]');
-      if (tag) tag.remove();
-
-      const ids = (hid.value || '')
-        .split(',')
-        .map(s => s.trim())
-        .filter(Boolean)
-        .filter(id => id !== actorIdStr);
-
-      hid.value = ids.join(',');
-    };
-
-    // 자동완성 박스 바깥 클릭 시 닫기
-    document.addEventListener('click', function (e) {
-      if (suggestionsBox && !e.target.closest('.actor-input-container')) {
-        suggestionsBox.style.display = 'none';
-      }
-    });
-  });
-
-  /* ==============================
-     유틸: CSV → name="actors" 배열 인풋으로 변환
-     ============================== */
-  function replaceActorsCsvWithArrayInputs(form) {
-    const hid = form.querySelector('#actors-hidden-input');
-    if (!hid) return;
-
-    const ids = (hid.value || '')
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    // 기존 name="actors" 인풋(CSV hidden 제외) 제거
-    form.querySelectorAll('input[name="actors"]').forEach(function (el) {
-      if (el !== hid) el.remove();
-    });
-
-    // CSV hidden의 name이 'actors'면 충돌 방지 위해 제거
-    if ((hid.getAttribute('name') || '') === 'actors') {
-      hid.remove();
-    }
-
-    // id마다 독립 hidden 추가: actors=1&actors=2&actors=3
-    ids.forEach(function (id) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'actors';
-      input.value = id;
-      form.appendChild(input);
-    });
-  }
-})();
-</script>
     </div>
   </div>
+
+  <%-- Notice Modal --%>
+  <div class="modal" id="notice-modal">
+    <div class="modal-box">
+      <h3>공지사항 등록/수정</h3>
+      <form class="modal-form" method="post" action="">
+        <input type="hidden" name="noticeId">
+        <input type="text" name="notice" placeholder="제목" required>
+        <textarea name="noticePlot" rows="8" placeholder="내용" required></textarea>
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">저장</button>
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('notice-modal')">취소</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <%-- Movie Modal --%>
+  <div class="modal" id="movie-modal">
+    <div class="modal-box">
+      <h3>영화 등록/수정</h3>
+      <form class="modal-form" method="post" action="" id="movie-form">
+        <input type="hidden" name="mId">
+        <input type="text" name="mTitle" placeholder="제목" required>
+        <input type="text" name="mSubtitle" placeholder="부제목">
+        <textarea name="mPlot" rows="4" placeholder="줄거리"></textarea>
+        <input type="date" name="mRelease" required>
+        <input type="text" name="mShowtime" placeholder="상영시간 (분)">
+        <input type="text" name="mCategory" placeholder="장르" required>
+        
+        <%-- 감독 입력 필드 삭제 --%>
+        
+        <div class="autocomplete-container">
+          <label>인물</label>
+          <div id="selected-actors-box" class="selected-actors-box"></div>
+          <input type="text" id="actor-search-input" placeholder=" 이름 검색 후 추가">
+          <div id="actor-suggestions" class="suggestions-list"></div>
+        </div>
+        
+        <input type="text" name="mScreeningType" placeholder="상영 타입 (2D, 3D, IMAX 등)">
+        <input type="text" name="mMovieTheater" placeholder="주요 상영관">
+        <input type="text" name="mUrlImage" placeholder="포스터 이미지 URL">
+        <input type="text" name="mUrlMovie" placeholder="예고편 영상 URL">
+        
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">저장</button>
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('movie-modal')">취소</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+const App = (() => {
+    // 영화 수정 모달의 배우 목록을 관리하는 상태 변수
+    let selectedActors = new Map();
+
+    // --- DOM Elements ---
+    const getElement = (id) => document.getElementById(id);
+    const movieForm = getElement('movie-form');
+    const noticeModal = getElement('notice-modal');
+    const movieModal = getElement('movie-modal');
+    
+    // --- Utility Functions ---
+    const debounce = (func, delay = 300) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
+     const fetchSuggestions = async (query, suggestionsBox, onSelect) => {
+         if (!query.trim()) {
+             suggestionsBox.style.display = 'none';
+             return;
+         }
+         try {
+             const url = `<c:url value='/api/actors/search'/>?name=` + encodeURIComponent(query);
+             
+             const response = await fetch(url);
+             if (!response.ok) throw new Error('Server response was not ok.');
+             const data = await response.json();
+
+             suggestionsBox.innerHTML = '';
+             if (data && data.length > 0) {
+                 data.forEach(actor => {
+                     const item = document.createElement('div');
+                     item.className = 'suggestion-item';
+                     item.textContent = actor.aName;
+                     item.onclick = () => {
+                         onSelect(actor);
+                         suggestionsBox.style.display = 'none';
+                     };
+                     suggestionsBox.appendChild(item);
+                 });
+                 suggestionsBox.style.display = 'block';
+             } else {
+                 suggestionsBox.style.display = 'none';
+             }
+         } catch (error) {
+             console.error('Failed to fetch suggestions:', error);
+             suggestionsBox.style.display = 'none';
+         }
+     };
+
+    // --- Actor Management ---
+    const manageActorList = (action, actor) => {
+        if (action === 'add') {
+            selectedActors.set(actor.aId, actor.aName);
+        } else if (action === 'remove') {
+            selectedActors.delete(actor.aId);
+        }
+        renderSelectedActors();
+    };
+
+    const renderSelectedActors = () => {
+        const container = getElement('selected-actors-box');
+        container.innerHTML = '';
+        selectedActors.forEach((name, id) => {
+            const tag = document.createElement('span');
+            tag.className = 'actor-tag';
+            tag.textContent = name;
+            
+            const removeBtn = document.createElement('span');
+            removeBtn.className = 'remove-tag';
+            removeBtn.textContent = 'x';
+            removeBtn.onclick = () => manageActorList('remove', { aId: id, aName: name });
+            
+            tag.appendChild(removeBtn);
+            container.appendChild(tag);
+        });
+    };
+
+    const prepareActorsForSubmission = (form) => {
+        form.querySelectorAll('input[name="actors"]').forEach(input => input.remove());
+        selectedActors.forEach((name, id) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'actors';
+            input.value = id;
+            form.appendChild(input);
+        });
+    };
+
+    // --- Modal Handling ---
+    const openModal = (modalId, isCreate) => {
+        const modal = getElement(modalId);
+        if (!modal) return;
+
+        const form = modal.querySelector('form');
+        form.reset();
+
+        if (modalId === 'movie-modal') {
+            selectedActors.clear();
+            renderSelectedActors();
+            // 감독 관련 필드 초기화 코드 삭제
+            form.action = isCreate ? "<c:url value='/admin/movie/add'/>" : "<c:url value='/admin/movie/update'/>";
+        } else if (modalId === 'notice-modal') {
+             form.action = isCreate ? "<c:url value='/admin/notice/add'/>" : "<c:url value='/admin/notice/update'/>";
+        }
+        
+        modal.classList.add('active');
+    };
+    
+    const closeModal = (modalId) => {
+        getElement(modalId)?.classList.remove('active');
+    };
+
+    const openNoticeEditModal = (button) => {
+        openModal('notice-modal', false);
+        const form = noticeModal.querySelector('form');
+        const data = button.dataset;
+        form.querySelector('[name="noticeId"]').value = data.id;
+        form.querySelector('[name="notice"]').value = data.title;
+        form.querySelector('[name="noticePlot"]').value = data.plot;
+    };
+    
+    const populateMovieEditModal = (button) => {
+        openModal('movie-modal', false);
+        const form = movieModal.querySelector('form');
+        const data = button.dataset;
+        
+        // 필드 값 채우기
+        form.querySelector('[name="mId"]').value = data.mid;
+        form.querySelector('[name="mTitle"]').value = data.mtitle;
+        form.querySelector('[name="mSubtitle"]').value = data.msubtitle;
+        form.querySelector('[name="mPlot"]').value = data.mplot;
+        form.querySelector('[name="mRelease"]').value = data.mrelease.split(' ')[0];
+        form.querySelector('[name="mShowtime"]').value = data.mshowtime;
+        form.querySelector('[name="mCategory"]').value = data.mcategory;
+        form.querySelector('[name="mScreeningType"]').value = data.mscreeningtype;
+        form.querySelector('[name="mMovieTheater"]').value = data.mmovietheater;
+        form.querySelector('[name="mUrlImage"]').value = data.murlimage;
+        form.querySelector('[name="mUrlMovie"]').value = data.murlmovie;
+
+        // 감독 정보 채우기 관련 코드 전체 삭제
+
+        // 배우 정보 채우기
+        const actorsJson = getElement(data.actorsId)?.textContent;
+        if (actorsJson) {
+            try {
+                JSON.parse(actorsJson).forEach(actor => manageActorList('add', actor));
+            } catch (e) {
+                console.error("배우 정보 파싱 오류:", e);
+            }
+        }
+    };
+    
+    const confirmDelete = (event) => {
+        if (!confirm('정말로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+            event.preventDefault();
+            return false;
+        }
+        return true;
+    };
+
+    // --- Event Listeners & Initialization ---
+    const init = () => {
+        getElement('movie-section')?.addEventListener('click', (e) => {
+            if (e.target.matches('.edit-movie-btn')) {
+                populateMovieEditModal(e.target);
+            }
+        });
+        
+        movieForm?.addEventListener('submit', (e) => {
+            prepareActorsForSubmission(e.target);
+        });
+
+        // 감독 검색 자동완성 관련 이벤트 리스너 삭제
+
+        // 배우 검색 자동완성
+        getElement('actor-search-input')?.addEventListener('keyup', debounce(e => {
+            fetchSuggestions(e.target.value, getElement('actor-suggestions'), (actor) => {
+                manageActorList('add', actor);
+                e.target.value = ''; // 입력 필드 비우기
+            });
+        }));
+
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.autocomplete-container')) {
+                document.querySelectorAll('.suggestions-list').forEach(el => el.style.display = 'none');
+            }
+        });
+    };
+    
+    document.addEventListener('DOMContentLoaded', init);
+
+    return {
+        openModal,
+        closeModal,
+        openNoticeEditModal,
+        confirmDelete
+    };
+})();
+</script>
 </body>
 </html>

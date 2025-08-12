@@ -24,12 +24,15 @@
 <style>
     body {
         background-color: #121212;
-        color: #e0e0e0;
+        color: var(--primary-30);
         font-family: 'Noto Sans KR', sans-serif;
     }
     .container {
         margin-top: 40px;
         margin-bottom: 100px; /* 맨 아래 리뷰와 푸터 사이 여백 추가 */
+    }
+    .text-mute{
+    		color: #A6CBFF;
     }
     .movie-header h1 {
         font-weight: 700;
@@ -386,7 +389,7 @@
 <div class="container">
     <div class="movie-header mb-4">
         <h1>${movie.mTitle}</h1>
-        <p class="text-muted">${movie.mSubtitle}</p>
+        <p class="text-mute">${movie.mSubtitle}</p>
     </div>
 
     <div class="row">
@@ -451,19 +454,19 @@
             <div class="row">
                 <div class="col-sm-6 mb-3">
                     <strong>감독</strong>
-                    <p class="text-muted mb-0">${movie.mDirector}</p>
+                    <p class="text-mute mb-0">${movie.mDirector}</p>
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>개봉일</strong>
-                    <p class="text-muted mb-0">${movie.mRelease}</p>
+                    <p class="text-mute mb-0">${movie.mRelease}</p>
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>장르</strong>
-                    <p class="text-muted mb-0">${movie.mCategory}</p>
+                    <p class="text-mute mb-0">${movie.mCategory}</p>
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>상영 시간</strong>
-                    <p class="text-muted mb-0">${movie.mShowtime}분</p>
+                    <p class="text-mute mb-0">${movie.mShowtime}분</p>
                 </div>
             </div>
         </div>
@@ -541,7 +544,7 @@
     <%-- ========================================================= --%>
     <div class="review-summary">
         <h4 class="fw-bold">&lt;리뷰 요약&gt;</h4>
-        <p class="text-muted mt-3">
+        <p class="text-mute mt-3">
             ${summary}
         </p>
     </div>
@@ -593,7 +596,7 @@
 
 <div class="chat-container" id="review-container">
 	<%-- ▼▼▼ 이 부분을 추가하세요 ▼▼▼ --%>
-    <div id="no-filter-results" class="text-center p-5 text-muted" style="display: none;">
+    <div id="no-filter-results" class="text-center p-5 text-mute" style="display: none;">
         <p>해당 조건에 맞는 리뷰가 없습니다.</p>
     </div>
 

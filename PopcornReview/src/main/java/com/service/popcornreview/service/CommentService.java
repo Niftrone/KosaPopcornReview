@@ -72,7 +72,7 @@ public class CommentService {
 	        }
 	    }
 
-	    return list; // ❗ 반드시 이걸 반환해야 위에서 가공한 값이 반영됨
+	    return list;
 	}
 
 }

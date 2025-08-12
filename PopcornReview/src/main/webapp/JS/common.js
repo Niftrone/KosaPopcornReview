@@ -188,6 +188,76 @@ $(document).ready(function() {
 
 	displayRecentSearches(); // 페이지 로드 시에도 표시 (localStorage에 있으면)
 
-	
+	const idInput = $('#signupId');
+	const pwdInput = $('#signupPwd');
+	const pwdConfirmInput = $('#signupPwdConfirm');
+
+	const idMessage = $('#id-message');
+	const pwdMessage = $('#pwd-message');
+	const pwdConfirmMessage = $('#pwd-confirm-message');
+
+	// 1. 아이디 유효성 검사 (6글자 이상 + 중복 확인)
+	idInput.on('keyup', function() {
+	    const id = $(this).val();
+
+	    if (id.length === 0) {
+	        idMessage.text('').removeClass('success error');
+	        return;
+	    }
+
+	    if (id.length < 6) {
+	        idMessage.text('아이디는 6글자 이상이어야 합니다.').removeClass('success').addClass('error');
+	        return;
+	    }
+
+	    // AJAX를 통해 서버에 아이디 중복 확인 요청
+	    $.ajax({
+	        url: '/user/checkId', // UserController에 만든 API 경로
+	        type: 'POST',
+	        data: { id: id },
+	        success: function(response) {
+	            if (response.available) {
+	                idMessage.text('사용 가능한 아이디입니다.').removeClass('error').addClass('success');
+	            } else {
+	                idMessage.text('이미 사용 중인 아이디입니다.').removeClass('success').addClass('error');
+	            }
+	        },
+	        error: function() {
+	            idMessage.text('ID 중복 확인 중 오류 발생').removeClass('success').addClass('error');
+	        }
+	    });
+	});
+
+	// 2. 비밀번호 유효성 검사 (6글자 이상)
+	pwdInput.on('keyup', function() {
+	    const pwd = $(this).val();
+
+	    if (pwd.length === 0) {
+	        pwdMessage.text('').removeClass('success error');
+	    } else if (pwd.length < 6) {
+	        pwdMessage.text('비밀번호는 6글자 이상이어야 합니다.').removeClass('success').addClass('error');
+	    } else {
+	        pwdMessage.text('사용 가능한 비밀번호입니다.').removeClass('error').addClass('success');
+	    }
+	    // 비밀번호 확인 필드의 값도 실시간으로 다시 검사하기 위해 keyup 이벤트를 발생시킴
+	    pwdConfirmInput.trigger('keyup');
+	});
+
+	// 3. 비밀번호 확인 유효성 검사 (일치 여부)
+	pwdConfirmInput.on('keyup', function() {
+	    const pwd = pwdInput.val();
+	    const pwdConfirm = $(this).val();
+
+	    if (pwdConfirm.length === 0) {
+	        pwdConfirmMessage.text('').removeClass('success error');
+	        return;
+	    }
+
+	    if (pwd === pwdConfirm) {
+	        pwdConfirmMessage.text('비밀번호가 일치합니다.').removeClass('error').addClass('success');
+	    } else {
+	        pwdConfirmMessage.text('비밀번호가 일치하지 않습니다.').removeClass('success').addClass('error');
+	    }
+	});
 	
 });
