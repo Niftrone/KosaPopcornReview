@@ -28,15 +28,13 @@ public class CommentController {
 	 * @return 리뷰 상세 페이지로 리다이렉트
 	 */
 	@PostMapping("/add")
-	public String addComment(Comment comment, HttpSession session, RedirectAttributes redirectAttributes) {
+	public String addComment(Comment comment,HttpSession session, RedirectAttributes redirectAttributes) {
 	    User loginUser = (User) session.getAttribute("loginUser"); // 세션에 저장된 속성 이름이 'loginUser'라고 가정
 	    
 	    if (loginUser == null) {
 	        redirectAttributes.addFlashAttribute("error", "로그인이 필요한 서비스입니다.");
 	        return "redirect:/review/" + comment.getrId();
 	    }
-	    
-	    comment.setid(loginUser.getId());
 	    System.out.println(comment);
 	    commentService.addComment(comment);
 	    

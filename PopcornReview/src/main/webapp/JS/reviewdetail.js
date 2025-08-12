@@ -158,7 +158,8 @@
 
     var data = {
       'review.rId': rId,
-      cPlot: $.trim(cPlot)
+      cPlot: $.trim(cPlot),
+	  'user.id' : window.loginUserId
     };
 
     var csrf = getCsrfHeader();
