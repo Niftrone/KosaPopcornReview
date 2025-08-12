@@ -24,7 +24,7 @@
 <style>
     body {
         background-color: #121212;
-        color: var(--primary-30);
+        color: #e0e0e0;;
         font-family: 'Noto Sans KR', sans-serif;
     }
     .container {
@@ -596,7 +596,7 @@
 
 <div class="chat-container" id="review-container">
 	<%-- ▼▼▼ 이 부분을 추가하세요 ▼▼▼ --%>
-    <div id="no-filter-results" class="text-center p-5 text-mute" style="display: none;">
+    <div id="no-filter-results" class="text-center p-5 text-muted" style="display: none;">
         <p>해당 조건에 맞는 리뷰가 없습니다.</p>
     </div>
 

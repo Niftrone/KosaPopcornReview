@@ -381,6 +381,149 @@ body {
     background-color: #718096;
 }
 
+/* =================================================================
+   [추가] 신고하기 모달 스타일
+   ================================================================= */
+
+/* 스크린 리더 전용 클래스 (접근성) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 모달 배경 오버레이 */
+.report-modal-overlay {
+  display: none; /* 평소엔 숨김 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.report-modal-overlay.active {
+  display: flex; /* active 클래스가 붙으면 보이도록 함 */
+}
+
+/* 모달 콘텐츠 영역 */
+.report-modal-content {
+  background-color: #2d3748;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  border: 1px solid #4A5568;
+}
+
+.report-modal-content h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-align: center;
+}
+
+/* 신고 대상 정보 */
+.report-target-info {
+  background-color: #1F2937;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #cbd5e0;
+}
+.report-target-info p {
+  margin: 0.5rem 0;
+}
+.report-target-info strong {
+  color: #a0aec0;
+}
+
+/* 신고 사유 리스트 */
+.report-reason-list {
+  border: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+}
+
+.report-reason-item {
+  margin-bottom: 0.75rem;
+}
+
+.report-reason-item input[type="radio"] {
+  display: none; /* 기본 라디오 버튼 숨기기 */
+}
+
+.report-reason-item label {
+  display: block;
+  padding: 0.75rem 1rem;
+  border: 1px solid #4A5568;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  color: #cbd5e0;
+}
+
+/* 선택되지 않은 라디오 버튼 레이블 호버 효과 */
+.report-reason-item input[type="radio"]:not(:checked) + label:hover {
+  background-color: #4A5568;
+}
+
+/* 선택된 라디오 버튼 레이블 스타일 */
+.report-reason-item input[type="radio"]:checked + label {
+  background-color: var(--btn-color, #EAB308);
+  border-color: var(--btn-color, #EAB308);
+  color: #141822;
+  font-weight: bold;
+}
+
+
+/* 모달 버튼 영역 */
+.report-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.report-modal-actions button {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.report-cancel-btn {
+  background-color: #4A5568;
+  color: #fff;
+}
+.report-cancel-btn:hover {
+  background-color: #718096;
+}
+
+.report-submit-btn {
+  background-color: var(--btn-color, #EAB308);
+  color: #141822;
+}
+.report-submit-btn:hover {
+  opacity: 0.85;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }

@@ -106,8 +106,6 @@ public class MovieController {
 	     // ★ [추가] 리뷰 리포트 데이터 조회
 	        ReviewStatsDto reviewStats = movieService.getReviewStats(list);
 	        
-	        // ... (요약 서비스 및 모델 추가 로직) ...
-		     // ✨ SmartService의 요약 기능 호출
 		        List<String> reviewTexts = list.stream()
 		                                          .map(Review::getrPlot)
 		                                          .collect(Collectors.toList());

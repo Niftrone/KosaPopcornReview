@@ -29,6 +29,8 @@
 
 <body>
 	<jsp:include page="include/header.jsp" />
+	
+	<c:set var="me" value="${sessionScope.loginUser.id}" />
 
 	<c:if test="${not empty movieDetail and not empty reviewDetail}">
 		<div class="movie-banner"
@@ -51,7 +53,9 @@
 		<main class="review-container">
 			<section class="review-content-box">
 				<p class="review-text">${reviewDetail.rPlot}</p>
-				<button class="review-report-button" type="button">신고하기</button>
+				<c:if test="${reviewDetail.user.id ne me}">
+					<button class="review-report-button" type="button">신고하기</button>
+				</c:if>
 			</section>
 
 			<section class="comment-form">
@@ -65,7 +69,7 @@
 				</form>
 			</section>
 
-			<c:set var="me" value="${sessionScope.loginUser.id}" />
+			
 
 			<section id="comment-list-section" class="comment-list">
 				<c:choose>
@@ -115,11 +119,67 @@
 			</section>
 		</main>
 	</c:if>
+	
+	
 
 	<c:if test="${empty reviewDetail}">
 		<div style="text-align: center; color: white; padding: 5rem;">
 			<h2>해당 리뷰를 찾을 수 없습니다.</h2>
 		</div>
 	</c:if>
+<%-- 신고하기 모달                                                    --%>
+<%-- =============================================================== --%>
+<div id="reportModal" class="report-modal-overlay">
+  <div class="report-modal-content">
+    <form id="reportForm">
+      <h2>신고하기</h2>
+      <input type="hidden" id="rId" value="${reviewDetail.rId}"/>
+      <%-- 신고 대상 리뷰 정보 (JS로 내용 채움) --%>
+      <div class="report-target-info">
+        <p><strong>작성자:</strong> <span id="reportAuthor">${reviewDetail.user.name}</span></p>
+        <p><strong>내용:</strong> "<span id="reportContent">${reviewDetail.rPlot}</span>"</p>
+      </div>
+
+      <%-- 신고 사유 선택 --%>
+      <fieldset class="report-reason-list">
+        <legend class="sr-only">신고 사유 선택</legend>
+        <div class="report-reason-item">
+          <input type="radio" id="reason1" name="reportReason" value="스팸홍보/도배">
+          <label for="reason1">스팸홍보/도배입니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason2" name="reportReason" value="음란물">
+          <label for="reason2">음란물입니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason3" name="reportReason" value="불법정보">
+          <label for="reason3">불법정보를 포함하고 있습니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason4" name="reportReason" value="청소년에게 유해함">
+          <label for="reason4">청소년에게 유해한 내용입니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason5" name="reportReason" value="욕설/혐오/차별">
+          <label for="reason5">욕설/생명경시/혐오/차별적 표현입니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason6" name="reportReason" value="개인정보 노출">
+          <label for="reason6">개인정보가 노출되었습니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason7" name="reportReason" value="불쾌한 표현">
+          <label for="reason7">불쾌한 표현이 있습니다.</label>
+        </div>
+      </fieldset>
+
+      <%-- 액션 버튼 --%>
+      <div class="report-modal-actions">
+        <button type="button" class="report-cancel-btn">취소</button>
+        <button type="submit" class="report-submit-btn">신고</button>
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>

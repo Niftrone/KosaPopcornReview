@@ -59,18 +59,19 @@ $(document).ready(function() {
     const userMenuButton = $('#userMenuButton');
     const userDropdownMenu = $('#userDropdownMenu');
 
-    // 닉네임 버튼을 클릭했을 때 드롭다운 메뉴를 토글
-    userMenuButton.on('click', function(event) {
-        event.stopPropagation(); // 이벤트 버블링 방지
-        userDropdownMenu.toggleClass('show');
-    });
+	userMenuButton
+	  .off('click.userMenu')                // 기존 중복 핸들러 제거
+	  .on('click.userMenu', function (e) {
+	    e.stopPropagation();
+	    // alert('clicked');  // 테스트용
+	    userDropdownMenu.toggleClass('show');
+	  });
 
-    // 문서의 다른 곳을 클릭했을 때 드롭다운 메뉴 닫기
-    $(document).on('click', function() {
-        if (userDropdownMenu.hasClass('show')) {
-            userDropdownMenu.removeClass('show');
-        }
-    });
+	$(document)
+	  .off('click.userMenuClose')
+	  .on('click.userMenuClose', function () {
+	    userDropdownMenu.removeClass('show');
+	  });
 
 
 	// 1. 로그아웃 버튼을 변수에 저장

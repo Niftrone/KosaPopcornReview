@@ -27,6 +27,7 @@ public class ReportService {
 
 	public int insertReported(ReportedReview reportedReview) {
 		System.out.println("ReportService...insertReported");
+		System.out.println(reportedReview);
 		return reportDao.insertReported(reportedReview);
 	}
 

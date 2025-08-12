@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam; // RequestParam을 
 
 import com.service.popcornreview.service.CommentService;
 import com.service.popcornreview.service.MovieService;
+import com.service.popcornreview.service.ReportService;
 import com.service.popcornreview.service.ReviewService;
-import com.service.popcornreview.service.UserService;
 import com.service.popcornreview.vo.Comment;
 import com.service.popcornreview.vo.Movie;
+import com.service.popcornreview.vo.ReportedReview;
 import com.service.popcornreview.vo.Review;
 import com.service.popcornreview.vo.User;
 import jakarta.servlet.http.HttpSession;
@@ -37,7 +38,8 @@ public class ReviewController {
     private MovieService movieService;
     
     @Autowired
-    private UserService userService;
+    private ReportService rReviewService;
+    
 
     /**
      * 리뷰 상세 페이지 요청을 처리합니다.
@@ -119,9 +121,8 @@ public class ReviewController {
 
 	// REVIEW-07: 리뷰 신고 (POST /review/reported)
 	@PostMapping("/reported")
-	public String addReported(@RequestParam("rId") int rId) { // 어떤 리뷰를 신고할지 ID를 받아야 합니다.
-		// 사용자가 불쾌한 리뷰를 신고하는 로직
-		// reportService.addReportedReview(...);
-		return "redirect:/review/" + rId; // 신고 후 해당 리뷰 상세 페이지로 다시 이동합니다.
+	public String addReported(ReportedReview rReview) { 
+		rReviewService.insertReported(rReview);
+		return "redirect:/review/" + rReview.getReview().getrId(); // 신고 후 해당 리뷰 상세 페이지로 다시 이동합니다.
 	}
 }
