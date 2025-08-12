@@ -333,18 +333,7 @@ header .search #searchInput::placeholder {
 	font-size: var(--font-size-base);
 }
 
-.signup-form input[type="text"], .signup-form input[type="password"],
-	.signup-form input[type="email"], .signup-form input[type="tel"] {
-	width: 80%;
-	height: 52px;
-	background-color: var(--sub-bg-overlay);
-	border: 1px solid var(--color-border);
-	border-radius: var(--border-radius-md);
-	margin-bottom: 1rem;
-	padding: 0 1rem;
-	color: var(--color-text-primary);
-	font-size: var(--font-size-base);
-}
+
 
 .modal-form input::placeholder {
 	color: var(--color-text-secondary);
@@ -407,6 +396,25 @@ header .search #searchInput::placeholder {
 
 .modal-overlay .btn-find-account:hover {
 	background-color: #414b56;
+}
+
+/* =================================================================
+   회원가입 폼 유효성 검사 메시지 스타일
+   ================================================================= */
+.modal-form .message {
+    font-size: 12px;
+    margin-top: -12px; /* 입력창 바로 아래에 위치하도록 조정 */
+    margin-bottom: 1rem;
+    padding-left: 5px;
+    height: 14px; /* 메시지 영역 높이를 고정하여 레이아웃 깨짐 방지 */
+}
+
+.modal-form .message.success {
+    color: #3498db; /* 파란색 */
+}
+
+.modal-form .message.error {
+    color: #e74c3c; /* 빨간색 */
 }
 
 .find-tabs {
