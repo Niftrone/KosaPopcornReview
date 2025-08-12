@@ -33,10 +33,20 @@ public class ReportDao {
 
 	public List<ReportedReview> getReported() {
 	    System.out.println("ReportDao...getReported");
-	    return sqlSession.selectList(NS + "getReported");
+	    return sqlSession.selectList(NS + "getReported");	    
 	    
 //	    List<ReportedReview> reportedReviewList = sqlSession.selectList(NS + "getReported");
 //	    System.out.println("조회된 신고 리뷰 목록: " + reportedReviewList);
 //	    return reportedReviewList;
+	}
+	// [추가] rrId로 단일 신고 정보를 조회하는 메소드
+	public ReportedReview getReportedReviewById(int rrId) {
+	    System.out.println("ReportDao...getReportedReviewById");
+	    return sqlSession.selectOne(NS + "getReportedReviewById", rrId);
+	}
+	
+	public int deleteAllReportsByReviewId(int rId) {
+	    System.out.println("ReportDao...deleteAllReportsByReviewId");
+	    return sqlSession.delete(NS + "deleteAllReportsByReviewId", rId);
 	}
 }

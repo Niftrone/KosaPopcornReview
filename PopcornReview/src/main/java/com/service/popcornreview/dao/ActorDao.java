@@ -1,6 +1,7 @@
 package com.service.popcornreview.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class ActorDao {
 	}
 	
 	// [추가] 이름으로 배우 검색 영화추가 할때 검색 리스트
-	public List<Actor> searchActorsByName(String name) {
-	    return sqlSession.selectList(NS + "searchActorsByName", name);
+	public List<Actor> searchActorsByName(Map<String, String> params) {
+	    return sqlSession.selectList(NS + "searchActorsByName", params);
 	}
 	
 	// [추가] 이름으로 배우 정보를 조회하는 메서드
@@ -31,5 +32,4 @@ public class ActorDao {
 	    System.out.println("ActorDao...getActorByName");
 	    return sqlSession.selectOne(NS + "getActorByName", name);
 	}
-
 }

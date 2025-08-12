@@ -1,7 +1,9 @@
 package com.service.popcornreview.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
@@ -75,7 +77,7 @@ public class AdminController {
 		        List<Notice> noticeList = noticeService.getNotices(serarch);
 		        
 		        model.addAttribute("noticeList", noticeList);
-		        model.addAttribute("activeSection", "notice");
+		        model.addAttribute("activeSection", "notice"); //activeSection이 활성화인가봄
 		        
 		        model.addAttribute("movieList", movieService.getAllMovies(new Movie()));
 		        model.addAttribute("reportList", reportService.getReported());
@@ -88,34 +90,39 @@ public class AdminController {
 	  }
 	  
 	  //영화 검색
-	  @GetMapping("/admin/movie/search")
-	  public String doMovieSerch(String keyword, Model model) {
-		  try {
-			  	Movie serarch = new Movie();
-			  	serarch.setmTitle(keyword);
-			  
-		        List<Movie> movieList = movieService.getAllMovies(serarch);
-		        model.addAttribute("movieList", movieList);
-		        
-		        
-		        model.addAttribute("noticeList", noticeService.getNotices(new Notice()));
-		        model.addAttribute("reportList", reportService.getReported());
-		        
-		        // 활성화될 섹션을 모델에 담아 전달
-		        model.addAttribute("activeSection", "movie");
-
-		        return "admin"; // redirect 대신 admin 뷰를 직접 반환
-		        
-		    } catch (Exception e) {
-		        model.addAttribute("errorMessage", "검색 중 오류가 발생했습니다.");
-		        return "error";
-		    }
-	  }
 	 
+	  @GetMapping("/admin/movie/search")
+	  public String searchMovie(@RequestParam(required = false) String keyword, Model model) {
+	      try {
+	          // 1. 영화(Movie) 검색 조건 객체 생성
+	          Movie criteria = new Movie();
+
+	          // keyword가 있을 경우, 영화 제목(mTitle)으로 검색 조건 설정
+	          if (keyword != null && !keyword.isBlank()) {
+	              criteria.setmTitle(keyword.trim());
+	          }
+	          // 영화 검색 서비스 호출 후 모델에 "movieList"로 추가
+	          model.addAttribute("movieList", movieService.getAllMovies(criteria));
+
+	          // 2. 다른 섹션의 목록 추가 (페이지 렌더링용)
+	          model.addAttribute("noticeList", noticeService.getNotices(new Notice()));
+	          model.addAttribute("reportList", reportService.getReported());
+
+	          // 3. 'movie' 탭을 활성화하도록 정보 추가
+	          model.addAttribute("activeSection", "movie");
+
+	          return "admin";
+
+	      } catch (Exception e) {
+	          // 4. 예외 발생 시 에러 페이지로 이동
+	          model.addAttribute("errorMessage", "영화 검색 중 오류가 발생했습니다.");
+	          return "error";
+	      }
+	  }
 	// ADMIN-01: 영화 정보 등록 (POST)
 	@PostMapping("admin/movie/add")
 	public String addMovie(Movie movie,Model model, RedirectAttributes ra) {
-		System.out.println("왔니?");
+		
         try {
             movieService.addMovie(movie);
             ra.addFlashAttribute("message", "영화 등록 완료.");
@@ -138,7 +145,7 @@ public class AdminController {
 			
 	        return "redirect:/admin/list?section=movie";
 		} catch (Exception e) {
-			model.addAttribute("errorMessage","영화 수정 실패 했습니다");
+			model.addAttribute("errorMessage","영화 수정 실패 했습니다"+e.getMessage());
 			return "error";
 		}
 	}
@@ -218,9 +225,14 @@ public class AdminController {
     }
 	
 	 // [추가] 배우 검색 API 메서드
-    @GetMapping("/api/actors/search")
-    @ResponseBody // 3. 이 메서드의 반환값은 뷰가 아닌 데이터(JSON)임을 명시
-    public List<Actor> searchActors(@RequestParam("name") String name) {
-        return actorService.searchActorsByName(name);
-    }
+	@GetMapping("/api/actors/search")
+	@ResponseBody
+	public List<Actor> search(@RequestParam(value="name", required=false) String name,
+	                          @RequestParam(value="keyword", required=false) String keyword,
+	                          @RequestParam(value="role", required=false) String role) {
+	    String q = (name != null && !name.isBlank()) ? name : keyword;
+	  
+
+	    return actorService.searchActorsByName(q == null ? "":q,null);
+	}
 }
