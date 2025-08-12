@@ -208,6 +208,18 @@
 				</c:choose>
 			</div>
 		</section>
+		<div id="noticeDetailModal" class="modal-overlay">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 id="noticeModalTitle" class="modal-title"></h2>
+				<button id="closeNoticeModal" class="close-button">&times;</button>
+			</div>
+			<div class="modal-body">
+				<p id="noticeModalDate" class="notice-date"></p>
+				<div id="noticeModalContent" class="notice-content"></div>
+			</div>
+		</div>
+	</div>
 	</main>
 
 	<footer class="footer">
@@ -251,18 +263,7 @@
 		</div>
 	</footer>
 
-	<div id="noticeDetailModal" class="modal-overlay">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2 id="noticeModalTitle" class="modal-title"></h2>
-				<button id="closeNoticeModal" class="close-button">&times;</button>
-			</div>
-			<div class="modal-body">
-				<p id="noticeModalDate" class="notice-date"></p>
-				<div id="noticeModalContent" class="notice-content"></div>
-			</div>
-		</div>
-	</div>
+
 
 	<script src="JS/index.js"></script>
 </body>
