@@ -466,7 +466,7 @@
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>상영 시간</strong>
-                    <p class="text-mute mb-0">${movie.mShowtime}분</p>
+                    <p class="text-mute mb-0">${movie.mShowtime}</p>
                 </div>
             </div>
         </div>
