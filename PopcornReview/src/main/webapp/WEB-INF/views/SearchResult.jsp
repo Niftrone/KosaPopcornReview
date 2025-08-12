@@ -12,7 +12,8 @@
     <title>검색 결과</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
-        body { background-color: #18181B; color: #FFFFFF; font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 40px; }
+        body { background-color: #18181B; color: #FFFFFF; font-family: 'Malgun Gothic', sans-serif; margin: 0;}
+        main{padding: 40px}
         .container { max-width: 1200px; margin: 0 auto; }
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .page-header h1 { font-size: 24px; margin: 0; }
@@ -44,7 +45,7 @@
         .info-section {
             padding: 16px;
         }
-        .title {
+        .info-section .title {
             font-size: 18px;
             font-weight: 600;
             color: #ffffff;
@@ -95,7 +96,8 @@
 <%-- 이 부분의 경로가 올바르지 않으면 404 에러가 발생할 수 있습니다. --%>
 <%-- 테스트를 위해 잠시 주석 처리하거나, 실제 header.jsp 파일 위치에 맞게 경로를 수정하세요. --%>
 	<jsp:include page="include/header.jsp" />
-
+	
+	<main>
     <div class="container">
         <div class="page-header">
 		    <h1>검색 <span>"${query}"</span></h1>
@@ -123,5 +125,6 @@
             </c:forEach>
         </div>
     </div>
+    </main>
 </body>
 </html>
