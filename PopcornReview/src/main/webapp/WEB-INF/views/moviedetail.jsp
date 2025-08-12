@@ -4,8 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<%-- 현재 날짜를 Date 객체로 준비 --%>
 <c:set var="now" value="<%=new java.util.Date()%>" />
-<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="todayStr" />
 
 <!DOCTYPE html>
 <html>
@@ -470,8 +470,10 @@
                 </div>
             </div>
         </div>
-<%-- ▼▼▼ 여기에 c:if 시작 태그를 추가합니다 ▼▼▼ --%>
-        <c:if test="${movie.mRelease <= todayStr}">
+        
+        
+<%-- ▼▼▼ [수정] .time 속성을 사용하여 숫자(밀리초)로 비교합니다 ▼▼▼ --%>
+<c:if test="${movie.mRelease.time <= now.time}">
         <%-- ========================================================= --%>
     <%-- ▼▼▼ [수정 시작] 관람객 통계 ▼▼▼                         --%>
     <%-- ========================================================= --%>

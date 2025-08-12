@@ -19,11 +19,9 @@
 		<result property="mAddedDate" column="m_added_date"/>
 		<result property="id" column="id"/>
 
-		<!-- 평균 점수: 계산 컬럼 + 스키마 컬럼 둘 다 매핑 -->
 		<result property="mAverageScore" column="average_score"/>
 		<result property="mAverageScore" column="m_averagescore"/>
 
-		<!-- 배우 컬렉션: column="m_id"를 ActorMapper로 전달 -->
 		<collection property="actors"
             ofType="actor"
             select="ns.sql.ActorMapper.getActorsByMovie"
@@ -87,7 +85,6 @@
 		SELECT * FROM movie WHERE m_release > CURDATE() OR m_release IS NULL ORDER BY m_release ASC;
 	</select>
 
-	<!-- 영화 INSERT: 키 생성 → movie.mId 세팅 -->
 	<insert id="addMovie" parameterType="movie" useGeneratedKeys="true" keyProperty="mId">
         INSERT INTO movie 
             (m_title, m_subtitle, m_release, m_showtime, m_plot, m_category, m_screening_type, m_movie_theater, m_url_image, m_url_movie, id, m_added_date)
@@ -95,7 +92,6 @@
             ( #{mTitle}, #{mSubtitle}, #{mRelease}, #{mShowtime}, #{mPlot}, #{mCategory}, #{mScreeningType}, #{mMovieTheater}, #{mUrlImage}, #{mUrlMovie}, #{id}, CURDATE())
 	</insert>
 
-	<!-- 영화-배우 연결 INSERT: 문자열 aId 사용 -->
 	<insert id="addMovieActorRelation" parameterType="map">
         INSERT INTO mov_act (m_id, a_id) VALUES (#{mId}, #{aId})
 	</insert>
