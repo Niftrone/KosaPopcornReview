@@ -67,10 +67,26 @@
     /* ★★★ CSS 수정: .stats-bar 의 배경색을 rating-bar와 통일하고,
            .progress-bar의 배경색은 Bootstrap 기본값을 사용하도록 하여 충돌 해결 */
     .stats-bar, .rating-bar {
-        background-color: #333; /* 모든 그래프의 배경은 어두운 회색 */
-    }
+    background-color: #333 !important; /* 모든 그래프의 배경은 어두운 회색 */
+}
     /* .progress-bar { background-color: #E50914; } 이 줄은 삭제하거나 주석처리 */
-
+	
+	/* ▼▼▼ [추가] 리뷰 없음 안내 문구 스타일 ▼▼▼ */
+    .placeholder-text {
+        color: #e0e0e0;
+        text-align: center;
+        padding: 3rem;
+        border-radius: 8px;
+        margin-top: 10px;
+        
+        /* ▼▼▼ [수정] 텍스트 위치를 아래로 내리기 위해 padding 값 조정 ▼▼▼ */
+    padding-top: 80px;    /* 위쪽 여백을 늘려 텍스트를 아래로 내립니다. */
+    padding-bottom: 80px; /* 전체적인 상자의 높이를 유지하기 위해 아래쪽 여백도 설정합니다. */
+    }3
+    .placeholder-text p {
+        margin-bottom: 0;
+    }
+	
     /* 컨트롤러 및 헤더 관련 스타일 */
     .review-controls-wrapper {
         display: flex;
@@ -458,7 +474,7 @@
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>개봉일</strong>
-                    <p class="text-mute mb-0">${movie.mRelease}</p>
+                    <p class="text-mute mb-0"><fmt:formatDate value="${movie.mRelease}" pattern="yyyy-MM-dd" /></p>
                 </div>
                 <div class="col-sm-6 mb-3">
                     <strong>장르</strong>
@@ -479,28 +495,37 @@
     <%-- ========================================================= --%>
      <div class="col-md-6">
         <h2 class="section-title">관람객 통계</h2>
-        <div>
-            <p>성별</p>
-            <c:if test="${not empty audienceStats.genderDistribution}">
-                <div class="progress rounded-pill" style="height: 25px; font-size: 0.9rem;">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: ${audienceStats.genderDistribution['남성']}%;" aria-valuenow="${audienceStats.genderDistribution['남성']}">
-                        남성 <fmt:formatNumber value="${audienceStats.genderDistribution['남성']}" maxFractionDigits="1"/>%
-                    </div>
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: ${audienceStats.genderDistribution['여성']}%;" aria-valuenow="${audienceStats.genderDistribution['여성']}">
-                        여성 <fmt:formatNumber value="${audienceStats.genderDistribution['여성']}" maxFractionDigits="1"/>%
-                    </div>
+        
+        <c:choose>
+            <c:when test="${not empty reviews}">
+                <div>
+                    <c:if test="${not empty audienceStats.genderDistribution and (audienceStats.genderDistribution['남성'] > 0 or audienceStats.genderDistribution['여성'] > 0)}">
+                        <p>성별</p>
+                        <div class="progress rounded-pill" style="height: 25px; font-size: 0.9rem;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: ${audienceStats.genderDistribution['남성']}%;" aria-valuenow="${audienceStats.genderDistribution['남성']}">
+                                남성 <fmt:formatNumber value="${audienceStats.genderDistribution['남성']}" maxFractionDigits="1"/>%
+                            </div>
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: ${audienceStats.genderDistribution['여성']}%;" aria-valuenow="${audienceStats.genderDistribution['여성']}">
+                                여성 <fmt:formatNumber value="${audienceStats.genderDistribution['여성']}" maxFractionDigits="1"/>%
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty audienceStats.ageDistribution}">
+                        <p class="mt-4">연령</p>
+                        <c:forEach items="${audienceStats.ageDistribution}" var="ageStat">
+                            <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: ${ageStat.value}%;">${ageStat.key}</div>
+                            </div>
+                        </c:forEach>
+                    </c:if>
                 </div>
-            </c:if>
-
-            <p class="mt-4">연령</p>
-            <c:if test="${not empty audienceStats.ageDistribution}">
-                <c:forEach items="${audienceStats.ageDistribution}" var="ageStat">
-                    <div class="progress stats-bar mb-2 rounded-pill" style="height: 18px;">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${ageStat.value}%;">${ageStat.key}</div>
-                    </div>
-                </c:forEach>
-            </c:if>
-        </div>
+            </c:when>
+            <c:otherwise>
+                <div class="placeholder-text">
+		                    <p>첫 번째 리뷰를 작성하고 관람객 통계를 확인해보세요!</p>
+		        </div>
+            </c:otherwise>
+        </c:choose>
     </div>
     
 
@@ -508,49 +533,48 @@
 
        <hr class="my-5"> 
 
-    <h2 class="section-title">유저 리뷰 리포트</h2>
-    <div class="user-report-container">
-        <div class="average-score-section">
-            <div class="d-flex align-items-center">
-                <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn Icon" style="height: 3.5rem; width: auto;">
-                <%-- 평균 평점 --%>
-                <span class="fs-1 fw-bold ms-n2">평균: ${reviewStats.averageScore}점</span>
-            </div>
-        </div>
-
-        <div class="rating-graph-section">
-            <div class="rating-distribution">
-                <%-- 점수 분포도 --%>
-                <c:forEach items="${reviewStats.scoreDistribution}" var="dist">
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="rating-label">${dist.key}점</span>
-                        <div class="progress rating-bar w-100" style="height:12px;">
-                            <div class="progress-bar bg-danger" style="width: ${dist.value}%;">
-                                <fmt:formatNumber value="${dist.value}" maxFractionDigits="0"/>%
-                            </div>
-                        </div>
+    <%-- ========================================================= --%>
+    <%-- ▼▼▼ [수정] 유저 리뷰 리포트 및 요약 ▼▼▼          --%>
+    <%-- ========================================================= --%>
+    <c:choose>
+        <c:when test="${not empty reviews}">
+            <h2 class="section-title">유저 리뷰 리포트</h2>
+            <div class="user-report-container">
+                <div class="average-score-section">
+                    <div class="d-flex align-items-center">
+                         <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn Icon" style="height: 3.5rem; width: auto;">
+                        <span class="fs-1 fw-bold ms-n2">평균: ${reviewStats.averageScore}점</span>
                     </div>
-                </c:forEach>
+                </div>
+        
+                <div class="rating-graph-section">
+                    <div class="rating-distribution">
+                        <c:forEach items="${reviewStats.scoreDistribution}" var="dist">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="rating-label">${dist.key}점</span>
+                                <div class="progress rating-bar w-100" style="height:12px;">
+                                     <div class="progress-bar bg-danger" style="width: ${dist.value}%;">
+                                        <fmt:formatNumber value="${dist.value}" maxFractionDigits="0"/>%
+                                    </div>
+                                 </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <%-- ========================================================= --%>
-    <%-- ▲▲▲ [수정 끝] 유저 리뷰 리포트 ▲▲▲                        --%>
-    <%-- ========================================================= --%>
-
-
-    <%-- ========================================================= --%>
-    <%-- ▼▼▼ [수정 시작] 리뷰 요약 ▼▼▼                            --%>
-    <%-- ========================================================= --%>
-    <div class="review-summary">
-        <h4 class="fw-bold">&lt;리뷰 요약&gt;</h4>
-        <p class="text-mute mt-3">
-            ${summary}
-        </p>
-    </div>
-    <%-- ========================================================= --%>
-    <%-- ▲▲▲ [수정 끝] 리뷰 요약 ▲▲▲                              --%>
-    <%-- ========================================================= --%>
+        
+            <div class="review-summary">
+                <h4 class="fw-bold">&lt;리뷰 요약&gt;</h4>
+                <p class="text-mute mt-3">${summary}</p>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <h2 class="section-title">유저 리뷰 리포트</h2>
+             <div class="placeholder-text">
+                <p>이 영화의 평균 평점이 궁금하신가요? 첫 리뷰의 주인공이 되어보세요.</p>
+            </div>
+        </c:otherwise>
+    </c:choose>
 
 
 
@@ -596,7 +620,7 @@
 
 <div class="chat-container" id="review-container">
 	<%-- ▼▼▼ 이 부분을 추가하세요 ▼▼▼ --%>
-    <div id="no-filter-results" class="text-center p-5 text-mute" style="display: none;">
+    <div id="no-filter-results" class="text-center p-5 text-muted" style="display: none;">
         <p>해당 조건에 맞는 리뷰가 없습니다.</p>
     </div>
 

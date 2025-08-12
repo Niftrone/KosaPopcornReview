@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.service.popcornreview.dto.AudienceStatsDto;
 import com.service.popcornreview.dto.ReviewStatsDto;
@@ -58,19 +59,30 @@ public class MovieController {
 	}
 		
 	@GetMapping("/movie/search")
-	public String getSearchMovie(String query,Model model) {
-		
-		try {
-			List<Movie> movies = movieService.searchMovies(query);
-			
-			model.addAttribute("movies",movies);
-			System.out.println("movies=>"+movies);
-			model.addAttribute("query", query);
-			return "SearchResult";
-		} catch(Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
+	public String searchAndSortMovies(
+	        @RequestParam("query") String query,
+	        @RequestParam(value = "sort", required = false, defaultValue = "latest") String sort,
+	        Model model) {
+	    
+	    try {
+	    	// System.out.println("query==>"+query+", sort==>"+sort);
+	        // 1. 먼저 DB에서 검색어에 해당하는 모든 영화를 가져옵니다.
+	        List<Movie> initialMovies = movieService.searchMovies(query);
+
+	        // 2. 가져온 목록을 Service의 정렬 메소드에 전달하여 정렬합니다.
+	        List<Movie> sortedMovies = movieService.SortByCondition(initialMovies, sort);
+
+	        // 3. 최종적으로 정렬된 목록을 모델에 담습니다.
+	        model.addAttribute("movies", sortedMovies);
+	        model.addAttribute("query", query);
+	        model.addAttribute("sort", sort);
+
+	        return "SearchResult";
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "error";
+	    }
 	}
 	
 	/**
@@ -104,7 +116,7 @@ public class MovieController {
 	        AudienceStatsDto audienceStats = movieService.getAudienceStats(list);
 	        
 	     // ★ [추가] 리뷰 리포트 데이터 조회
-	        ReviewStatsDto reviewStats = movieService.getReviewStats(list);
+	        ReviewStatsDto reviewStats = movieService.getReviewStats(list,movie);
 	        
 	        // ... (요약 서비스 및 모델 추가 로직) ...
 		     // ✨ SmartService의 요약 기능 호출
@@ -132,6 +144,10 @@ public class MovieController {
 	        return "error";
 	    }
 	}
+	
+	
+	
+	
 	@GetMapping("/movie/actordetail")
 	public String getActorDetail(Actor actor, Model model) {
 	    // 1. 파라미터로 받은 actorId를 사용해 DB에서 해당 배우의 정보를 조회합니다.
