@@ -10,17 +10,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.service.popcornreview.dto.AudienceStatsDto;
 import com.service.popcornreview.dto.ReviewStatsDto;
+import com.service.popcornreview.dto.SummaryResponse;
 import com.service.popcornreview.service.ActorService;
 import com.service.popcornreview.service.CommentService;
 import com.service.popcornreview.service.MovieService;
 import com.service.popcornreview.service.NoticeService;
 import com.service.popcornreview.service.ReportService;
 import com.service.popcornreview.service.ReviewService;
+import com.service.popcornreview.service.SmartService;
 import com.service.popcornreview.service.UserService;
 import com.service.popcornreview.vo.Actor;
 import com.service.popcornreview.vo.Movie;
 import com.service.popcornreview.vo.Review;
-
+import java.util.stream.Collectors;
 
 @Controller
 public class MovieController {
@@ -36,6 +38,10 @@ public class MovieController {
 
 	@Autowired
 	private ActorService actorService;
+	
+	@Autowired
+	private SmartService smartService;
+
 
 	@GetMapping("/")
 	public String getIndexData(Model model) {
@@ -89,8 +95,11 @@ public class MovieController {
 	        Review review = new Review();
 	        review.setMovie(movie);
 	        List<Review> list = reviewService.getAllReviews(review);
-	        System.out.println("list=>"+list);
-
+	       
+	        
+	        for(Review r :list) {
+	        	System.out.println("user=>"+r.getUser());
+	        }
 	        // ★ [수정됨] movieId 대신, 위에서 가져온 'list'를 그대로 전달합니다.
 	        AudienceStatsDto audienceStats = movieService.getAudienceStats(list);
 	        
@@ -98,30 +107,24 @@ public class MovieController {
 	        ReviewStatsDto reviewStats = movieService.getReviewStats(list);
 	        
 	        // ... (요약 서비스 및 모델 추가 로직) ...
+		     // ✨ SmartService의 요약 기능 호출
+		        List<String> reviewTexts = list.stream()
+		                                          .map(Review::getrPlot)
+		                                          .collect(Collectors.toList());
+		        SummaryResponse summaryResponse =  smartService.getSummary(movie,reviewTexts);
+		        
+		     // [수정] .getSummary()를 이용해 객체 안의 문자열(String)을 꺼냅니다.
+		        String summaryText = summaryResponse.getSummary();
+	        
 	        
 	        model.addAttribute("movie", movie);
 	        model.addAttribute("reviews", list);
 	        model.addAttribute("audienceStats", audienceStats);
 	        model.addAttribute("reviewStats", reviewStats); // ★ 리뷰 통계 데이터 추가
-	        model.addAttribute("summary", """
-	        	    🙇‍♀️ 정말 미안해… 조금만 기다려줘
-	        	    안녕!
-	        	    지금 너무 바쁘게 움직이고 있었는데, 네가 기다리고 있을 걸 생각하니 마음이 계속 쓰였어.
-
-	        	    🕒 생각보다 오래 걸리게 해서 정말 미안해.
-	        	    일부러 그런 건 아니야.
-	        	    조금만 정리하면 바로 끝나니까 진짜 금방 끝내고 네게 갈게.
-
-	        	    🙏 너무 기다리게 해서 미안하고, 고맙고, 미안해.
-	        	    나를 이해해주고 기다려줘서 늘 고마워.
-	        	    이런 사소한 약속이라도 소중하게 여기는 너니까, 나도 더 책임감 있게 움직일게.
-
-	        	    💨 조금만 더! 진짜 금방 할게!
-	        	    딱! 잠깐만 기다려줘.
-	        	    최대한 빨리 끝내고, 미소 지으며 네 앞에 다시 나타날게. 약속할게 🤞
-	        	""");
-	        // ...
-
+	        model.addAttribute("summary", summaryText);
+	        
+	        
+	   
 	        return "moviedetail";
 
 	    } catch (Exception e) {
