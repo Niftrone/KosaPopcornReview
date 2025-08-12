@@ -142,6 +142,7 @@ body {
     width: 100%;
     min-height: 100px; /* height를 min-height로 변경 */
     padding: 1rem;
+    padding-right: 6rem;
     background-color: var(--sub-bg-overlay, #1F2937);
     border: 1px solid var(--modal-btn, #303D);
     border-radius: 8px;
@@ -159,8 +160,8 @@ body {
 
 .comment-submit-button {
     position: absolute;
-    bottom: 12px;
-    right: 12px;
+    bottom: 24px;
+    right: 34px;
     background-color: var(--btn-color, #EAB308);
     color: var(--bg-overlay, #141822);
     border: none;
@@ -223,6 +224,163 @@ body {
     margin: 0 auto;
 }
 
+/* ===== 내 댓글 강조 & 액션 메뉴 ===== */
+.comment-item { position: relative; }
+
+/* 내가 쓴 댓글 스타일 수정 */
+.comment-item.mine {
+	background-color: #2a3a50; /* 기존 #0d6efd 보다 좀 더 톤다운된 색상 */
+    border-left: 4px solid var(--btn-color, #EAB308); /* 왼쪽 테두리로 강조 */
+}
+
+/* 햄버거 버튼 컨테이너 (오른쪽 위 정렬) */
+.comment-menu {
+  position: absolute;
+  right: 1.0rem;
+  top: 1.0rem;
+  z-index: 5;
+}
+
+/* 햄버거 버튼 스타일 수정 */
+.menu-button {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  transition: background-color 0.2s;
+}
+
+.menu-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-button .icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* 햄버거 아이콘(점) 색상을 흰색으로 변경 */
+.menu-button .icon circle {
+  fill: #ffffff;
+}
+
+/* 드롭다운 메뉴 (수정/삭제 버튼) - 평소에 숨기기 */
+.menu-dropdown {
+    display: none; 
+    position: absolute;
+    right: 0;
+    top: 100%; /* 버튼 바로 아래에 위치 */
+    background-color: #2d3748; /* 어두운 배경 */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 10;
+    overflow: hidden;
+    min-width: 90px;
+    padding: 0.5rem 0; /* 상하 패딩 */
+    border: 1px solid #4A5568;
+}
+
+/* JS에서 active 클래스 추가 시 보이도록 함 (토글 기능) */
+.menu-dropdown.active {
+    display: block; 
+}
+
+.menu-item-btn {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: none;
+    border: none;
+    color: #cbd5e0; /* 밝은 회색 텍스트 */
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.menu-item-btn:hover {
+    background-color: #4A5568; /* 호버 시 배경색 변경 */
+    color: #ffffff; /* 호버 시 텍스트 색상 변경 */
+}
+
+.menu-item-delete {
+    color: #f56565; /* 삭제 버튼은 붉은색으로 강조 */
+}
+
+.menu-item-delete:hover {
+    background-color: #c53030;
+    color: #ffffff;
+}
+
+
+/* 댓글 수정 UI 컨테이너 */
+.comment-edit-container {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* 댓글 수정 텍스트 영역 */
+.comment-edit-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #4A5568;
+    border-radius: 6px;
+    font-size: 15px;
+    line-height: 1.5;
+    resize: vertical;
+    margin-bottom: 8px;
+    background-color: #1F2937; /* 어두운 배경 */
+    color: #fff; /* 흰색 텍스트 */
+    box-sizing: border-box;
+}
+
+.comment-edit-textarea:focus {
+    outline: none;
+    border-color: var(--btn-color, #EAB308);
+    box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3);
+}
+
+
+/* 수정/취소 버튼 영역 */
+.comment-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* 수정/취소 버튼 기본 스타일 */
+.comment-edit-actions button {
+    padding: 6px 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+/* 저장 버튼 */
+.comment-edit-actions .edit-save-btn {
+    background-color: var(--btn-color, #EAB308);
+    color: var(--bg-overlay, #141822);
+}
+.comment-edit-actions .edit-save-btn:hover {
+    background-color: #facc15; /* 호버 시 약간 더 밝게 */
+}
+
+/* 취소 버튼 */
+.comment-edit-actions .edit-cancel-btn {
+    background-color: #4A5568;
+    color: #fff;
+}
+.comment-edit-actions .edit-cancel-btn:hover {
+    background-color: #718096;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -242,4 +400,9 @@ body {
     .info-section .movie-title {
         font-size: 2rem; 
     }
+    .comment-actions {
+	    position: static;
+	    justify-content: flex-end;
+	    margin-top: .5rem;
+  	}
 }

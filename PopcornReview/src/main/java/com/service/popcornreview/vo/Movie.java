@@ -34,7 +34,7 @@ public class Movie {
 	} 
 
 
-	public Movie(Integer mId, String mTitle, String mSubtitle, String mRelease, String mShowtime, String mDirector,
+	public Movie(Integer mId, String mTitle, String mSubtitle, Date mRelease, String mShowtime, String mDirector,
 			String mPlot, String mScreeningType, String mMovieTheater, String mCategory, String mUrlImage,
 			String mUrlMovie, Double mAverageScore, String id, String mAddedDate, List<Actor> actors) {
 		super();
