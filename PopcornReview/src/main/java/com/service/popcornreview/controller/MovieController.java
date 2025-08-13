@@ -118,13 +118,11 @@ public class MovieController {
 	     // ★ [추가] 리뷰 리포트 데이터 조회
 	        ReviewStatsDto reviewStats = movieService.getReviewStats(list,movie);
 	        
-		        List<String> reviewTexts = list.stream()
-		                                          .map(Review::getrPlot)
-		                                          .collect(Collectors.toList());
-		        SummaryResponse summaryResponse =  smartService.getSummary(movie,reviewTexts);
-		        
+	        List<String> reviewTexts = list.stream().map(Review::getrPlot).collect(Collectors.toList());
+	        SummaryResponse summaryResponse =  smartService.getSummary(movie,reviewTexts);
+
 		     // [수정] .getSummary()를 이용해 객체 안의 문자열(String)을 꺼냅니다.
-		        String summaryText = summaryResponse.getSummary();
+	        String summaryText = summaryResponse.getSummary();
 	        
 	        
 	        model.addAttribute("movie", movie);

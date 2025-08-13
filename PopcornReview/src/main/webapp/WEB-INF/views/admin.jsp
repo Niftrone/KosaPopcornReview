@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<fmt:setTimeZone value="Asia/Seoul" />
+
 
 <%-- JSTL 변수 설정: URL 파라미터가 없으면 'notice'를 기본 섹션으로 사용 --%>
 <c:set var="activeSection" value="${empty param.section ? 'notice' : param.section}" />
@@ -151,7 +154,7 @@
                   <td>${status.count}</td>
                   <td style="text-align: left;"><c:out value="${movie.mTitle}" /></td>
                   <td style="text-align: left;"><c:out value="${movie.mSubtitle}" /></td>
-                  <td><c:out value="${movie.mRelease}" /></td>
+                  <td><td><fmt:formatDate value="${movie.mRelease}" pattern="yyyy/MM/dd" /></td></td>
                   <td>
                     <button class="btn btn-secondary edit-movie-btn"
                             data-mid="${movie.mId}"

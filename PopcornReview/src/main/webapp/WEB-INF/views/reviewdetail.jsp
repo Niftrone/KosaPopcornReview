@@ -84,8 +84,7 @@
 
 								<div class="comment-info">
 									<span class="comment-author">${comment.user.name}</span> <span
-										class="comment-date"> <fmt:formatDate
-											value="${comment.cDate}" pattern="yyyy/MM/dd HH:mm:ss" />
+										class="comment-date"> <fmt:formatDate value="${comment.cDate}" pattern="yyyy/MM/dd HH:mm:ss" />
 									</span>
 								</div>
 

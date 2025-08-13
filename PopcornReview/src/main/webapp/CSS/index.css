@@ -47,6 +47,7 @@ section {
 
 .banner-poster img {
 	max-width: 250px;
+	height: 360px;
 	border-radius: var(--border-radius-sm);
 }
 
@@ -122,6 +123,7 @@ section {
 .movie-card>img {
 	margin-left: 1.5rem;
 	width: 182px;
+	height: 260px;
 	display: block;
 	border-radius: 30px;
 }
