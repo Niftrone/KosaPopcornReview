@@ -72,4 +72,8 @@
     <delete id="deleteCommentsByUserId" parameterType="string">
     DELETE FROM comment WHERE user_id = #{userId}
 </delete>
+
+<delete id="deleteCommentsByReviewId" parameterType="int">
+    DELETE FROM comment WHERE review_id = #{rId}
+</delete>
 </mapper>
