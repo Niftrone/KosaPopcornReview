@@ -425,13 +425,159 @@
 }
 .message-right .btn-text-link:hover {
     color: rgba(255, 255, 255, 1);
+    text-decoration: underline;
 }
 .message-left .btn-text-link { /* 남의 리뷰 (회색 말풍선) 안의 링크 */
     color: #8a95a3;
 }
 .message-left .btn-text-link:hover {
     color: #ced4da;
+    text-decoration: underline;
 }
+
+* =================================================================
+   [추가] 신고하기 모달 스타일
+   ================================================================= */
+
+/* 스크린 리더 전용 클래스 (접근성) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 모달 배경 오버레이 */
+.report-modal-overlay {
+  display: none; /* 평소엔 숨김 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.report-modal-overlay.active {
+  display: flex; /* active 클래스가 붙으면 보이도록 함 */
+}
+
+/* 모달 콘텐츠 영역 */
+.report-modal-content {
+  background-color: #2d3748;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  border: 1px solid #4A5568;
+}
+
+.report-modal-content h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-align: center;
+}
+
+/* 신고 대상 정보 */
+.report-target-info {
+  background-color: #1F2937;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #cbd5e0;
+}
+.report-target-info p {
+  margin: 0.5rem 0;
+}
+.report-target-info strong {
+  color: #a0aec0;
+}
+
+/* 신고 사유 리스트 */
+.report-reason-list {
+  border: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+}
+
+.report-reason-item {
+  margin-bottom: 0.75rem;
+}
+
+.report-reason-item input[type="radio"] {
+  display: none; /* 기본 라디오 버튼 숨기기 */
+}
+
+.report-reason-item label {
+  display: block;
+  padding: 0.75rem 1rem;
+  border: 1px solid #4A5568;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  color: #cbd5e0;
+}
+
+/* 선택되지 않은 라디오 버튼 레이블 호버 효과 */
+.report-reason-item input[type="radio"]:not(:checked) + label:hover {
+  background-color: #4A5568;
+}
+
+/* 선택된 라디오 버튼 레이블 스타일 */
+.report-reason-item input[type="radio"]:checked + label {
+  background-color: var(--btn-color, #EAB308);
+  border-color: var(--btn-color, #EAB308);
+  color: #141822;
+  font-weight: bold;
+}
+
+
+/* 모달 버튼 영역 */
+.report-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.report-modal-actions button {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.report-cancel-btn {
+  background-color: #4A5568;
+  color: #fff;
+}
+.report-cancel-btn:hover {
+  background-color: #718096;
+}
+
+.report-submit-btn {
+  background-color: var(--btn-color, #EAB308);
+  color: #141822;
+}
+.report-submit-btn:hover {
+  opacity: 0.85;
+}
+
 
 </style>
 </head>
@@ -663,61 +809,60 @@
     <c:choose>
         <c:when test="${not empty reviews}">
             <c:forEach items="${reviews}" var="review">
-            	<a href="/review/${review.rId}" class="review-link-wrapper">
-                <c:choose>
-                    <%-- 내 리뷰 (오른쪽) --%>
-                    <c:when test="${review.user.id == sessionScope.loginUser.id}">
-                        <div class="chat-message message-right">
-                            <%-- ★★★ 구조 변경: 작성자를 위로 빼냅니다 ★★★ --%>
-                            <span class="chat-author">나</span>
-                            
-                            <%-- ★★★ 구조 변경: 말풍선과 날짜를 content-line으로 묶습니다 ★★★ --%>
-                            <div class="content-line">
-                                <%-- [수정 후] --%>
-					<%-- 이전에 수정했던 두 곳의 날짜 부분을 모두 아래와 같이 원래 코드로 복원합니다. --%>
-								<span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
-								    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
-								</span>
-                                <div class="chat-bubble">
-                                    <div class="bubble-rating">
-									    <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
-									</div>
-									<p class="bubble-plot">${review.rPlot}</p>
-									<div class="review-actions">
-									    <a href="#" class="btn-text-link btn-edit-review">수정</a>
-									    <a href="#" class="btn-text-link btn-delete-review">삭제</a>
-									</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </c:when>
-
-                    <%-- 다른 사람 리뷰 (왼쪽) --%>
-                    <c:otherwise>
-	                        <div class="chat-message message-left">
-	                            <%-- ★★★ 구조 변경: 작성자를 위로 빼냅니다 ★★★ --%>
-	                            <span class="chat-author">${review.user.name}</span>
-	                            
-	                            <%-- ★★★ 구조 변경: 말풍선과 날짜를 content-line으로 묶습니다 ★★★ --%>
-	                            <div class="content-line">
-	                                <div class="chat-bubble">
-	                                    <div class="bubble-rating">
-										    <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
-										</div>
-	                                    <p class="bubble-plot">${review.rPlot}</p>
-	                                    <div class="review-actions">
-										    <a href="#" class="btn-text-link btn-report-review">신고하기</a>
-										</div>
-	                                </div>
-	                                <span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
-									    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
-									</span>
-	                            </div>
-	                        </div>
-                    </c:otherwise>
-                </c:choose>
-                </a>
+            	<div class="chat-message ${review.user.id == sessionScope.loginUser.id ? 'message-right' : 'message-left'}"
+			         data-rid="${review.rId}" 
+			         data-rrating="${review.rRating}">
+			
+			        <c:choose>
+			            <%-- 내 리뷰 (오른쪽) --%>
+			            <c:when test="${review.user.id == sessionScope.loginUser.id}">
+			                <span class="chat-author">나</span>
+			                <div class="content-line">
+			                    <span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
+			                        <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
+			                    </span>
+			                    <div class="chat-bubble">
+			                        <div class="bubble-rating">
+			                            <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
+			                        </div>
+			                        
+			                        <%-- ✨✨ 이 부분이 핵심 ✨✨ --%>
+			                        <%-- a 태그를 리뷰 내용(p)만 감싸도록 변경 --%>
+			                        <a href="/review/${review.rId}" class="review-link-wrapper">
+			                            <p class="bubble-plot">${review.rPlot}</p>
+			                        </a>
+			                        
+			                        <div class="review-actions">
+			                            <button type="button" class="btn-text-link btn-edit-review">수정</button>
+			                            <button type="button" class="btn-text-link btn-delete-review">삭제</button>
+			                        </div>
+			                    </div>
+			                </div>
+			            </c:when>
+			
+			            <%-- 다른 사람 리뷰 (왼쪽) --%>
+			            <c:otherwise>
+			                <%-- 다른 사람 리뷰도 동일한 구조로 a 태그를 p 태그만 감싸도록 수정 --%>
+			                <span class="chat-author">${review.user.name}</span>
+			                <div class="content-line">
+			                    <div class="chat-bubble">
+			                        <div class="bubble-rating">
+			                            <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
+			                        </div>
+			                        <a href="/review/${review.rId}" class="review-link-wrapper">
+			                            <p class="bubble-plot">${review.rPlot}</p>
+			                        </a>
+			                        <div class="review-actions">
+			                            <button type="button" class="btn-text-link btn-report-review">신고하기</button>
+			                        </div>
+			                    </div>
+			                    <span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
+			                        <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>
+			                    </span>
+			                </div>
+			            </c:otherwise>
+			        </c:choose>
+			    </div>
             </c:forEach>
         </c:when>
         <c:otherwise>
@@ -772,9 +917,75 @@
         </div>
     </div>
 </div>
+<%-- moviedetail.jsp 파일의 </body> 바로 위에 추가 --%>
+
+<%-- =============================================================== --%>
+<%-- 신고하기 모달                                                     --%>
+<%-- =============================================================== --%>
+<div id="reportModal" class="report-modal-overlay">
+  <div class="report-modal-content">
+    <%-- ✨ 1. form 태그에 action과 method를 추가하여 컨트롤러와 연결합니다. --%>
+    <form id="reportForm" action="/review/reported" method="post">
+      <h2>신고하기</h2>
+
+      <%-- ✨ 2. 어떤 리뷰를 신고할지 ID를 담을 숨겨진 필드입니다. 
+             - name="review.rId": 컨트롤러의 ReportedReview 객체와 연결됩니다.
+             - id="reportReviewId": JavaScript가 이 필드를 쉽게 찾도록 ID를 지정합니다.
+             - value="": 처음에는 비워두고 JavaScript가 채웁니다. --%>
+     <input type="hidden" name="review.rId" id="reportReviewId" value="">
+      <input type="hidden" name="review.rPlot" id="reportReviewPlot" value="">
+      
+      <%-- 신고 대상 리뷰 정보 (JS로 내용 채움) --%>
+      <div class="report-target-info">
+        <%-- ✨ 3. JavaScript가 내용을 채울 수 있도록 비워둡니다. --%>
+        <p><strong>작성자:</strong> <span id="reportAuthor"></span></p>
+        <p><strong>내용:</strong> "<span id="reportContent"></span>"</p>
+      </div>
+
+      <%-- 신고 사유 선택 (이하 구조는 그대로 유지) --%>
+      <fieldset class="report-reason-list">
+        <legend class="sr-only">신고 사유 선택</legend>
+        <div class="report-reason-item">
+          <input type="radio" id="reason1" name="rrPlot" value="스팸홍보/도배">
+          <label for="reason1">스팸홍보/도배입니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason2" name="rrPlot" value="음란물">
+          <label for="reason2">음란물입니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason3" name="rrPlot" value="불법정보">
+          <label for="reason3">불법정보를 포함하고 있습니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason4" name="rrPlot" value="청소년에게 유해함">
+          <label for="reason4">청소년에게 유해한 내용입니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason5" name="rrPlot" value="욕설/혐오/차별">
+          <label for="reason5">욕설/생명경시/혐오/차별적 표현입니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason6" name="rrPlot" value="개인정보 노출">
+          <label for="reason6">개인정보가 노출되었습니다.</label>
+        </div>
+        <div class="report-reason-item">
+          <input type="radio" id="reason7" name="rrPlot" value="불쾌한 표현">
+          <label for="reason7">불쾌한 표현이 있습니다.</label>
+        </div>
+      </fieldset>
+
+      <%-- 액션 버튼 --%>
+      <div class="report-modal-actions">
+        <button type="button" class="report-cancel-btn">취소</button>
+        <button type="submit" class="report-submit-btn">신고</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
 <script>
 $(document).ready(function() {
     // 1. 페이지 로드 시 스크롤 위치 복원
@@ -904,6 +1115,160 @@ $(document).ready(function() {
         $('#ratingValue').val('0');
         $('#scoreDisplay').text('0/5');
         updatePopcorns(0);
+    });
+    
+ // moviedetail.jsp의 <script> 태그 안, $(document).ready(function() { ... }); 내부에 추가
+
+    /* ================================================== */
+    /* 리뷰 수정 / 삭제 관련 스크립트                */
+    /* ================================================== */
+
+    // 6. 리뷰 '수정' 버튼 클릭 이벤트 (모달 재활용)
+    $('#review-container').on('click', '.btn-edit-review', function(e) {
+        e.preventDefault(); 
+        e.stopPropagation(); // 부모 a태그로의 이벤트 전파를 막아 페이지 이동 방지
+
+        // (1) 수정할 리뷰의 기존 데이터를 가져옵니다.
+        const reviewWrapper = $(this).closest('div.chat-message'); // 전체 메시지 div
+        
+        // data-* 속성에서 리뷰 데이터를 읽어옵니다. (이 방식이 더 안정적입니다)
+        const rId = reviewWrapper.data('rid');
+        const rRating = reviewWrapper.data('rrating');
+        const rPlot = reviewWrapper.find('.bubble-plot').text();
+
+        // (2) 리뷰 작성 모달(reviewModal)을 '수정 모드'로 변경합니다.
+        const reviewForm = $('#reviewForm');
+        reviewForm.attr('action', '/review/update'); // 폼의 목적지를 수정용 URL로 변경
+
+        // (3) 폼 내부에 수정할 리뷰의 ID(rId)를 hidden input으로 추가합니다.
+        //    (서버에 어떤 리뷰를 수정할지 알려주기 위함)
+        if (reviewForm.find('input[name="rId"]').length === 0) {
+        	 // ✅ 수정된 부분: 백틱(`)을 사용하여 변수 ${rId}가 올바르게 값으로 치환됩니다.
+            reviewForm.prepend(`<input type="hidden" name="rId" value="\${rId}">`);
+        } else {
+            reviewForm.find('input[name="rId"]').val(rId);
+        }
+
+        // (4) 모달에 가져온 데이터들을 채워 넣습니다.
+        currentRating = parseInt(rRating); // 전역 변수 currentRating 업데이트
+        $('#ratingValue').val(currentRating);
+        $('#scoreDisplay').text(currentRating + '/5');
+        updatePopcorns(currentRating); // 팝콘 아이콘 상태 업데이트
+        reviewForm.find('textarea[name="rPlot"]').val(rPlot);
+
+        // (5) 모달의 제목과 버튼 텍스트를 '수정'용으로 변경합니다.
+        $('#reviewModalLabel').text('리뷰 수정');
+        $('#reviewModal .btn-submit-review').text('수정');
+
+        // (6) 준비된 모달을 화면에 보여줍니다.
+        $('#reviewModal').modal('show');
+    });
+
+
+    // 7. 리뷰 '삭제' 버튼 클릭 이벤트 (동적 Form 생성)
+    $('#review-container').on('click', '.btn-delete-review', function(e) {
+        e.preventDefault(); 
+        e.stopPropagation(); 
+
+        if (!confirm('정말로 이 리뷰를 삭제하시겠습니까?')) {
+            return;
+        }
+
+        // data-* 속성에서 삭제할 리뷰의 ID를 가져옵니다.
+        const rId = $(this).closest('div.chat-message').data('rid');
+
+        // (1) 서버로 데이터를 보내기 위한 form 태그를 동적으로 생성합니다.
+        const form = $('<form></form>');
+        form.attr('method', 'post');
+        form.attr('action', '/review/delete'); // ReviewController의 삭제 처리 주소
+
+        // (2) 생성한 form에 리뷰 ID(rId)를 담은 hidden input을 추가합니다.
+        form.append($('<input>', { type: 'hidden', name: 'rId', value: rId }));
+
+        // (3) 완성된 form을 페이지에 추가한 후, 바로 전송(submit)합니다.
+        $('body').append(form);
+        form.submit();
+    });
+
+
+    // 8. 리뷰 작성/수정 모달이 닫힐 때의 초기화 로직 (기존 코드 수정)
+//        (수정을 '취소'했을 때를 위한 처리)
+    $('#reviewModal').on('hidden.bs.modal', function () {
+        const reviewForm = $('#reviewForm');
+
+        // (1) 폼의 목적지(action)와 제목, 버튼 텍스트를 다시 '리뷰 추가' 상태로 되돌립니다.
+        reviewForm.attr('action', '/review/add'); 
+        $('#reviewModalLabel').text('User Review');
+        $('#reviewModal .btn-submit-review').text('등록');
+
+        // (2) '수정 모드'에서 사용했던 리뷰 ID(rId) input을 제거합니다.
+        reviewForm.find('input[name="rId"]').remove();
+        
+        // (3) 폼의 모든 입력 값을 초기화합니다.
+        reviewForm[0].reset(); 
+        currentRating = 0;
+        $('#ratingValue').val('0');
+        $('#scoreDisplay').text('0/5');
+        updatePopcorns(0);
+    });
+    
+    /* ================================================== */
+    /* 리뷰 신고 관련 스크립트                   */
+    /* ================================================== */
+
+    // 9. '신고하기' 버튼 클릭 이벤트
+    $('#review-container').on('click', '.btn-report-review', function(e) {
+	    e.preventDefault();
+	    e.stopPropagation();
+
+        // (1) 신고할 리뷰의 정보를 가져옵니다.
+        const reviewWrapper = $(this).closest('div.chat-message');
+	    const rId = reviewWrapper.data('rid');
+	    const author = reviewWrapper.find('.chat-author').text();
+	    const plot = reviewWrapper.find('.bubble-plot').text();
+
+        // (2) 가져온 정보로 신고 모달의 내용을 채웁니다.
+         $('#reportModal #reportReviewId').val(rId);
+	    $('#reportModal #reportReviewPlot').val(plot); // 신고된 리뷰 내용 채우기
+	    $('#reportModal #reportAuthor').text(author);
+	    $('#reportModal #reportContent').text(plot);
+
+        // (3) 신고 모달을 보여줍니다.
+	    $('#reportModal').css('display', 'flex');
+    });
+
+    // 10. 신고 모달의 '취소' 버튼 클릭 이벤트
+    // 신고 모달의 '취소' 버튼 클릭 시 모달 닫기
+	$('#reportModal .report-cancel-btn').on('click', function() {
+	    $('#reportModal').hide();
+	    // 폼 초기화 (선택했던 라디오 버튼 해제)
+	    $('#reportForm')[0].reset(); 
+	});
+
+ // 11. 신고 폼 제출 이벤트 (제출 시점 제어 방식)
+    $('#reportForm').on('submit', function(e) {
+	    // 1. 폼의 자동 전송을 일단 막습니다.
+	    e.preventDefault(); 
+	
+	    // 유효성 검사: 신고 사유를 선택했는지 확인
+	    if ($('input[name="rrPlot"]:checked').length === 0) {
+	        alert('신고 사유를 선택해주세요.');
+	        return; // 유효성 검사 실패 시 여기서 중단
+	    }
+	
+	    // 2. 원하는 alert 창을 먼저 띄웁니다.
+	    alert('신고가 접수되었습니다.');
+	
+	    // 3. 사용자가 '확인'을 누르면, JavaScript가 수동으로 폼을 제출시킵니다.
+	    this.submit(); // 'this'는 #reportForm을 가리킵니다.
+	});
+
+ // 모달 바깥의 어두운 영역 클릭 시 모달 닫기
+    $('#reportModal').on('click', function(e) {
+        if (e.target === this) {
+            $(this).hide();
+            $('#reportForm')[0].reset();
+        }
     });
 });
 </script>

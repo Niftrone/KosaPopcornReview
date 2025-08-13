@@ -65,7 +65,7 @@ public class CommentService {
 	        // 2. Review 정보 채우기
 	        Review partialReview = c.getReview();
 	        if (partialReview != null && partialReview.getrId() != 0) {
-	            Review fullReview = reviewDao.getReview(partialReview);
+	            Review fullReview = reviewDao.getReview(partialReview.getrId());
 	            if (fullReview != null) {
 	                c.setReview(fullReview);
 	            }

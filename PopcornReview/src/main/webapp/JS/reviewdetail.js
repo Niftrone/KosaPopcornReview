@@ -200,7 +200,7 @@
         if (csrf) xhr.setRequestHeader(csrf.name, csrf.value);
       },
       success: function (response) {
-        alert(response); // Controller에서 보낸 성공 메시지
+        alert('신고 접수가 처리되었습니다.'); // Controller에서 보낸 성공 메시지
         closeReportModal();
       },
       error: function (xhr) {

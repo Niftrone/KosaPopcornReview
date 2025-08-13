@@ -175,8 +175,16 @@ $(document).ready(function() {
 	    }
 	});
 
-	searchInput.on('focus', function() {
-	    displayRecentSearches();
+	// [수정됨] 검색창에 글자를 입력하면 최근 검색어 표시
+	searchInput.on('input', function() {
+	    // 입력된 글자가 1개 이상일 경우, 최근 검색어 표시
+	    if ($(this).val().length > 0) {
+	        displayRecentSearches();
+	    } 
+	    // 입력된 글자가 없을 경우 (모두 지웠을 때), 최근 검색어 숨김
+	    else {
+	        recentSearchesContainer.hide();
+	    }
 	});
 
 	$(document).on('click', function(event) {
@@ -187,7 +195,7 @@ $(document).ready(function() {
 
 	clearAllButton.on('click', clearAllRecentSearches);
 
-	displayRecentSearches(); // 페이지 로드 시에도 표시 (localStorage에 있으면)
+	// displayRecentSearches(); // 페이지 로드 시에도 표시 (localStorage에 있으면)
 
 	const idInput = $('#signupId');
 	const pwdInput = $('#signupPwd');
