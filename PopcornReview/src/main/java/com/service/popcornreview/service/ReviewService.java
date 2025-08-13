@@ -35,9 +35,9 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public Review getReview(Review review) {
+    public Review getReview(int rId) {
         System.out.println("ReviewService...getReview");
-        Review found = reviewDao.getReview(review);
+        Review found = reviewDao.getReview(rId);
         hydrateReview(found); 
         return found;
     }

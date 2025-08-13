@@ -42,16 +42,31 @@
 	            
 	            <when test="user != null and user.id != null">
 	                u.id = #{user.id}
-	            </when>
-	            <when test="rId != null">
-	            	r.r_id = #{rId}
-	            </when>
-	            
+	            </when>           
 	            <otherwise></otherwise>
 	        </choose>
 	    </where>
 	    
 	    
+	    ORDER BY r.r_date DESC
+	</select>
+	
+	
+	<select id="getReviewById" parameterType="integer" resultMap="reviewRM">
+	    SELECT 
+	        r.r_id,
+	        r.r_rating,
+	        r.r_plot,
+	        r.r_date,
+	        u.id AS user_id,
+	        m.m_id
+	    FROM 
+	        review r
+	    LEFT JOIN 
+	        user u ON r.user_id = u.id
+	    LEFT JOIN 
+	        movie m ON r.m_id = m.m_id
+	    WHERE r.r_id = #{VALUE}
 	    ORDER BY r.r_date DESC
 	</select>
   

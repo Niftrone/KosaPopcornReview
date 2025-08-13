@@ -21,9 +21,9 @@ public class ReviewDao {
 		return sqlSession.selectList(NS + "getAllReviews", review);
 	}
 
-	public Review getReview(Review review) {
-		System.out.println("ReviewDao...getAllReviews");
-		return sqlSession.selectOne(NS + "getAllReviews", review);
+	public Review getReview(int rId) {
+		System.out.println("ReviewDao...getReview");
+		return sqlSession.selectOne(NS + "getReviewById", rId);
 	}
 	
 	public int addReview(Review review) {
