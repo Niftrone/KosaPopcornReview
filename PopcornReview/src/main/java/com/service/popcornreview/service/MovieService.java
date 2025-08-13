@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.service.popcornreview.dao.MovieDao;
+import com.service.popcornreview.dao.ReviewDao;
 import com.service.popcornreview.dto.AudienceStatsDto;
 import com.service.popcornreview.dto.ReviewStatsDto;
 import com.service.popcornreview.vo.Actor;
@@ -28,6 +30,9 @@ public class MovieService {
 
 	@Autowired
 	private MovieDao movieDao;
+	
+	@Autowired
+	private ReviewDao reviewDao;
 
 	public Movie getMovie(int mId) {
 		System.out.println("MovieService...getMovie");
@@ -250,7 +255,7 @@ public class MovieService {
 	 * @param reviews 통계를 계산할 리뷰 데이터 목록
 	 * @return ReviewStatsDto 리뷰 통계 결과가 담긴 DTO
 	 */
-	public ReviewStatsDto getReviewStats(List<Review> reviews) {
+	public ReviewStatsDto getReviewStats(List<Review> reviews,Movie movie) {
 	    if (reviews == null || reviews.isEmpty()) {
 	        return new ReviewStatsDto(); 
 	    }
@@ -270,8 +275,12 @@ public class MovieService {
 	        scoreCounts.merge(score, 1, Integer::sum);
 	    }
 
-	    // 평균 평점 계산 (10점 만점으로 변환)
+	    // 평균 평점 계산 (5점 만점으로 변환)
 	    double averageScore = (totalScoreSum / totalCount);
+	    averageScore = Math.round(averageScore * 10) / 10.0; 
+	    movie.setmAverageScore(averageScore);
+	    updateAverage(movie);
+	    
 
 	    // 점수별 분포도(%) 계산
 	    Map<Integer, Double> scoreDistribution = new LinkedHashMap<>();
@@ -291,4 +300,46 @@ public class MovieService {
 	public List<Movie> searchMovies(String query) {
 		return movieDao.searchMovies(query);
 	}
+	
+	public int updateAverage(Movie movie) {
+		return movieDao.updateAverage(movie);
+	}
+	
+	public List<Movie> SortByCondition(List<Movie> list, String sort) {
+	    // switch 문을 사용하여 정렬 기준에 따라 분기합니다.
+		 System.out.println("--- 리뷰 개수 확인 시작 ---");
+	    switch (sort) {
+	        case "rating":
+	            // 평점(mAverageScore)을 기준으로 내림차순 정렬 (높은 점수 먼저)
+	        	//for(Movie movie:list) {
+		        //	System.out.println("영화: " + movie.getmTitle() + ", 평균 편점 : " + movie.getmAverageScore()); }
+	            list.sort(Comparator.comparingDouble(Movie::getmAverageScore).reversed());
+	            break;
+
+	        case "reviews":
+	            // 리뷰 개수(reviews 리스트의 크기)를 기준으로 내림차순 정렬 (리뷰 많은 순)
+	        	// ✨ [수정됨] 1. 정렬 전에 각 영화의 리뷰 개수를 DB에서 가져와 채워넣기
+	        	for (Movie movie : list) {
+                    int count = movieDao.getReviewCountByMovieId(movie);
+                    movie.setReviewCount(count); // Movie 객체에 리뷰 개수 설정
+               
+	        	// ✨ [중요] 이 로그를 추가해서 실제 count 값을 확인하세요!
+                // System.out.println("영화: " + movie.getmTitle() + ", 리뷰 개수: " + count);
+	        	 }
+	        	// ✨ 2. 이제 reviewCount 필드를 기준으로 간단하게 정렬
+                list.sort(Comparator.comparingInt(Movie::getReviewCount).reversed());
+	            break;
+
+	        case "latest":
+	        default:
+	            // 개봉일(mRelease)을 기준으로 내림차순 정렬 (최신순)
+	            // 혹시 개봉일이 null인 영화가 있을 경우를 대비해, null인 데이터는 맨 뒤로 보냅니다.
+	        	
+	            list.sort(Comparator.comparing(Movie::getmRelease, Comparator.nullsLast(Comparator.reverseOrder())));
+	            break;
+	    }
+	    return list; // 정렬된 리스트를 반환합니다.
+	}
+
+
 }

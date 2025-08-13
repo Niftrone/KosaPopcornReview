@@ -77,4 +77,13 @@ public class MovieDao {
 	    System.out.println("MovieDao...addMovieActorRelation");
 	    return sqlSession.insert(NS + "addMovieActorRelation", params);
 	}
+	
+	public int updateAverage(Movie movie) {
+		return sqlSession.update(NS+"updateAverage",movie);
+	}
+	
+	public int getReviewCountByMovieId(Movie movie) {
+	
+		return sqlSession.selectOne(NS+"getReviewCountByMovieId",movie);
+	}
 }

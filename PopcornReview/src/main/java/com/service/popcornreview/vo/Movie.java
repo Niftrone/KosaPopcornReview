@@ -31,6 +31,8 @@ public class Movie {
 	private String mAddedDate;
 
 	private List<Actor> actors; // 출연 배우 목록
+	
+	private int reviewCount;
 
 	public Movie() {
 
@@ -58,6 +60,16 @@ public class Movie {
 		this.mAddedDate = mAddedDate;
 		this.actors = actors;
 	}
+	
+	
+	// ✨ [추가] getter와 setter
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
 
     // [수정] Getter의 반환 타입을 Integer로 변경합니다.
 	public Integer getmId() {

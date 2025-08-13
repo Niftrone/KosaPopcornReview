@@ -17,10 +17,8 @@
 		<result property="mUrlImage" column="m_url_image"/>
 		<result property="mUrlMovie" column="m_url_movie"/>
 		<result property="mAddedDate" column="m_added_date"/>
-		<result property="id" column="id"/>
-
-		<result property="mAverageScore" column="average_score"/>
 		<result property="mAverageScore" column="m_averagescore"/>
+		<result property="id" column="id"/>
 
 		<collection property="actors"
             ofType="actor"
@@ -113,4 +111,14 @@
 	<delete id="deleteMovieActorRelations" parameterType="int">
         DELETE FROM mov_act WHERE m_id = #{mId}
 	</delete>
+	
+	<update id = "updateAverage" parameterType="movie">
+		UPDATE movie SET m_averagescore = #{mAverageScore} WHERE m_id=#{mId}
+	</update>
+	
+	<select id="getReviewCountByMovieId" parameterType="movie" resultType="int">
+        SELECT COUNT(*) 
+        FROM review 
+        WHERE m_id = #{mId}
+    </select>
 </mapper>
