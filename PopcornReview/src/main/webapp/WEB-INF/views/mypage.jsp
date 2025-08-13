@@ -135,7 +135,7 @@
 					name="id" value="<c:out value='${user.id}'/>" readonly /></label> <label
 					class="form-row"><span>이메일</span> <input type="email"
 					name="email" value="<c:out value='${user.email}'/>"
-					placeholder="이메일" /></label> <label class="form-row"><span>이름</span>
+					placeholder="이메일" /></label> <label class="form-row"><span>닉네임</span>
 					<input type="text" name="name"
 					value="<c:out value='${user.name}'/>" placeholder="이름을 입력해주세요." /></label>
 				<label class="form-row"><span>생년월일</span> <input type="date"

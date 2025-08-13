@@ -41,5 +41,14 @@ public class CommentDao {
 	    System.out.println("CommentDao...deleteCommentsByUserId");
 	    return sqlSession.delete(NS + "deleteCommentsByUserId", userId);
 	}
+	/**
+	 * [추가] 리뷰 ID로 해당 리뷰의 모든 댓글을 삭제합니다.
+	 * @param rId 삭제할 리뷰의 ID
+	 * @return 삭제된 댓글의 수
+	 */
+	public int deleteCommentsByReviewId(int rId) {
+	    System.out.println("CommentDao...deleteCommentsByReviewId");
+	    return sqlSession.delete(NS + "deleteCommentsByReviewId", rId);
+	}
 	
 }

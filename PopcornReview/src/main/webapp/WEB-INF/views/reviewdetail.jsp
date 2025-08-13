@@ -31,22 +31,25 @@
 	<jsp:include page="include/header.jsp" />
 
 	<c:if test="${not empty movieDetail and not empty reviewDetail}">
-		<div class="movie-banner"
-			style="background-image: url('${movieDetail.mUrlImage}');">
-			<div class="banner-inner">
-				<button class="back-button" type="button">&lt; Back</button>
-				<div class="banner-content">
-					<div class="poster-section">
-						<img src="${movieDetail.mUrlImage}"
-							alt="${movieDetail.mTitle} 포스터" class="poster-image" />
-					</div>
-					<div class="info-section">
-						<h1 class="movie-title">${movieDetail.mTitle}</h1>
-						<h1 class="info-page">User Reviews</h1>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div class="movie-banner" style="background-image: url('${movieDetail.mUrlImage}');">
+    <%-- 위 태그에 style을 다시 추가하고, 잘못된 a, img 태그는 삭제합니다. --%>
+    <div class="banner-inner">
+        <button class="back-button" type="button">&lt; Back</button>
+        <div class="banner-content">
+            <div class="poster-section">
+                <%-- ▼▼▼ 바로 이 위치의 <img> 태그를 <a>로 감싸야 합니다. ▼▼▼ --%>
+                <a href="/movie/detail?mId=${movieDetail.mId}">
+                    <img src="${movieDetail.mUrlImage}"
+                         alt="${movieDetail.mTitle} 포스터" class="poster-image" />
+                </a>
+            </div>
+            <div class="info-section">
+                <h1 class="movie-title">${movieDetail.mTitle}</h1>
+                <h1 class="info-page">User Reviews</h1>
+            </div>
+        </div>
+    </div>
+</div>
 
 		<main class="review-container">
 			<section class="review-content-box">

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.service.popcornreview.dao.CommentDao;
 import com.service.popcornreview.dao.ReportDao;
 import com.service.popcornreview.dao.ReviewDao;
 import com.service.popcornreview.vo.ReportedReview;
@@ -17,7 +18,8 @@ public class ReportService {
 	private ReportDao reportDao;
 	@Autowired
 	private ReviewDao reviewDao;
-	
+	@Autowired
+	private CommentDao commentDao;
 	// [추가] 전체 신고 목록 조회를 위한 서비스 메소드
 	public List<ReportedReview> getReported() {
 	    System.out.println("ReportService...getReported");
@@ -37,19 +39,26 @@ public class ReportService {
 	
 	@Transactional
 	public void deleteReviewAndAssociatedReports(int rrId) {
-        // 1. 전달받은 rrId로 신고 정보를 가져와서 원본 리뷰의 ID(rId)를 확보합니다.
-        ReportedReview reportedReview = reportDao.getReportedReviewById(rrId); // 이 메소드가 없다면 만들어야 합니다.
-        if (reportedReview == null) {
-            // 이미 삭제되었거나 없는 경우, 여기서 로직을 중단합니다.
-            System.out.println("삭제할 신고 리뷰를 찾을 수 없습니다. rrId: " + rrId);
-            return;
-        }
-        int originalReviewId = reportedReview.getReview().getrId();
+	    // 1. rrId로 신고 정보를 가져와서 원본 리뷰 ID를 확보합니다.
+	    ReportedReview reportedReview = reportDao.getReportedReviewById(rrId);
+	    
+	    // 2. 신고 기록 또는 원본 리뷰가 없는 경우에 대한 예외 처리
+	    if (reportedReview == null) {
+	        throw new IllegalArgumentException("ID " + rrId + "에 해당하는 신고 기록이 없습니다.");
+	    }
+	    if (reportedReview.getReview() == null) {
+	        // 원본 리뷰가 없는 고아 데이터의 경우, 신고 기록만 삭제하고 종료
+	        System.out.println("신고 기록(rrId: " + rrId + ")에 연결된 원본 리뷰를 찾을 수 없습니다. 신고 기록만 삭제합니다.");
+	        reportDao.deleteReported(rrId);
+	        return;
+	    }
+	    
+	    // 3. 원본 리뷰 ID를 가져옵니다.
+	    int originalReviewId = reportedReview.getReview().getrId();
 
-        // 2. 원본 리뷰 ID에 연결된 '모든' 신고 기록을 먼저 삭제합니다. (외래 키 제약 해결)
-        reportDao.deleteAllReportsByReviewId(originalReviewId);
-
-        // 3. 이제 안전하게 원본 리뷰를 삭제합니다.
-        reviewDao.deleteReview(originalReviewId); // Review를 삭제하는 기존 DAO 메소드 호출
-    }
+	    // 4. ★★★ 원본 리뷰만 삭제합니다. ★★★
+	    // ON DELETE CASCADE 설정에 의해 관련된 댓글과 모든 신고 기록은
+	    // 데이터베이스가 자동으로 함께 삭제해줍니다.
+	    reviewDao.deleteReview(originalReviewId);
+	}
 }
