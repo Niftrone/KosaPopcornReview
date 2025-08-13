@@ -121,7 +121,19 @@
 .review-title, .comment-title a { font-weight: 800; font-size: 14px; text-decoration: none; color: #EDEFF3; }
 .review-snippet, .comment-text { font-size: 12px; color: #9AA3AD; line-height: 1.45; }
 .comment-text { margin-top: 6px; }
-
+/* ▼▼▼ 이 부분을 추가하세요 ▼▼▼ */
+.review-card .review-snippet,
+.comment-item .comment-text {
+  /* 텍스트 영역의 높이를 고정합니다. (3줄 분량) */
+  height: 52px; /* line-height(1.45) * font-size(12px) * 3줄 = 52.2px */
+  
+  /* 텍스트가 높이를 넘어갈 경우 3줄 뒤에 말줄임표(...)를 표시합니다. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 보여줄 줄 수 (2줄로 하려면 2로 변경) */
+  -webkit-box-orient: vertical;
+}
 /* =========================================================
    MODAL (프로필 수정 등)
 ========================================================= */
