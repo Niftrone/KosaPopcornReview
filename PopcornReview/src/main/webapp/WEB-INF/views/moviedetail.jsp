@@ -155,6 +155,7 @@
     padding: 15px 20px;
     border-radius: 20px;
     position: relative;
+    padding-bottom: 40px; /* 이 줄을 추가하세요 */
     }
 
    
@@ -398,6 +399,40 @@
     text-decoration: none; /* 밑줄 제거 */
     display: block; /* 링크가 div 전체를 감쌀 수 있도록 블록 요소로 만듦 */
 }
+
+/* ▼▼▼ [추가] 수정/삭제/신고 버튼 관련 스타일 ▼▼▼ */
+.review-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    display: flex;
+    gap: 15px;
+}
+.btn-text-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+/* ▼▼▼ "나"를 오른쪽으로 보내기 위해 이 부분을 추가하세요 ▼▼▼ */
+.message-right {
+    align-items: flex-end;
+}
+.message-right .btn-text-link { /* 내 리뷰 (파란 말풍선) 안의 링크 */
+    color: rgba(255, 255, 255, 0.7);
+}
+.message-right .btn-text-link:hover {
+    color: rgba(255, 255, 255, 1);
+}
+.message-left .btn-text-link { /* 남의 리뷰 (회색 말풍선) 안의 링크 */
+    color: #8a95a3;
+}
+.message-left .btn-text-link:hover {
+    color: #ced4da;
+}
+
 </style>
 </head>
 <body>
@@ -648,6 +683,10 @@
 									    <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
 									</div>
 									<p class="bubble-plot">${review.rPlot}</p>
+									<div class="review-actions">
+									    <a href="#" class="btn-text-link btn-edit-review">수정</a>
+									    <a href="#" class="btn-text-link btn-delete-review">삭제</a>
+									</div>
                                 </div>
                             </div>
                         </div>
@@ -667,6 +706,9 @@
 										    <img src="${pageContext.request.contextPath}/image/popcorn.png" alt="Popcorn" class="popcorn-icon"> ${review.rRating}점
 										</div>
 	                                    <p class="bubble-plot">${review.rPlot}</p>
+	                                    <div class="review-actions">
+										    <a href="#" class="btn-text-link btn-report-review">신고하기</a>
+										</div>
 	                                </div>
 	                                <span class="chat-date" data-date="<fmt:formatDate value='${review.rDate}' pattern='yyyy-MM-dd HH:mm:ss'/>">
 									    <fmt:formatDate value="${review.rDate}" pattern="yyyy-MM-dd"/>

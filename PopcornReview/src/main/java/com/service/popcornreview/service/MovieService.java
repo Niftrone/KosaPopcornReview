@@ -275,8 +275,9 @@ public class MovieService {
 	        scoreCounts.merge(score, 1, Integer::sum);
 	    }
 
-	    // 평균 평점 계산 (10점 만점으로 변환)
+	    // 평균 평점 계산 (5점 만점으로 변환)
 	    double averageScore = (totalScoreSum / totalCount);
+	    averageScore = Math.round(averageScore * 10) / 10.0; 
 	    movie.setmAverageScore(averageScore);
 	    updateAverage(movie);
 	    
